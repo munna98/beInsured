@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { subDays, subHours } from 'date-fns';
+
 import {
   Box,
   Button,
@@ -11,35 +11,54 @@ import {
   TextField,
   Unstable_Grid2 as Grid
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-const now = new Date();
-// const states = [
-//   {
-//     value: 'alabama',
-//     label: 'Alabama'
-//   },
-//   {
-//     value: 'new-york',
-//     label: 'New York'
-//   },
-//   {
-//     value: 'san-francisco',
-//     label: 'San Francisco'
-//   },
-//   {
-//     value: 'los-angeles',
-//     label: 'Los Angeles'
-//   }
-// ];
+
+const states = [
+  {
+    value: 'alabama',
+    label: 'Alabama'
+  },
+  {
+    value: 'new-york',
+    label: 'New York'
+  },
+  {
+    value: 'san-francisco',
+    label: 'San Francisco'
+  },
+  {
+    value: 'los-angeles',
+    label: 'Los Angeles'
+  }
+];
 
 export const PolicyAddForm = () => {
+
+  const [now, setNow] = useState(new Date());
+
   const [values, setValues] = useState({
-    date: '',
+    date: Date,
     customerName: '',
-    lastName: '',
     vehicleNumber: '',
-    state: '',
-    country: ''
+    premium: '',
+    thirdParty: '',
+    ownDamage: '',
+    net: '',
+    intermediary: '',
+    vehicleType: '',
+    commission: '',
+    agentName: '',
+    myPlan: '',
+    agentPlan: '',
+    policyNumber: '',
+    paidBank: '',
+    capReached: '',
+    amomuntRecieved: '',
+    amountToBePaid: '',
   });
 
   const handleChange = useCallback(
@@ -51,6 +70,9 @@ export const PolicyAddForm = () => {
     },
     []
   );
+  const handleDateChange = (date) => {
+    setNow(date);
+  };
 
   const handleSubmit = useCallback(
     (event) => {
@@ -76,43 +98,35 @@ export const PolicyAddForm = () => {
               container
               spacing={3}
             >
-              {/* <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  helperText="Policy issue date"
-                  label="Date"
-                  name="date"
-                  type="date"
-                  onChange={handleChange}
-                  required
-                  value={date}
-                />
-              </Grid> */}
               <Grid
                 xs={12}
                 md={6}
               >
-                <TextField
-                  fullWidth
-                  helperText="Policy issue date"
-                  label="Date"
-                  name="date"
-                  type="date"
-                  onChange={handleChange}
-                  required
-                  value={subDays(subHours(now, 1), 9).getTime()}
-                />
+                <FormGroup style={{ backgroundColor: 'lightblue', padding: 16 }}>
+                  <FormControlLabel control={<Checkbox defaultChecked />} label="TP" />
+                  <FormControlLabel control={<Checkbox />} label="PK" />
+                </FormGroup>
               </Grid>
               <Grid
                 xs={12}
                 md={6}
               >
+                <DatePicker
+                  fullWidth
+                  label="Policy issue date"
+                  name="date"
+                  renderInput={(params) => <TextField {...params} />}
+                  value={now}
+                  onChange={handleDateChange}
+                />
+              </Grid>
+
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  // helperText="Please specify the first name"
                   label="Customer name"
                   name="customerName"
                   onChange={handleChange}
@@ -120,43 +134,19 @@ export const PolicyAddForm = () => {
                   value={values.customerName}
                 />
               </Grid>
+
               <Grid
                 xs={12}
                 md={6}
               >
                 <TextField
                   fullWidth
-                  label="Last name"
-                  name="lastName"
-                  onChange={handleChange}
-                  value={values.lastName}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  type='email'
-                  label="Email Address"
-                  name="email"
-                  onChange={handleChange}
-                  required
-                  value={values.email}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Vehicle Number"
+                  label="Vehicle number"
                   name="vehicleNumber"
                   onChange={handleChange}
                   type="text"
                   value={values.phone}
+                  required
                 />
               </Grid>
               <Grid
@@ -165,8 +155,190 @@ export const PolicyAddForm = () => {
               >
                 <TextField
                   fullWidth
-                  label="Country"
-                  name="country"
+                  type='number'
+                  label="Premium"
+                  name="premium"
+                  onChange={handleChange}
+                  value={values.state}
+                >
+
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  type='number'
+                  label="TP amount"
+                  name="thirdParty"
+                  onChange={handleChange}
+                  value={values.state}
+                >
+
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  type='number'
+                  label="OD amount"
+                  name="ownDamage"
+                  onChange={handleChange}
+                  value={values.state}
+                >
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  type='number'
+                  label="Net"
+                  name="net"
+                  onChange={handleChange}
+                  value={4000}
+                  disabled
+                >
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Intermediary"
+                  name="intermediary"
+                  onChange={handleChange}
+                  value={values.state}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {states.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Vehicle type"
+                  name="vehicleType"
+                  onChange={handleChange}
+                  value={values.state}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {states.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  type='number'
+                  label="Commission"
+                  name="commission"
+                  onChange={handleChange}
+                  value={values.state}
+                >
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Agent name"
+                  name="agentName"
+                  onChange={handleChange}
+                  value={values.country}
+                />
+              </Grid>
+
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="My plan"
+                  name="myPlan"
+                  onChange={handleChange}
+                  value={values.state}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {states.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Agent plan"
+                  name="agentPlan"
+                  onChange={handleChange}
+                  value={values.state}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {states.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Policy number"
+                  name="policyNumber"
                   onChange={handleChange}
                   value={values.country}
                 />
@@ -177,21 +349,56 @@ export const PolicyAddForm = () => {
               >
                 <TextField
                   fullWidth
-                  label="State"
-                  name="state"
+                  label="Paid bank"
+                  name="paidBank"
                   onChange={handleChange}
-                //   select
-                //   SelectProps={{ native: true }}
+                  value={values.country}
+                />
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  type='number'
+                  label="CAP reached"
+                  name="capReached"
+                  onChange={handleChange}
                   value={values.state}
                 >
-                  {/* {states.map((option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </option>
-                  ))} */}
+
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  type='number'
+                  label="Amomunt recieved"
+                  name="amomuntRecieved"
+                  onChange={handleChange}
+                  value={values.state}
+                >
+
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  type='number'
+                  label="Amount to be paid"
+                  name="amountToBePaid"
+                  onChange={handleChange}
+                  value={values.state}
+                  disabled
+                >
+
                 </TextField>
               </Grid>
             </Grid>
