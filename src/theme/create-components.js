@@ -247,6 +247,42 @@ export function createComponents(config) {
         }
       }
     },
+    MuiFormGroup: {
+      styleOverrides: {
+        root: {
+          fontSize: 14,
+          fontWeight: 500,
+          height: '54px',
+          display: 'flex', flexDirection: 'row', alignItems:'center' ,
+          backgroundColor: 'transparent',
+          borderRadius: 8,
+          borderStyle: 'solid',
+          borderWidth: 1,
+          overflow: 'hidden',
+          borderColor: palette.neutral[200],
+          transition: muiTheme.transitions.create([
+            'border-color',
+            'box-shadow'
+          ]),
+          '&:hover': {
+            backgroundColor: palette.action.hover
+          },
+          [`&.${filledInputClasses.disabled}`]: {
+            backgroundColor: 'transparent'
+          },
+          [`&.${filledInputClasses.focused}`]: {
+            backgroundColor: 'transparent',
+            borderColor: palette.primary.main,
+            boxShadow: `${palette.primary.main} 0 0 0 2px`
+          },
+          [`&.${filledInputClasses.error}`]: {
+            borderColor: palette.error.main,
+            boxShadow: `${palette.error.main} 0 0 0 2px`
+          }
+        },
+
+      }
+    },
     MuiTab: {
       styleOverrides: {
         root: {

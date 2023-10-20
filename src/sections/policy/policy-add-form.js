@@ -131,8 +131,8 @@ export const PolicyAddForm = () => {
                 xs={12}
                 md={6}
               >
-                <FormGroup style={{ flexDirection: 'row', alignItems:'center', padding: 5}}>
-                <Typography variant="p" style={{  padding: 5}}>
+                <FormGroup>
+                <Typography variant="subtitle2" style={{  padding: 10}}>
                   Policy type
                 </Typography>
                   <FormControlLabel control={<Checkbox defaultChecked />} label="TP" />

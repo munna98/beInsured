@@ -8,7 +8,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        Settings | Devias Kit
+        Settings | beInsured
       </title>
     </Head>
     <Box
@@ -23,7 +23,7 @@ const Page = () => (
           <Typography variant="h4">
             Settings
           </Typography>
-          <SettingsNotifications />
+          {/* <SettingsNotifications /> */}
           <SettingsPassword />
         </Stack>
       </Container>

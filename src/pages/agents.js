@@ -201,7 +201,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Agents | Devias Kit
+          Agents | beInsured
         </title>
       </Head>
       <Box

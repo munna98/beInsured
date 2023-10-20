@@ -201,7 +201,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Policies | Devias Kit
+          Policies | beInsured
         </title>
       </Head>
       <Box

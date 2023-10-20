@@ -70,7 +70,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Intermediaries | Devias Kit
+          Intermediaries | beInsured
         </title>
       </Head>
       <Box
