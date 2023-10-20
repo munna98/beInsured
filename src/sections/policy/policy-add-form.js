@@ -9,7 +9,8 @@ import {
   CardHeader,
   Divider,
   TextField,
-  Unstable_Grid2 as Grid
+  Unstable_Grid2 as Grid,
+  Typography
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import Checkbox from '@mui/material/Checkbox';
@@ -98,15 +99,7 @@ export const PolicyAddForm = () => {
               container
               spacing={3}
             >
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <FormGroup style={{ backgroundColor: 'lightblue', padding: 16 }}>
-                  <FormControlLabel control={<Checkbox defaultChecked />} label="TP" />
-                  <FormControlLabel control={<Checkbox />} label="PK" />
-                </FormGroup>
-              </Grid>
+              
               <Grid
                 xs={12}
                 md={6}
@@ -134,7 +127,18 @@ export const PolicyAddForm = () => {
                   value={values.customerName}
                 />
               </Grid>
-
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <FormGroup style={{ flexDirection: 'row', alignItems:'center', padding: 5}}>
+                <Typography variant="p" style={{  padding: 5}}>
+                  Policy type
+                </Typography>
+                  <FormControlLabel control={<Checkbox defaultChecked />} label="TP" />
+                  <FormControlLabel control={<Checkbox />} label="PK" />
+                </FormGroup>
+              </Grid>
               <Grid
                 xs={12}
                 md={6}
