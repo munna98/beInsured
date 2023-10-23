@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useContext } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -11,40 +11,36 @@ import { IntermediariesTable } from 'src/sections/intermediary/intermediaries-ta
 import { IntermediariesSearch } from 'src/sections/intermediary/intermediaries-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { IntermediaryAddForm } from 'src/sections/intermediary/intermediary-add-form';
+import { DataContext } from 'src/contexts/data-context';
 
-const now = new Date();
 
-const data = [
-  {
-    id: '5e887ac47eed253091be10cb',
-    name: 'BIG',
-  },
-  {
-    id: '5e887ac47eed253091be10cb',
-    name: 'JSK',
-  },
-  
-];
 
-const useIntermediaries = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(data, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
-};
 
-const useIntermediaryIds = (intermediaries) => {
-  return useMemo(
-    () => {
-      return intermediaries.map((intermediary) => intermediary.id);
-    },
-    [intermediaries]
-  );
-};
 
 const Page = () => {
+  const { IntermediaryData } = useContext(DataContext)
+  const data = IntermediaryData;
+
+  const useIntermediaries = (page, rowsPerPage) => {
+    return useMemo(
+      () => {
+        return applyPagination(data, page, rowsPerPage);
+      },
+      [page, rowsPerPage]
+    );
+  };
+
+  const useIntermediaryIds = (intermediaries) => {
+    return useMemo(
+      () => {
+        return intermediaries.map((intermediary) => intermediary.id);
+      },
+      [intermediaries]
+    );
+  };
+
+
+  const now = new Date();
   const [page, setPage] = useState(0);
   const [addIntermediary, setAddIntermediary] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -120,7 +116,7 @@ const Page = () => {
               </Stack>
               <div>
                 <Button
-                  onClick={()=>setAddIntermediary((prev)=>!prev)}
+                  onClick={() => setAddIntermediary((prev) => !prev)}
                   startIcon={(
                     <SvgIcon fontSize="small">
                       <PlusIcon />
@@ -132,8 +128,10 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {addIntermediary&& <IntermediaryAddForm />}
-            <IntermediariesSearch />
+            {addIntermediary && <IntermediaryAddForm />}
+            <IntermediariesSearch
+
+            />
             <IntermediariesTable
               count={data.length}
               items={intermediaries}

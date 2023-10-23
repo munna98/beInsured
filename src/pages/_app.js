@@ -10,6 +10,7 @@ import { useNProgress } from 'src/hooks/use-nprogress';
 import { createTheme } from 'src/theme';
 import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
+import { DataProvider } from 'src/contexts/data-context';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -41,13 +42,15 @@ const App = (props) => {
         <AuthProvider>
           <ThemeProvider theme={theme}>
             <CssBaseline />
+            <DataProvider>
             <AuthConsumer>
-              {
-                (auth) => auth.isLoading
-                  ? <SplashScreen />
-                  : getLayout(<Component {...pageProps} />)
-              }
+                {
+                  (auth) => auth.isLoading
+                    ? <SplashScreen />
+                    : getLayout(<Component {...pageProps} />)
+                }
             </AuthConsumer>
+            </DataProvider>
           </ThemeProvider>
         </AuthProvider>
       </LocalizationProvider>

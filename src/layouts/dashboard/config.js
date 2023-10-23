@@ -71,15 +71,15 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Plans',
-    path: '/plans',
-    icon: (
-      <SvgIcon fontSize="small">
-        <ChatBubbleBottomCenterTextIcon/>
-      </SvgIcon>
-    )
-  },
+  // {
+  //   title: 'Plans',
+  //   path: '/plans',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <ChatBubbleBottomCenterTextIcon/>
+  //     </SvgIcon>
+  //   )
+  // },
   // {
   //   title: 'Account',
   //   path: '/account',
