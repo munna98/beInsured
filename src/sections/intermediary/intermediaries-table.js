@@ -29,7 +29,8 @@ export const IntermediariesTable = (props) => {
     onSelectOne,
     page = 0,
     rowsPerPage = 0,
-    selected = []
+    selected = [],
+    searchResults=[],
   } = props;
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
@@ -61,7 +62,7 @@ export const IntermediariesTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((Intermediary) => {
+              {searchResults.map((Intermediary) => {
                 const isSelected = selected.includes(Intermediary.id);
                 // const createdAt = format(Intermediary.createdAt, 'dd/MM/yyyy');
 
@@ -140,5 +141,6 @@ IntermediariesTable.propTypes = {
   onSelectOne: PropTypes.func,
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
+  selected: PropTypes.array,
+  searchResults: PropTypes.array
 };

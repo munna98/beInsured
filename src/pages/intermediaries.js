@@ -12,14 +12,16 @@ import { IntermediariesSearch } from 'src/sections/intermediary/intermediaries-s
 import { applyPagination } from 'src/utils/apply-pagination';
 import { IntermediaryAddForm } from 'src/sections/intermediary/intermediary-add-form';
 import { DataContext } from 'src/contexts/data-context';
-
-
-
-
+import { items } from 'src/layouts/dashboard/config';
+import useSearch from 'src/hooks/use-search';
 
 const Page = () => {
-  const { IntermediaryData } = useContext(DataContext)
-  const data = IntermediaryData;
+  const { intermediaryData, setIntermediaryData } = useContext(DataContext)
+  const data = intermediaryData;
+  const setData =setIntermediaryData;
+
+  const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
+
 
   const useIntermediaries = (page, rowsPerPage) => {
     return useMemo(
@@ -128,10 +130,16 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {addIntermediary && <IntermediaryAddForm />}
-            <IntermediariesSearch
-
-            />
+            {addIntermediary && 
+            <IntermediaryAddForm
+              data={data}
+              setData={setData}
+            />}
+            <IntermediariesSearch 
+              data={data}
+              searchTerm={searchTerm}
+              handleSearchChange={handleSearchChange}
+             />
             <IntermediariesTable
               count={data.length}
               items={intermediaries}
@@ -144,6 +152,7 @@ const Page = () => {
               page={page}
               rowsPerPage={rowsPerPage}
               selected={intermediariesSelection.selected}
+              searchResults={searchResults}
             />
           </Stack>
         </Container>

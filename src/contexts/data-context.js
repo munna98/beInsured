@@ -3,7 +3,7 @@ export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
 
-    const [IntermediaryData, setIntermediaryData] = useState([
+    const [intermediaryData, setIntermediaryData] = useState([
         {
             id: '5e887ac47eed253091be10cb',
             name: 'BIG',
@@ -24,7 +24,7 @@ export const DataProvider = ({ children }) => {
     ]);
 
     return (
-        <DataContext.Provider value={{ IntermediaryData, setIntermediaryData }}>
+        <DataContext.Provider value={{ intermediaryData, setIntermediaryData }}>
             {children}
         </DataContext.Provider >
     );

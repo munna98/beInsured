@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useContext } from 'react';
 import {
   Box,
   Button,
@@ -10,35 +10,21 @@ import {
   TextField,
   Unstable_Grid2 as Grid
 } from '@mui/material';
+import { DataContext } from 'src/contexts/data-context';
 
-// const states = [
-//   {
-//     value: 'alabama',
-//     label: 'Alabama'
-//   },
-//   {
-//     value: 'new-york',
-//     label: 'New York'
-//   },
-//   {
-//     value: 'san-francisco',
-//     label: 'San Francisco'
-//   },
-//   {
-//     value: 'los-angeles',
-//     label: 'Los Angeles'
-//   }
-// ];
+let nextId = 1;
 
-export const IntermediaryAddForm = () => {
+
+export const IntermediaryAddForm = ({ data, setData }) => {
+
+  const { intermediaryData, setIntermediaryData } = useContext(DataContext)
+
+
   const [values, setValues] = useState({
-    intermediayName: '',
-    lastName: '',
-    email: 'example@gmail.com',
-    phone: '',
-    state: '',
-    country: ''
+    id: nextId,
+    name: '',
   });
+  nextId++
 
   const handleChange = useCallback(
     (event) => {
@@ -47,21 +33,25 @@ export const IntermediaryAddForm = () => {
         [event.target.name]: event.target.value
       }));
     },
-    []
+    [values]
   );
 
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault();
+      setData((prev) => [values, ...prev])
+      console.log("submit works");
     },
-    []
+    [values, setData]
   );
-
+  console.log(data);
+    console.log(values);
+    setIntermediaryData(data)
   return (
     <form
       autoComplete="off"
       noValidate
-      onSubmit={handleSubmit}
+
     >
       <Card>
         <CardHeader
@@ -82,10 +72,10 @@ export const IntermediaryAddForm = () => {
                   fullWidth
                   helperText="Please specify the Intermediary name"
                   label="Intermediary name"
-                  name="intermediayName"
+                  name="name"
                   onChange={handleChange}
                   required
-                  value={values.intermediaryName}
+                  value={values.name}
                 />
               </Grid>
             </Grid>
@@ -93,7 +83,7 @@ export const IntermediaryAddForm = () => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button variant="contained">
+          <Button variant="contained" onClick={handleSubmit}>
             Save Intermediary
           </Button>
         </CardActions>

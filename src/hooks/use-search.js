@@ -1,23 +1,24 @@
 import { useState } from 'react';
 
-const useSearch = (initialData = []) => {
+const useSearch = (initialData) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState(initialData);
 
-  const handleSearch = (query) => {
-    setSearchTerm(query);
-
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  
     const filteredResults = initialData.filter((item) =>
-      item.name.toLowerCase().includes(query.toLowerCase())
+      item.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
-
+  
     setSearchResults(filteredResults);
   };
+  
 
   return {
     searchTerm,
     searchResults,
-    handleSearch,
+    handleSearchChange,
   };
 };
 
