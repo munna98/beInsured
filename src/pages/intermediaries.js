@@ -21,14 +21,14 @@ const Page = () => {
   const setData =setIntermediaryData;
 
   const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
-
+ 
 
   const useIntermediaries = (page, rowsPerPage) => {
     return useMemo(
       () => {
-        return applyPagination(data, page, rowsPerPage);
+        return applyPagination(searchResults, page, rowsPerPage);
       },
-      [page, rowsPerPage]
+      [page, rowsPerPage,searchTerm]
     );
   };
 
@@ -63,6 +63,7 @@ const Page = () => {
     },
     []
   );
+
 
   return (
     <>
@@ -136,12 +137,11 @@ const Page = () => {
               setData={setData}
             />}
             <IntermediariesSearch 
-              data={data}
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}
              />
             <IntermediariesTable
-              count={data.length}
+              count={searchResults.length}
               items={intermediaries}
               onDeselectAll={intermediariesSelection.handleDeselectAll}
               onDeselectOne={intermediariesSelection.handleDeselectOne}
@@ -153,6 +153,7 @@ const Page = () => {
               rowsPerPage={rowsPerPage}
               selected={intermediariesSelection.selected}
               searchResults={searchResults}
+              data={data}
             />
           </Stack>
         </Container>

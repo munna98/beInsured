@@ -30,7 +30,7 @@ export const IntermediariesTable = (props) => {
     page = 0,
     rowsPerPage = 0,
     selected = [],
-    searchResults=[],
+    searchResults=[]
   } = props;
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
@@ -62,7 +62,7 @@ export const IntermediariesTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {searchResults.map((Intermediary) => {
+              {items.map((Intermediary) => {
                 const isSelected = selected.includes(Intermediary.id);
                 // const createdAt = format(Intermediary.createdAt, 'dd/MM/yyyy');
 
@@ -90,26 +90,11 @@ export const IntermediariesTable = (props) => {
                         direction="coloumn"
                         spacing={2}
                       >
-                        {/* <Avatar src={Intermediary.avatar}>
-                          {getInitials(Intermediary.name)}
-                        </Avatar> */}
                         <Typography variant="subtitle2">
                           {Intermediary.name}
                         </Typography>
                       </Stack>
                     </TableCell>
-                    {/* <TableCell>
-                      {Intermediary.email}
-                    </TableCell>
-                    <TableCell>
-                      {Intermediary.address.city}, {Intermediary.address.state}, {Intermediary.address.country}
-                    </TableCell>
-                    <TableCell>
-                      {Intermediary.phone}
-                    </TableCell>
-                    <TableCell>
-                      {createdAt}
-                    </TableCell> */}
                   </TableRow>
                 );
               })}
@@ -142,5 +127,5 @@ IntermediariesTable.propTypes = {
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
   selected: PropTypes.array,
-  searchResults: PropTypes.array
+  searchResults: PropTypes.array,
 };

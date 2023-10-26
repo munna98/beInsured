@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 const useSearch = (initialData) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState(initialData);
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
   
-    const filteredResults = initialData.filter((item) =>
-      item.name.toLowerCase().includes(event.target.value.toLowerCase())
+  const searchResults = useMemo(() => {
+    return initialData.filter(item =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  
-    setSearchResults(filteredResults);
-  };
-  
+  }, [searchTerm, initialData]);
+
+  const handleSearchChange = useCallback((event) => {
+    setSearchTerm(event.target.value);
+  }, []);
+
 
   return {
     searchTerm,

@@ -1,4 +1,4 @@
-import { useCallback, useState, useContext } from 'react';
+import { useCallback, useState } from 'react';
 import {
   Box,
   Button,
@@ -10,26 +10,21 @@ import {
   TextField,
   Unstable_Grid2 as Grid
 } from '@mui/material';
-import { DataContext } from 'src/contexts/data-context';
-
-let nextId = 1;
-
 
 export const IntermediaryAddForm = ({ data, setData }) => {
-
-  const { intermediaryData, setIntermediaryData } = useContext(DataContext)
-
+  const [nextId, setNextId] = useState(1);
+  const [newinteremediary, setnewinteremediary] = useState('');
 
   const [values, setValues] = useState({
     id: nextId,
     name: '',
   });
-  nextId++
 
   const handleChange = useCallback(
     (event) => {
-      setValues((prevState) => ({
-        ...prevState,
+      setnewinteremediary(event.target.value)
+      setValues((prev) => ({
+        ...prev,
         [event.target.name]: event.target.value
       }));
     },
@@ -38,36 +33,23 @@ export const IntermediaryAddForm = ({ data, setData }) => {
 
   const handleSubmit = useCallback(
     (event) => {
-      event.preventDefault();
-      setData((prev) => [values, ...prev])
-      console.log("submit works");
+      setData((prev) => [values, ...prev]);
+      setNextId((prevNextId) => prevNextId + 1);
+      setnewinteremediary('')
     },
-    [values, setData]
+    [values, nextId, setData]
   );
-  console.log(data);
-    console.log(values);
-    setIntermediaryData(data)
-  return (
-    <form
-      autoComplete="off"
-      noValidate
 
-    >
+  console.log(data);
+
+  return (
+    <form autoComplete="off" noValidate>
       <Card>
-        <CardHeader
-          subheader="Fill the input to add a new intermediary"
-          title="Add Intermediary"
-        />
+        <CardHeader title="Add Intermediary" />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                xs={12}
-                md={6}
-              >
+            <Grid container spacing={3}>
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   helperText="Please specify the Intermediary name"
@@ -75,7 +57,7 @@ export const IntermediaryAddForm = ({ data, setData }) => {
                   name="name"
                   onChange={handleChange}
                   required
-                  value={values.name}
+                  value={newinteremediary}
                 />
               </Grid>
             </Grid>

@@ -35,6 +35,11 @@ export const AgentsTable = (props) => {
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
+  
+console.log(count,'=count');
+// console.log(searchResults,'search results');
+console.log(items,'items');
+
   return (
     <Card>
       <Scrollbar>
