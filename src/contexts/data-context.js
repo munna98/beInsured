@@ -6,7 +6,7 @@ export const DataProvider = ({ children }) => {
     const [intermediaryData, setIntermediaryData] = useState([
         {
             id: '5e887ac47eed253091be10cb',
-            name: 'BIG',
+            name: 'HEAVY',
         },
         {
             id: '5dfghkkjhf52hj091be10c1',

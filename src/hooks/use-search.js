@@ -4,9 +4,13 @@ const useSearch = (initialData) => {
   const [searchTerm, setSearchTerm] = useState('');
   
   const searchResults = useMemo(() => {
-    return initialData.filter(item =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    if(searchTerm==''){
+      return initialData
+    }
+      return initialData.filter(item =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
   }, [searchTerm, initialData]);
 
   const handleSearchChange = useCallback((event) => {
@@ -17,6 +21,7 @@ const useSearch = (initialData) => {
   return {
     searchTerm,
     searchResults,
+    setSearchTerm,
     handleSearchChange,
   };
 };

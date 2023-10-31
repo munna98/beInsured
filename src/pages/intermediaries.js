@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState, useContext } from 'react';
+import { useCallback, useMemo, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -11,24 +12,45 @@ import { IntermediariesTable } from 'src/sections/intermediary/intermediaries-ta
 import { IntermediariesSearch } from 'src/sections/intermediary/intermediaries-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { IntermediaryAddForm } from 'src/sections/intermediary/intermediary-add-form';
-import { DataContext } from 'src/contexts/data-context';
-import { items } from 'src/layouts/dashboard/config';
 import useSearch from 'src/hooks/use-search';
 
 const Page = () => {
-  const { intermediaryData, setIntermediaryData } = useContext(DataContext)
-  const data = intermediaryData;
-  const setData =setIntermediaryData;
 
-  const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
- 
+
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  console.log(data,'1');
+
+  // ***** Setting api *****
+useEffect(() => {
+  const apiUrl = '/api/intermediaries';
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(apiUrl);
+      setData(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setLoading(false);
+    }
+  };
+
+  fetchData();
+}, []);
+
+  console.log(data,'2');
+  // ***** End setting api *****
+  const { searchTerm, searchResults, setSearchTerm, handleSearchChange } = useSearch(data);
+
 
   const useIntermediaries = (page, rowsPerPage) => {
     return useMemo(
       () => {
         return applyPagination(searchResults, page, rowsPerPage);
       },
-      [page, rowsPerPage,searchTerm]
+      [page, rowsPerPage, searchTerm, searchResults]
     );
   };
 
@@ -131,30 +153,51 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {addIntermediary && 
-            <IntermediaryAddForm
-              data={data}
-              setData={setData}
-            />}
-            <IntermediariesSearch 
+            {addIntermediary &&
+              <IntermediaryAddForm
+                data={data}
+                setData={setData}
+              />}
+            <IntermediariesSearch
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}
-             />
-            <IntermediariesTable
-              count={searchResults.length}
-              items={intermediaries}
-              onDeselectAll={intermediariesSelection.handleDeselectAll}
-              onDeselectOne={intermediariesSelection.handleDeselectOne}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={intermediariesSelection.handleSelectAll}
-              onSelectOne={intermediariesSelection.handleSelectOne}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              selected={intermediariesSelection.selected}
-              searchResults={searchResults}
-              data={data}
             />
+            {
+              <IntermediariesTable
+                count={searchResults.length}
+                items={intermediaries}
+                onDeselectAll={intermediariesSelection.handleDeselectAll}
+                onDeselectOne={intermediariesSelection.handleDeselectOne}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                onSelectAll={intermediariesSelection.handleSelectAll}
+                onSelectOne={intermediariesSelection.handleSelectOne}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                selected={intermediariesSelection.selected}
+                searchResults={searchResults}
+                data={data}
+              />}
+{/* On load indicator for table
+{loading ? (
+              <p>Loading...</p>
+            ) : (
+              <IntermediariesTable
+                count={searchResults.length}
+                items={intermediaries}
+                onDeselectAll={intermediariesSelection.handleDeselectAll}
+                onDeselectOne={intermediariesSelection.handleDeselectOne}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                onSelectAll={intermediariesSelection.handleSelectAll}
+                onSelectOne={intermediariesSelection.handleSelectOne}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                selected={intermediariesSelection.selected}
+                searchResults={searchResults}
+                data={data}
+              />)} */}
+
           </Stack>
         </Container>
       </Box>
