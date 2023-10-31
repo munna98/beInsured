@@ -1,5 +1,5 @@
 import EllipsisHorizontalIcon from '@heroicons/react/24/solid/EllipsisHorizontalIcon';
-import { SvgIcon } from '@mui/material';
+import { SvgIcon, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -126,9 +126,11 @@ export const IntermediariesTable = (props) => {
                       </TableCell>
 
                       <TableCell >
-                       <SvgIcon  fontSize="small" >
-                          <EllipsisHorizontalIcon />
-                        </SvgIcon>
+                        <Tooltip title="Actions">
+                          <SvgIcon fontSize="small" >
+                            <EllipsisHorizontalIcon />
+                          </SvgIcon>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   );

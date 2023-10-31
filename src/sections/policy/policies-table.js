@@ -101,9 +101,9 @@ export const PoliciesTable = (props) => {
                         direction="coloumn"
                         spacing={2}
                       >
-                        <Avatar src={policy.avatar}>
+                        {/* <Avatar src={policy.avatar}>
                           {getInitials(policy.name)}
-                        </Avatar>
+                        </Avatar> */}
                         <Typography variant="subtitle2">
                           {policy.name}
                         </Typography>

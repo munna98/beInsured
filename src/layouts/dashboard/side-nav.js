@@ -71,21 +71,21 @@ export const SideNav = (props) => {
                 color="inherit"
                 variant="subtitle1"
               >
-                Devias
+                BeInsured
               </Typography>
               <Typography
                 color="neutral.400"
                 variant="body2"
               >
-                Production
+                JSK KVR
               </Typography>
             </div>
-            <SvgIcon
+            {/* <SvgIcon
               fontSize="small"
               sx={{ color: 'neutral.500' }}
             >
               <ChevronUpDownIcon />
-            </SvgIcon>
+            </SvgIcon> */}
           </Box>
         </Box>
         <Divider sx={{ borderColor: 'neutral.700' }} />

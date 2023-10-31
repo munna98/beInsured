@@ -68,7 +68,11 @@ export const Layout = (props) => {
             }
           }}
         >
-          <Box sx={{ p: 3 }}>
+          <Box
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+            justifyContent='center' sx={{ p: 3 }}>
             <Typography
               align="center"
               color="inherit"
@@ -93,11 +97,12 @@ export const Layout = (props) => {
               sx={{ mb: 3 }}
               variant="subtitle1"
             >
-              A professional kit that comes with ready-to-use MUI components.
+              A professional tool that safeguards your insurance business.
             </Typography>
             <img
-              alt=""
+              alt="logo here"
               src="/assets/auth-illustration.svg"
+              width='400px'
             />
           </Box>
         </Grid>

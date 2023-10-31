@@ -25,8 +25,8 @@ const Page = () => {
   const [method, setMethod] = useState('email');
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123!',
+      email: 'admin@gmail.com',
+      password: 'admin@jskkvr',
       submit: null
     },
     validationSchema: Yup.object({
@@ -93,8 +93,8 @@ const Page = () => {
         >
           <div>
             <Stack
-              spacing={1}
-              sx={{ mb: 3 }}
+              spacing={2}
+              sx={{ mb: 5 }}
             >
               <Typography variant="h4">
                 Login
@@ -115,7 +115,7 @@ const Page = () => {
                 </Link>
               </Typography>
             </Stack>
-            <Tabs
+            {/* <Tabs
               onChange={handleMethodChange}
               sx={{ mb: 3 }}
               value={method}
@@ -128,7 +128,7 @@ const Page = () => {
                 label="Phone Number"
                 value="phoneNumber"
               />
-            </Tabs>
+            </Tabs> */}
             {method === 'email' && (
               <form
                 noValidate
@@ -158,9 +158,9 @@ const Page = () => {
                     value={formik.values.password}
                   />
                 </Stack>
-                <FormHelperText sx={{ mt: 1 }}>
+                {/* <FormHelperText sx={{ mt: 1 }}>
                   Optionally you can skip.
-                </FormHelperText>
+                </FormHelperText> */}
                 {formik.errors.submit && (
                   <Typography
                     color="error"
@@ -179,15 +179,15 @@ const Page = () => {
                 >
                   Continue
                 </Button>
-                <Button
+                {/* <Button
                   fullWidth
                   size="large"
                   sx={{ mt: 3 }}
                   onClick={handleSkip}
                 >
                   Skip authentication
-                </Button>
-                <Alert
+                </Button> */}
+                {/* <Alert
                   color="primary"
                   severity="info"
                   sx={{ mt: 3 }}
@@ -195,7 +195,7 @@ const Page = () => {
                   <div>
                     You can use <b>demo@devias.io</b> and password <b>Password123!</b>
                   </div>
-                </Alert>
+                </Alert> */}
               </form>
             )}
             {method === 'phoneNumber' && (
