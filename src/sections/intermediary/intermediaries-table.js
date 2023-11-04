@@ -1,5 +1,6 @@
-import EllipsisHorizontalIcon from '@heroicons/react/24/solid/EllipsisHorizontalIcon';
-import { SvgIcon, Tooltip } from '@mui/material';
+import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
+import TrashlIcon from '@heroicons/react/24/solid/TrashIcon';
+import { SvgIcon, Tooltip, } from '@mui/material';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -8,6 +9,7 @@ import {
   Card,
   Checkbox,
   Stack,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -19,6 +21,7 @@ import {
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
 import { useEffect } from 'react';
+import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
 
 export const IntermediariesTable = (props) => {
   const {
@@ -70,71 +73,71 @@ export const IntermediariesTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {
+              {items.map((Intermediary) => {
+                const isSelected = selected.includes(Intermediary.id);
 
-                // items.length == 0 ?
-                //   <Typography align="center"
-                //   sx={{ mb: 12 }}
-                //   variant="h6">
-                //     No items found 
-                //   </Typography>:
+                return (
+                  <TableRow
+                    hover
+                    key={Intermediary.id}
+                    selected={isSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={isSelected}
+                        onChange={(event) => {
+                          if (event.target.checked) {
+                            onSelectOne?.(Intermediary.id);
+                          } else {
+                            onDeselectOne?.(Intermediary.id);
+                          }
+                        }}
+                      />
+                    </TableCell>
 
+                    <TableCell>
+                      <Stack
+                        alignItems="left"
+                        direction="column"
+                        spacing={2}
+                      >
+                        <Typography variant="subtitle2">
+                          {Intermediary.name}
+                        </Typography>
+                      </Stack>
+                    </TableCell>
 
-                // <img
-                //   src="/assets/errors/search-not-found.png"
-                //   alt="search-not-found"
-                //   style={{
-                //     display: 'flex',
-                //     alignItems:'center',
-                //     justifyContent:'center',
-                //     width: 200
-                //   }}></img> :
-
-                items.map((Intermediary) => {
-                  const isSelected = selected.includes(Intermediary.id);
-                  // const createdAt = format(Intermediary.createdAt, 'dd/MM/yyyy');
-
-                  return (
-                    <TableRow
-                      hover
-                      key={Intermediary.id}
-                      selected={isSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isSelected}
-                          onChange={(event) => {
-                            if (event.target.checked) {
-                              onSelectOne?.(Intermediary.id);
-                            } else {
-                              onDeselectOne?.(Intermediary.id);
-                            }
-                          }}
-                        />
-                      </TableCell>
-
-                      <TableCell>
-                        <Stack
-                          alignItems="center"
-                          direction="coloumn"
-                          spacing={2}
-                        >
-                          <Typography variant="subtitle2">
-                            {Intermediary.name}
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-
-                      <TableCell >
-                        <Tooltip title="Actions">
-                          <SvgIcon fontSize="small" >
-                            <EllipsisHorizontalIcon />
-                          </SvgIcon>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                    <TableCell>
+                      <Stack direction="row" spacing={2}>
+                        <IconButton>
+                          <Tooltip title="Edit">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="primary"
+                              aria-label="delete"
+                              onClick={() => console.log(Intermediary.id, 'edit')} // You should define the handleDelete function
+                            >
+                              <PencilIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                        <IconButton>
+                          <Tooltip title="Delete">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="primary"
+                              aria-label="delete"
+                              onClick={() => console.log(Intermediary.id, 'delete')} // You should define the handleDelete function
+                            >
+                              <TrashIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </Box>

@@ -12,11 +12,11 @@ import {
 } from '@mui/material';
 
 export const IntermediaryAddForm = ({ data, setData }) => {
-  const [nextId, setNextId] = useState(1);
+
   const [newinteremediary, setnewinteremediary] = useState('');
 
   const [values, setValues] = useState({
-    id: nextId,
+    id: new Date(),
     name: '',
   });
 
@@ -32,12 +32,25 @@ export const IntermediaryAddForm = ({ data, setData }) => {
   );
 
   const handleSubmit = useCallback(
-    (event) => {
-      setData((prev) => [values, ...prev]);
-      setNextId((prevNextId) => prevNextId + 1);
-      setnewinteremediary('')
+    (event) => {async () => {
+      try {
+        const response = await axios.get(apiUrl,{
+          method: 'POST',
+          body: JSON.stringify(values)
+        });
+        setData(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+
+      // setData((prev) => [values, ...prev]);
+      // setnewinteremediary('')
     },
-    [values, nextId, setData]
+    [values, setData]
   );
 
   console.log(data);

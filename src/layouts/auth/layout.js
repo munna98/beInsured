@@ -46,7 +46,7 @@ export const Layout = (props) => {
               sx={{
                 display: 'inline-flex',
                 height: 32,
-                width: 32
+                width: 32,
               }}
             >
               <Logo />
