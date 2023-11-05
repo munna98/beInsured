@@ -1,5 +1,5 @@
 import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
-import TrashlIcon from '@heroicons/react/24/solid/TrashIcon';
+import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
 import { SvgIcon, Tooltip, } from '@mui/material';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
@@ -21,7 +21,6 @@ import {
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
 import { useEffect } from 'react';
-import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
 
 export const IntermediariesTable = (props) => {
   const {
@@ -39,7 +38,7 @@ export const IntermediariesTable = (props) => {
     searchResults = []
   } = props;
 
-  console.log(items.length, 'i length')
+
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
@@ -113,8 +112,8 @@ export const IntermediariesTable = (props) => {
                           <Tooltip title="Edit">
                             <SvgIcon fontSize="small"
                               cursor="pointer"
-                              color="primary"
-                              aria-label="delete"
+                              color="neutral"
+                              aria-label="edit"
                               onClick={() => console.log(Intermediary.id, 'edit')} // You should define the handleDelete function
                             >
                               <PencilIcon />
@@ -125,7 +124,7 @@ export const IntermediariesTable = (props) => {
                           <Tooltip title="Delete">
                             <SvgIcon fontSize="small"
                               cursor="pointer"
-                              color="primary"
+                              color="neutral"
                               aria-label="delete"
                               onClick={() => console.log(Intermediary.id, 'delete')} // You should define the handleDelete function
                             >

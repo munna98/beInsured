@@ -18,13 +18,12 @@ const Page = () => {
 
 
   const [data, setData] = useState([]);
+  const apiUrl = '/api/intermediaries';
   const [loading, setLoading] = useState(true);
 
-  console.log(data,'1');
 
   // ***** Setting api *****
 useEffect(() => {
-  const apiUrl = '/api/intermediaries';
 
   const fetchData = async () => {
     try {
@@ -50,7 +49,7 @@ useEffect(() => {
       () => {
         return applyPagination(searchResults, page, rowsPerPage);
       },
-      [page, rowsPerPage, searchTerm, searchResults]
+      [page, rowsPerPage, searchTerm, searchResults, data]
     );
   };
 
@@ -157,6 +156,7 @@ useEffect(() => {
               <IntermediaryAddForm
                 data={data}
                 setData={setData}
+                apiUrl={apiUrl}
               />}
             <IntermediariesSearch
               searchTerm={searchTerm}
@@ -177,6 +177,7 @@ useEffect(() => {
                 selected={intermediariesSelection.selected}
                 searchResults={searchResults}
                 data={data}
+                
               />}
 {/* On load indicator for table
 {loading ? (

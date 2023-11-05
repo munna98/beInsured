@@ -1,3 +1,4 @@
+// import axios from 'axios';
 import { useCallback, useState } from 'react';
 import {
   Box,
@@ -11,18 +12,18 @@ import {
   Unstable_Grid2 as Grid
 } from '@mui/material';
 
-export const IntermediaryAddForm = ({ data, setData }) => {
 
-  const [newinteremediary, setnewinteremediary] = useState('');
+export const IntermediaryAddForm = ({ data, setData, apiUrl }) => {
+
+  const [newintermediary, setnewintermediary] = useState('');
 
   const [values, setValues] = useState({
-    id: new Date(),
     name: '',
   });
 
   const handleChange = useCallback(
     (event) => {
-      setnewinteremediary(event.target.value)
+      setnewintermediary(event.target.value)
       setValues((prev) => ({
         ...prev,
         [event.target.name]: event.target.value
@@ -31,30 +32,25 @@ export const IntermediaryAddForm = ({ data, setData }) => {
     [values]
   );
 
-  const handleSubmit = useCallback(
-    (event) => {async () => {
-      try {
-        const response = await axios.get(apiUrl,{
-          method: 'POST',
-          body: JSON.stringify(values)
-        });
-        setData(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      }
-    };
+  const handleSubmit = useCallback(async () => {
 
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      body: JSON.stringify({ values }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if (response.status === 201) {
+      const newValues= await response.json();
 
-      // setData((prev) => [values, ...prev]);
-      // setnewinteremediary('')
-    },
-    [values, setData]
-  );
+      // Update the client-side data state with the new intermediary
+      setData([newValues, ...data]);
+      setnewintermediary('')
+    }
+  }, [values, setData]);
 
-  console.log(data);
-
+console.log(values.name)
   return (
     <form autoComplete="off" noValidate>
       <Card>
@@ -70,7 +66,7 @@ export const IntermediaryAddForm = ({ data, setData }) => {
                   name="name"
                   onChange={handleChange}
                   required
-                  value={newinteremediary}
+                  value={newintermediary}
                 />
               </Grid>
             </Grid>
