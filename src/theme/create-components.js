@@ -332,6 +332,16 @@ export function createComponents(config) {
       defaultProps: {
         variant: 'filled'
       }
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          '&.custom-dialog-paper-elevation1': {
+            boxShadow: '0px 5px 22px rgba(0, 0, 0, 0.04), 0px 0px 0px 0.5px rgba(0, 0, 0, 0.03)',
+            // Add any other custom styles here
+          },
+        },
+      },
     }
   };
 }

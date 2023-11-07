@@ -177,7 +177,8 @@ useEffect(() => {
                 selected={intermediariesSelection.selected}
                 searchResults={searchResults}
                 data={data}
-                
+                setData={setData}
+                apiUrl={apiUrl}
               />}
 {/* On load indicator for table
 {loading ? (

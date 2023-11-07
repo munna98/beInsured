@@ -35,13 +35,40 @@ export const IntermediariesTable = (props) => {
     page = 0,
     rowsPerPage = 0,
     selected = [],
-    searchResults = []
+    searchResults = [],
+    setData,
+    apiUrl=''
   } = props;
 
 
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
+
+
+  const fetchIntermediary = async () => {
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    setData(data)
+  }
+
+  const handleDelete = async (intermediaryId) => {
+    try {
+      const response = await fetch(`${apiUrl}/${intermediaryId}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.status === 204) {
+        // Successful deletion (No Content status), no need to parse the response.
+        // Update the client-side data and fetch updated data.
+        fetchIntermediary();
+      } else {
+        console.error('Failed to delete intermediary. Status code:', response.status);
+      }
+    } catch (error) {
+      console.error('Error deleting intermediary:', error);
+    }
+  };
 
   return (
     <Card>
@@ -114,7 +141,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="edit"
-                              onClick={() => console.log(Intermediary.id, 'edit')} // You should define the handleDelete function
+                              onClick={() => handleEdit(Intermediary.id, 'edit')} // You should define the handleDelete function
                             >
                               <PencilIcon />
                             </SvgIcon>
@@ -126,7 +153,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
-                              onClick={() => console.log(Intermediary.id, 'delete')} // You should define the handleDelete function
+                              onClick={() => handleDelete(Intermediary.id)} // You should define the handleDelete function
                             >
                               <TrashIcon />
                             </SvgIcon>
