@@ -16,11 +16,17 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
-import { useEffect } from 'react';
+import { useState } from 'react';
 
 export const IntermediariesTable = (props) => {
   const {
@@ -45,6 +51,22 @@ export const IntermediariesTable = (props) => {
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
+//Dialog setting up
+
+  const [open, setOpen] = useState(false);
+  const [deleteId, setdeleteId] = useState();
+
+  const handleClickOpen = (Id) => {
+    setOpen(true);
+    setdeleteId(Id);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+
 
   const fetchIntermediary = async () => {
     const response = await fetch(apiUrl)
@@ -53,6 +75,7 @@ export const IntermediariesTable = (props) => {
   }
 
   const handleDelete = async (intermediaryId) => {
+    handleClose();
     try {
       const response = await fetch(`${apiUrl}/${intermediaryId}`, {
         method: 'DELETE',
@@ -153,7 +176,9 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
-                              onClick={() => handleDelete(Intermediary.id)} // You should define the handleDelete function
+                              // onClick={() => handleDelete(Intermediary.id)} // You should define the handleDelete function
+                            
+                              onClick={()=>handleClickOpen(Intermediary.id)}
                             >
                               <TrashIcon />
                             </SvgIcon>
@@ -177,6 +202,30 @@ export const IntermediariesTable = (props) => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
+
+      
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Delete Item"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete this item?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button variant="contained"
+          onClick={() => handleDelete(deleteId)} autoFocus>
+            Okay
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };

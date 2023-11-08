@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import BellIcon from '@heroicons/react/24/solid/BellIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import Bars3Icon from '@heroicons/react/24/solid/Bars3Icon';
-import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
+import ReceiptPercentIcon from '@heroicons/react/24/solid/ReceiptPercentIcon';
+// import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import {
   Avatar,
   Badge,
@@ -65,10 +66,10 @@ export const TopNav = (props) => {
                 </SvgIcon>
               </IconButton>
             )}
-            <Tooltip title="Search">
+            <Tooltip title="Set commission">
               <IconButton>
                 <SvgIcon fontSize="small">
-                  <MagnifyingGlassIcon />
+                  <ReceiptPercentIcon />
                 </SvgIcon>
               </IconButton>
             </Tooltip>

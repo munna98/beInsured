@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -23,23 +23,26 @@ const Page = () => {
 
 
   // ***** Setting api *****
-useEffect(() => {
+  useEffect(() => {
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(apiUrl);
-      setData(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setLoading(false);
-    }
-  };
+    const fetchData = async () => {
+      try {
 
-  fetchData();
-}, []);
+        const response = await fetch(apiUrl)
+        const data = await response.json()
+        setData(data)
 
-  console.log(data,'2');
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(data, '2');
   // ***** End setting api *****
   const { searchTerm, searchResults, setSearchTerm, handleSearchChange } = useSearch(data);
 
@@ -180,7 +183,7 @@ useEffect(() => {
                 setData={setData}
                 apiUrl={apiUrl}
               />}
-{/* On load indicator for table
+            {/* On load indicator for table
 {loading ? (
               <p>Loading...</p>
             ) : (
