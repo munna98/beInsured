@@ -43,7 +43,9 @@ export const IntermediariesTable = (props) => {
     selected = [],
     searchResults = [],
     setData,
-    apiUrl=''
+    apiUrl='',
+    intermediaryToEdit='',
+    setIntermediaryToEdit,
   } = props;
 
 
@@ -74,8 +76,14 @@ export const IntermediariesTable = (props) => {
     setData(data)
   }
 
+
+const handleEdit= (intermediaryId)=>{
+  console.log('clicked on',intermediaryId)
+  setIntermediaryToEdit(intermediaryId)
+}
+
   const handleDelete = async (intermediaryId) => {
-    handleClose();
+    
     try {
       const response = await fetch(`${apiUrl}/${intermediaryId}`, {
         method: 'DELETE',
@@ -91,6 +99,7 @@ export const IntermediariesTable = (props) => {
     } catch (error) {
       console.error('Error deleting intermediary:', error);
     }
+    handleClose();
   };
 
   return (
@@ -164,7 +173,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="edit"
-                              onClick={() => handleEdit(Intermediary.id, 'edit')} // You should define the handleDelete function
+                              onClick={() => handleEdit(Intermediary.id)} // You should define the handleDelete function
                             >
                               <PencilIcon />
                             </SvgIcon>

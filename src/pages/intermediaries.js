@@ -42,7 +42,7 @@ const Page = () => {
     fetchData();
   }, []);
 
-  console.log(data, '2');
+ 
   // ***** End setting api *****
   const { searchTerm, searchResults, setSearchTerm, handleSearchChange } = useSearch(data);
 
@@ -68,11 +68,14 @@ const Page = () => {
 
   const now = new Date();
   const [page, setPage] = useState(0);
-  const [addIntermediary, setAddIntermediary] = useState(false);
+  const [displayForm, setDisplayForm] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [intermediaryToEdit, setIntermediaryToEdit] = useState('');
   const intermediaries = useIntermediaries(page, rowsPerPage);
   const intermediariesIds = useIntermediaryIds(intermediaries);
   const intermediariesSelection = useSelection(intermediariesIds);
+
+  console.log(data,intermediaryToEdit);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -143,7 +146,7 @@ const Page = () => {
               </Stack>
               <div>
                 <Button
-                  onClick={() => setAddIntermediary((prev) => !prev)}
+                  onClick={() => setDisplayForm((prev) => !prev)}
                   startIcon={(
                     <SvgIcon fontSize="small">
                       <PlusIcon />
@@ -155,7 +158,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {addIntermediary &&
+            {(displayForm ||intermediaryToEdit)  &&
               <IntermediaryAddForm
                 data={data}
                 setData={setData}
@@ -182,6 +185,8 @@ const Page = () => {
                 data={data}
                 setData={setData}
                 apiUrl={apiUrl}
+                intermediaryToEdit={intermediaryToEdit}
+                setIntermediaryToEdit={setIntermediaryToEdit}
               />}
             {/* On load indicator for table
 {loading ? (
