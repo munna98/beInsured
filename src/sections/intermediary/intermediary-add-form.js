@@ -11,7 +11,7 @@ import {
   Unstable_Grid2 as Grid,
 } from '@mui/material';
 
-export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit }) => {
+export const IntermediaryAddForm = ({ data, setData, apiUrl, editId, intermediaryToEdit }) => {
   const [newIntermediary, setNewIntermediary] = useState('');
 
   const [values, setValues] = useState({
@@ -20,7 +20,7 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit 
 
   // Initialize form fields with the existing intermediary's data
   useEffect(() => {
-    if (intermediaryToEdit) {
+    if (editId) {
       setValues({
         name: intermediaryToEdit.name,
       });

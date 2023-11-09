@@ -43,8 +43,9 @@ export const IntermediariesTable = (props) => {
     selected = [],
     searchResults = [],
     setData,
-    apiUrl='',
-    intermediaryToEdit='',
+    apiUrl = '',
+    intermediaryToEdit = {},
+    editId='',
     setIntermediaryToEdit,
   } = props;
 
@@ -53,7 +54,7 @@ export const IntermediariesTable = (props) => {
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
-//Dialog setting up
+  //Dialog setting up
 
   const [open, setOpen] = useState(false);
   const [deleteId, setdeleteId] = useState();
@@ -77,18 +78,21 @@ export const IntermediariesTable = (props) => {
   }
 
 
-const handleEdit= (intermediaryId)=>{
-  console.log('clicked on',intermediaryId)
-  setIntermediaryToEdit(intermediaryId)
-}
+  const handleEdit = (intermediaryId) => {
+    console.log('clicked on', intermediaryId);
+    const intermediary = items.find(intermediary => {
+      intermediary.id === intermediaryId
+    });
+    setIntermediaryToEdit(intermediary)
+  }
 
   const handleDelete = async (intermediaryId) => {
-    
+
     try {
       const response = await fetch(`${apiUrl}/${intermediaryId}`, {
         method: 'DELETE',
       });
-  
+
       if (response.status === 204) {
         // Successful deletion (No Content status), no need to parse the response.
         // Update the client-side data and fetch updated data.
@@ -186,8 +190,8 @@ const handleEdit= (intermediaryId)=>{
                               color="neutral"
                               aria-label="delete"
                               // onClick={() => handleDelete(Intermediary.id)} // You should define the handleDelete function
-                            
-                              onClick={()=>handleClickOpen(Intermediary.id)}
+
+                              onClick={() => handleClickOpen(Intermediary.id)}
                             >
                               <TrashIcon />
                             </SvgIcon>
@@ -212,7 +216,7 @@ const handleEdit= (intermediaryId)=>{
         rowsPerPageOptions={[5, 10, 25]}
       />
 
-      
+
       <Dialog
         open={open}
         onClose={handleClose}
@@ -224,13 +228,13 @@ const handleEdit= (intermediaryId)=>{
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-          Are you sure you want to delete this item?
+            Are you sure you want to delete this item?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button variant="contained"
-          onClick={() => handleDelete(deleteId)} autoFocus>
+            onClick={() => handleDelete(deleteId)} autoFocus>
             Okay
           </Button>
         </DialogActions>
