@@ -11,7 +11,7 @@ import {
   Unstable_Grid2 as Grid,
 } from '@mui/material';
 
-export const IntermediaryAddForm = ({ data, setData, apiUrl, editId, intermediaryToEdit }) => {
+export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit, setIntermediaryToEdit }) => {
   const [newIntermediary, setNewIntermediary] = useState('');
 
   const [values, setValues] = useState({
@@ -20,7 +20,7 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, editId, intermediar
 
   // Initialize form fields with the existing intermediary's data
   useEffect(() => {
-    if (editId) {
+    if (intermediaryToEdit) {
       setValues({
         name: intermediaryToEdit.name,
       });
@@ -40,10 +40,12 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, editId, intermediar
 
   const handleSubmit = useCallback(async () => {
     if (intermediaryToEdit) {
+
+      console.log("gonna edit");
       // Handle editing by sending a PUT request
       const response = await fetch(`${apiUrl}/${intermediaryToEdit.id}`, {
         method: 'PUT',
-        body: JSON.stringify({ name: values.name /* Add other fields */ }),
+        body: JSON.stringify({ values }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -55,9 +57,12 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, editId, intermediar
           intermediary.id === updatedValues.id ? updatedValues : intermediary
         );
         setData(updatedData);
-        setNewIntermediary('');
+        setIntermediaryToEdit(null);
+        setNewIntermediary({});
       }
     } else {
+
+      console.log("gonna add");
       // Handle adding a new intermediary
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -70,9 +75,10 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, editId, intermediar
         const newValues = await response.json();
         // Update the client-side data state with the new intermediary
         setData([newValues, ...data]);
+        
         setNewIntermediary('');
       }
-    }
+    }setIntermediaryToEdit(null);
   }, [values, setData, data, apiUrl, intermediaryToEdit]);
 
   return (

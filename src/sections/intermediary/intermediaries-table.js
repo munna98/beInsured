@@ -45,8 +45,8 @@ export const IntermediariesTable = (props) => {
     setData,
     apiUrl = '',
     intermediaryToEdit = {},
-    editId='',
     setIntermediaryToEdit,
+    setDisplayForm,
   } = props;
 
 
@@ -79,12 +79,13 @@ export const IntermediariesTable = (props) => {
 
 
   const handleEdit = (intermediaryId) => {
-    console.log('clicked on', intermediaryId);
-    const intermediary = items.find(intermediary => {
-      intermediary.id === intermediaryId
-    });
-    setIntermediaryToEdit(intermediary)
+    setDisplayForm(prev=>!prev)
+    const intermediary = items.find(intermediary => intermediary.id === intermediaryId);
+    setIntermediaryToEdit(intermediary);
   }
+  
+
+  console.log( intermediaryToEdit);
 
   const handleDelete = async (intermediaryId) => {
 
@@ -189,8 +190,6 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
-                              // onClick={() => handleDelete(Intermediary.id)} // You should define the handleDelete function
-
                               onClick={() => handleClickOpen(Intermediary.id)}
                             >
                               <TrashIcon />

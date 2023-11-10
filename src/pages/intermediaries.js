@@ -70,14 +70,12 @@ const Page = () => {
   const [page, setPage] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [editId, setEditId] = useState();
-  const [intermediaryToEdit, setIntermediaryToEdit] = useState({});
+  const [intermediaryToEdit, setIntermediaryToEdit] = useState(null);
   const intermediaries = useIntermediaries(page, rowsPerPage);
   const intermediariesIds = useIntermediaryIds(intermediaries);
   const intermediariesSelection = useSelection(intermediariesIds);
 
   console.log(data);
-  console.log(intermediaryToEdit);
   console.log(intermediaryToEdit);
 
   const handlePageChange = useCallback(
@@ -161,12 +159,13 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {(displayForm )  &&
+            {displayForm   &&
               <IntermediaryAddForm
                 data={data}
                 setData={setData}
                 apiUrl={apiUrl}
-                editId={editId}
+                intermediaryToEdit={intermediaryToEdit}
+                setIntermediaryToEdit={setIntermediaryToEdit}
               />}
             <IntermediariesSearch
               searchTerm={searchTerm}
@@ -190,8 +189,8 @@ const Page = () => {
                 setData={setData}
                 apiUrl={apiUrl}
                 intermediaryToEdit={intermediaryToEdit}
-                editId={editId}
                 setIntermediaryToEdit={setIntermediaryToEdit}
+                setDisplayForm={setDisplayForm}
               />}
             {/* On load indicator for table
 {loading ? (
