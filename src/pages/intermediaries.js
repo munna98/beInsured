@@ -70,7 +70,7 @@ const Page = () => {
   const [page, setPage] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [intermediaryToEdit, setIntermediaryToEdit] = useState(null);
+  const [intermediaryToEdit, setIntermediaryToEdit] = useState({name:"munna"});
   const intermediaries = useIntermediaries(page, rowsPerPage);
   const intermediariesIds = useIntermediaryIds(intermediaries);
   const intermediariesSelection = useSelection(intermediariesIds);
@@ -95,7 +95,7 @@ const Page = () => {
   const handleAdd = useCallback(
     () => {
       setDisplayForm((prev) => !prev)
-      setIntermediaryToEdit(null);
+      setIntermediaryToEdit();
     },
     []
   );
@@ -174,6 +174,7 @@ const Page = () => {
                 apiUrl={apiUrl}
                 intermediaryToEdit={intermediaryToEdit}
                 setIntermediaryToEdit={setIntermediaryToEdit}
+                setDisplayForm={setDisplayForm}
               />}
             <IntermediariesSearch
               searchTerm={searchTerm}

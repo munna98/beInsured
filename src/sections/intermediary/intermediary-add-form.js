@@ -11,7 +11,8 @@ import {
   Unstable_Grid2 as Grid,
 } from '@mui/material';
 
-export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit, setIntermediaryToEdit }) => {
+export const IntermediaryAddForm = ({ data, setData, 
+  apiUrl, intermediaryToEdit, setIntermediaryToEdit, setDisplayForm }) => {
   const [newIntermediary, setNewIntermediary] = useState('');
 
   const [values, setValues] = useState({
@@ -20,7 +21,7 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
 
   // Initialize form fields with the existing intermediary's data
   useEffect(() => {
-    console.log('intermediaryToEdit:', intermediaryToEdit);
+    document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
 
     if (intermediaryToEdit) {
       console.log('Setting values:', intermediaryToEdit.name);
@@ -42,12 +43,12 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
 
   const handleSubmit = useCallback(async () => {
     if (intermediaryToEdit) {
-
       console.log("gonna edit");
+      console.log(intermediaryToEdit.id);
       // Handle editing by sending a PUT request
       const response = await fetch(`${apiUrl}/${intermediaryToEdit.id}`, {
         method: 'PUT',
-        body: JSON.stringify({ 'id':intermediaryToEdit.id,'name':intermediaryToEdit.name }),
+        body: JSON.stringify({ values }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -59,11 +60,11 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
           intermediary.id === updatedValues.id ? updatedValues : intermediary
         );
         setData(updatedData);
-        setIntermediaryToEdit(null);
-        setNewIntermediary('');
+        setIntermediaryToEdit();
+        setValues({ name: '' }); // Reset form fields
+        setDisplayForm(false)
       }
     } else {
-
       console.log("gonna add");
       // Handle adding a new intermediary
       const response = await fetch(apiUrl, {
@@ -77,15 +78,14 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
         const newValues = await response.json();
         // Update the client-side data state with the new intermediary
         setData([newValues, ...data]);
-
-        setNewIntermediary('');
+        setValues({ name: '' }); // Reset form fields
       }
-    } setIntermediaryToEdit(null);
-  }, [values, setData, data, apiUrl, intermediaryToEdit]);
-
+    }
+  }, [values, setData, data, apiUrl, intermediaryToEdit, setValues]);
+  
   return (
-    <form autoComplete="off" noValidate>
-      <Card>
+    <form autoComplete="off" noValidate  Card id="editForm" >
+      <Card >
         <CardHeader title={intermediaryToEdit ? 'Edit Intermediary' : 'Add Intermediary'} />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
