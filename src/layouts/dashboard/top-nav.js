@@ -12,11 +12,14 @@ import {
   Stack,
   SvgIcon,
   Tooltip,
-  useMediaQuery
+  useMediaQuery,
+  Button
 } from '@mui/material';
+import { useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { usePopover } from 'src/hooks/use-popover';
 import { AccountPopover } from './account-popover';
+import CommissionDialog from 'src/components/commission-dialog';
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -25,6 +28,16 @@ export const TopNav = (props) => {
   const { onNavOpen } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   const accountPopover = usePopover();
+
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const handleSaveCommission = (commissionData) => {
+    // Handle saving commission data
+    console.log('Commission Data:', commissionData);
+    setDialogOpen(false);
+  };
+
+
 
   return (
     <>
@@ -67,8 +80,7 @@ export const TopNav = (props) => {
               </IconButton>
             )}
             <Tooltip title="Set commission">
-              <IconButton>
-                <SvgIcon fontSize="small">
+            <IconButton onClick={() => setDialogOpen(true)}>                <SvgIcon fontSize="small">
                   <ReceiptPercentIcon />
                 </SvgIcon>
               </IconButton>
@@ -79,8 +91,8 @@ export const TopNav = (props) => {
             direction="row"
             spacing={2}
           >
-            <Tooltip title="Contacts">
-              <IconButton>
+            <Tooltip title="Contacts" >
+              <IconButton >
                 <SvgIcon fontSize="small">
                   <UsersIcon />
                 </SvgIcon>
@@ -116,6 +128,11 @@ export const TopNav = (props) => {
         anchorEl={accountPopover.anchorRef.current}
         open={accountPopover.open}
         onClose={accountPopover.handleClose}
+      />
+      <CommissionDialog
+        open={isDialogOpen}
+        onClose={() => setDialogOpen(false)}
+        onSave={handleSaveCommission}
       />
     </>
   );

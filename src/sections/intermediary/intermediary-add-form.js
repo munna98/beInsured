@@ -20,7 +20,10 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
 
   // Initialize form fields with the existing intermediary's data
   useEffect(() => {
+    console.log('intermediaryToEdit:', intermediaryToEdit);
+
     if (intermediaryToEdit) {
+      console.log('Setting values:', intermediaryToEdit.name);
       setValues({
         name: intermediaryToEdit.name,
       });
@@ -29,13 +32,12 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
 
   const handleChange = useCallback(
     (event) => {
-      setNewIntermediary(event.target.value);
       setValues((prev) => ({
         ...prev,
         [event.target.name]: event.target.value,
       }));
     },
-    [values]
+    []
   );
 
   const handleSubmit = useCallback(async () => {
@@ -45,7 +47,7 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
       // Handle editing by sending a PUT request
       const response = await fetch(`${apiUrl}/${intermediaryToEdit.id}`, {
         method: 'PUT',
-        body: JSON.stringify({ values }),
+        body: JSON.stringify({ 'id':intermediaryToEdit.id,'name':intermediaryToEdit.name }),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -58,7 +60,7 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
         );
         setData(updatedData);
         setIntermediaryToEdit(null);
-        setNewIntermediary({});
+        setNewIntermediary('');
       }
     } else {
 
@@ -75,10 +77,10 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
         const newValues = await response.json();
         // Update the client-side data state with the new intermediary
         setData([newValues, ...data]);
-        
+
         setNewIntermediary('');
       }
-    }setIntermediaryToEdit(null);
+    } setIntermediaryToEdit(null);
   }, [values, setData, data, apiUrl, intermediaryToEdit]);
 
   return (
@@ -96,7 +98,7 @@ export const IntermediaryAddForm = ({ data, setData, apiUrl, intermediaryToEdit,
                   name="name"
                   onChange={handleChange}
                   required
-                  value={newIntermediary}
+                  value={values.name}
                 />
               </Grid>
             </Grid>

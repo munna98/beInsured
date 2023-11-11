@@ -79,7 +79,7 @@ export const IntermediariesTable = (props) => {
 
 
   const handleEdit = (intermediaryId) => {
-    setDisplayForm(prev=>!prev)
+    setDisplayForm(prev=> true)
     const intermediary = items.find(intermediary => intermediary.id === intermediaryId);
     setIntermediaryToEdit(intermediary);
   }

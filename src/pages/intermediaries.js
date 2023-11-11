@@ -92,6 +92,14 @@ const Page = () => {
     []
   );
 
+  const handleAdd = useCallback(
+    () => {
+      setDisplayForm((prev) => !prev)
+      setIntermediaryToEdit(null);
+    },
+    []
+  );
+
 
   return (
     <>
@@ -147,7 +155,7 @@ const Page = () => {
               </Stack>
               <div>
                 <Button
-                  onClick={() => setDisplayForm((prev) => !prev)}
+                  onClick={() => handleAdd()}
                   startIcon={(
                     <SvgIcon fontSize="small">
                       <PlusIcon />

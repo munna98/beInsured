@@ -13,22 +13,23 @@ export default function handler(req, res) {
     }
   } else if (req.method === 'PUT') {
     // Handle PUT request to update an intermediary
-    const updatedData = intermediaryData.find((intermediary) => intermediary.id === intermediaryId);
-    if (!updatedData) {
+    const updatedDataIndex = intermediaryData.findIndex((intermediary) => intermediary.id === intermediaryId);
+    if (updatedDataIndex === -1) {
       res.status(404).json({ message: 'Intermediary not found' });
       return;
     }
 
     // Update the intermediary's data based on the request body
     try {
-      const requestBody = JSON.parse(req.body);
-      updatedData.name = requestBody.name; // Update other fields as needed
+      const { id, name } = req.body.values;
+      intermediaryData[updatedDataIndex].id = id;
+      intermediaryData[updatedDataIndex].name = name;
+      res.status(200).json(intermediaryData[updatedDataIndex]);
     } catch (error) {
-      res.status(400).json({ message: 'Invalid request body' });
+      console.error('Error updating intermediary:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
       return;
     }
-
-    res.status(200).json(updatedData);
   } else if (req.method === 'DELETE') {
     // Handle DELETE request to delete an intermediary
     const deletedData = intermediaryData.find((intermediary) => intermediary.id === intermediaryId);
