@@ -17,16 +17,11 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
 import { useState } from 'react';
+import DeleteDialog from 'src/components/delete-dialog';
 
 export const IntermediariesTable = (props) => {
   const {
@@ -79,13 +74,13 @@ export const IntermediariesTable = (props) => {
 
 
   const handleEdit = (intermediaryId) => {
-    setDisplayForm(prev=> true)
+    setDisplayForm(prev => true)
     const intermediary = items.find(intermediary => intermediary._id === intermediaryId);
     setIntermediaryToEdit(intermediary);
   }
-  
 
-  console.log( intermediaryToEdit);
+
+  console.log(intermediaryToEdit);
 
   const handleDelete = async (intermediaryId) => {
 
@@ -216,28 +211,12 @@ export const IntermediariesTable = (props) => {
       />
 
 
-      <Dialog
+      <DeleteDialog
         open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Delete Item"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this item?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="contained"
-            onClick={() => handleDelete(deleteId)} autoFocus>
-            Okay
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleClose={handleClose}
+        handleDelete={handleDelete}
+        deleteId={deleteId}
+      />
     </Card>
   );
 };
