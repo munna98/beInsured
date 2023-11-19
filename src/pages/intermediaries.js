@@ -70,7 +70,7 @@ const Page = () => {
   const [page, setPage] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [intermediaryToEdit, setIntermediaryToEdit] = useState({name:"munna"});
+  const [intermediaryToEdit, setIntermediaryToEdit] = useState();
   const intermediaries = useIntermediaries(page, rowsPerPage);
   const intermediariesIds = useIntermediaryIds(intermediaries);
   const intermediariesSelection = useSelection(intermediariesIds);

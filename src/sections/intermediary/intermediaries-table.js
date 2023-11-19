@@ -80,7 +80,7 @@ export const IntermediariesTable = (props) => {
 
   const handleEdit = (intermediaryId) => {
     setDisplayForm(prev=> true)
-    const intermediary = items.find(intermediary => intermediary.id === intermediaryId);
+    const intermediary = items.find(intermediary => intermediary._id === intermediaryId);
     setIntermediaryToEdit(intermediary);
   }
   
@@ -137,12 +137,12 @@ export const IntermediariesTable = (props) => {
             </TableHead>
             <TableBody>
               {items.map((Intermediary) => {
-                const isSelected = selected.includes(Intermediary.id);
+                const isSelected = selected.includes(Intermediary._id);
 
                 return (
                   <TableRow
                     hover
-                    key={Intermediary.id}
+                    key={Intermediary._id}
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox">
@@ -150,9 +150,9 @@ export const IntermediariesTable = (props) => {
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(Intermediary.id);
+                            onSelectOne?.(Intermediary._id);
                           } else {
-                            onDeselectOne?.(Intermediary.id);
+                            onDeselectOne?.(Intermediary._id);
                           }
                         }}
                       />
@@ -178,7 +178,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="edit"
-                              onClick={() => handleEdit(Intermediary.id)} // You should define the handleDelete function
+                              onClick={() => handleEdit(Intermediary._id)} // You should define the handleDelete function
                             >
                               <PencilIcon />
                             </SvgIcon>
@@ -190,7 +190,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
-                              onClick={() => handleClickOpen(Intermediary.id)}
+                              onClick={() => handleClickOpen(Intermediary._id)}
                             >
                               <TrashIcon />
                             </SvgIcon>

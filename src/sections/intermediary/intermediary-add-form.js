@@ -24,7 +24,6 @@ export const IntermediaryAddForm = ({ data, setData,
     document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
 
     if (intermediaryToEdit) {
-      console.log('Setting values:', intermediaryToEdit.name);
       setValues({
         name: intermediaryToEdit.name,
       });
@@ -44,9 +43,10 @@ export const IntermediaryAddForm = ({ data, setData,
   const handleSubmit = useCallback(async () => {
     if (intermediaryToEdit) {
       console.log("gonna edit");
-      console.log(intermediaryToEdit.id);
+      console.log( intermediaryToEdit);
+      console.log(intermediaryToEdit._id);
       // Handle editing by sending a PUT request
-      const response = await fetch(`${apiUrl}/${intermediaryToEdit.id}`, {
+      const response = await fetch(`${apiUrl}/${intermediaryToEdit._id}`, {
         method: 'PUT',
         body: JSON.stringify({ values }),
         headers: {
@@ -57,7 +57,7 @@ export const IntermediaryAddForm = ({ data, setData,
         const updatedValues = await response.json();
         // Update the client-side data state with the edited intermediary
         const updatedData = data.map((intermediary) =>
-          intermediary.id === updatedValues.id ? updatedValues : intermediary
+          intermediary._id === updatedValues._id ? updatedValues : intermediary
         );
         setData(updatedData);
         setIntermediaryToEdit();
