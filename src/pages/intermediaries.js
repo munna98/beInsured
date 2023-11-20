@@ -13,6 +13,7 @@ import { IntermediariesSearch } from 'src/sections/intermediary/intermediaries-s
 import { applyPagination } from 'src/utils/apply-pagination';
 import { IntermediaryAddForm } from 'src/sections/intermediary/intermediary-add-form';
 import useSearch from 'src/hooks/use-search';
+import TableLoader from 'src/components/table-loader';
 
 const Page = () => {
 
@@ -180,8 +181,9 @@ const Page = () => {
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}
             />
-            {
-              <IntermediariesTable
+            {loading ?
+              (<TableLoader/>)
+              :(<IntermediariesTable
                 count={searchResults.length}
                 items={intermediaries}
                 onDeselectAll={intermediariesSelection.handleDeselectAll}
@@ -200,27 +202,7 @@ const Page = () => {
                 intermediaryToEdit={intermediaryToEdit}
                 setIntermediaryToEdit={setIntermediaryToEdit}
                 setDisplayForm={setDisplayForm}
-              />}
-            {/* On load indicator for table
-{loading ? (
-              <p>Loading...</p>
-            ) : (
-              <IntermediariesTable
-                count={searchResults.length}
-                items={intermediaries}
-                onDeselectAll={intermediariesSelection.handleDeselectAll}
-                onDeselectOne={intermediariesSelection.handleDeselectOne}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleRowsPerPageChange}
-                onSelectAll={intermediariesSelection.handleSelectAll}
-                onSelectOne={intermediariesSelection.handleSelectOne}
-                page={page}
-                rowsPerPage={rowsPerPage}
-                selected={intermediariesSelection.selected}
-                searchResults={searchResults}
-                data={data}
-              />)} */}
-
+              />)}
           </Stack>
         </Container>
       </Box>

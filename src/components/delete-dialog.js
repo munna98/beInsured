@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     Button,
     Dialog,
@@ -10,9 +10,27 @@ import {
 } from '@mui/material';
 
 
-const DeleteDialog = ({ open, handleClose, handleDelete, deleteId }) => {
+const DeleteDialog = ({ open, handleClose, deleteId, apiUrl, fetchData}) => {
 
+    const handleDelete = async (itemId) => {
 
+        try {
+          const response = await fetch(`${apiUrl}/${itemId}`, {
+            method: 'DELETE',
+          });
+    
+          if (response.status === 204) {
+            // Successful deletion (No Content status), no need to parse the response.
+            // Update the client-side data and fetch updated data.
+            fetchData();
+          } else {
+            console.error('Failed to delete intermediary. Status code:', response.status);
+          }
+        } catch (error) {
+          console.error('Error deleting intermediary:', error);
+        }
+        handleClose();
+      };
 
     return (
 

@@ -49,7 +49,6 @@ export const IntermediariesTable = (props) => {
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
-  //Dialog setting up
 
   const [open, setOpen] = useState(false);
   const [deleteId, setdeleteId] = useState();
@@ -81,26 +80,6 @@ export const IntermediariesTable = (props) => {
 
 
   console.log(intermediaryToEdit);
-
-  const handleDelete = async (intermediaryId) => {
-
-    try {
-      const response = await fetch(`${apiUrl}/${intermediaryId}`, {
-        method: 'DELETE',
-      });
-
-      if (response.status === 204) {
-        // Successful deletion (No Content status), no need to parse the response.
-        // Update the client-side data and fetch updated data.
-        fetchIntermediary();
-      } else {
-        console.error('Failed to delete intermediary. Status code:', response.status);
-      }
-    } catch (error) {
-      console.error('Error deleting intermediary:', error);
-    }
-    handleClose();
-  };
 
   return (
     <Card>
@@ -214,8 +193,9 @@ export const IntermediariesTable = (props) => {
       <DeleteDialog
         open={open}
         handleClose={handleClose}
-        handleDelete={handleDelete}
         deleteId={deleteId}
+        apiUrl={apiUrl}
+        fetchData={fetchIntermediary}
       />
     </Card>
   );
