@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -11,6 +11,8 @@ import { PoliciesTable } from 'src/sections/policy/policies-table';
 import { PoliciesSearch } from 'src/sections/policy/policies-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { PolicyAddForm } from 'src/sections/policy/policy-add-form';
+import useSearch from 'src/hooks/use-search';
+import TableLoader from 'src/components/table-loader';
 
 const now = new Date();
 

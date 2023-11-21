@@ -1,3 +1,6 @@
+import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
+import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
+import { SvgIcon, Tooltip, } from '@mui/material';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -6,16 +9,19 @@ import {
   Card,
   Checkbox,
   Stack,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
+import { useState } from 'react';
+import DeleteDialog from 'src/components/delete-dialog';
 
 export const VehiclesTable = (props) => {
   const {
@@ -23,17 +29,53 @@ export const VehiclesTable = (props) => {
     items = [],
     onDeselectAll,
     onDeselectOne,
-    onPageChange = () => {},
+    onPageChange = () => { },
     onRowsPerPageChange,
     onSelectAll,
     onSelectOne,
     page = 0,
     rowsPerPage = 0,
-    selected = []
+    selected = [],
+    setData,
+    apiUrl = '',
+    vehicleToEdit = {},
+    setVehicleToEdit,
+    setDisplayForm,
   } = props;
+
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
+
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteId, setdeleteId] = useState();
+
+  const handleClickOpen = (Id) => {
+    setDeleteDialogOpen(true);
+    setdeleteId(Id);
+  };
+
+  const handleClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+
+
+
+  const fetchVehicle = async () => {
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    setData(data)
+  }
+
+
+  const handleEdit = (vehicleId) => {
+    setDisplayForm(prev => true)
+    const vehicle = items.find(vehicle => vehicle._id === vehicleId);
+    setVehicleToEdit(vehicle);
+  }
+
 
   return (
     <Card>
@@ -58,17 +100,19 @@ export const VehiclesTable = (props) => {
                 <TableCell>
                   Name
                 </TableCell>
+                <TableCell>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((vehicle) => {
-                const isSelected = selected.includes(vehicle.id);
-                // const createdAt = format(vehicle.createdAt, 'dd/MM/yyyy');
+              {items.map((Vehicle) => {
+                const isSelected = selected.includes(Vehicle._id);
 
                 return (
                   <TableRow
                     hover
-                    key={vehicle.id}
+                    key={Vehicle._id}
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox">
@@ -76,40 +120,54 @@ export const VehiclesTable = (props) => {
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(vehicle.id);
+                            onSelectOne?.(Vehicle._id);
                           } else {
-                            onDeselectOne?.(vehicle.id);
+                            onDeselectOne?.(Vehicle._id);
                           }
                         }}
                       />
                     </TableCell>
+
                     <TableCell>
                       <Stack
-                        alignItems="center"
-                        direction="coloumn"
+                        alignItems="left"
+                        direction="column"
                         spacing={2}
                       >
-                        {/* <Avatar src={vehicle.avatar}>
-                          {getInitials(vehicle.name)}
-                        </Avatar> */}
                         <Typography variant="subtitle2">
-                         {/* ***Change the vehicle.vehicle to vehicle.name in future*** */}
-                          {vehicle.vehicle}
+                          {Vehicle.name}
                         </Typography>
                       </Stack>
                     </TableCell>
-                    {/* <TableCell>
-                      {vehicle.email}
-                    </TableCell>
+
                     <TableCell>
-                      {vehicle.address.city}, {vehicle.address.state}, {vehicle.address.country}
+                      <Stack direction="row" spacing={2}>
+                        <IconButton>
+                          <Tooltip title="Edit">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="neutral"
+                              aria-label="edit"
+                              onClick={() => handleEdit(Vehicle._id)} // You should define the handleDelete function
+                            >
+                              <PencilIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                        <IconButton>
+                          <Tooltip title="Delete">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="neutral"
+                              aria-label="delete"
+                              onClick={() => handleClickOpen(Vehicle._id)}
+                            >
+                              <TrashIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                      </Stack>
                     </TableCell>
-                    <TableCell>
-                      {vehicle.phone}
-                    </TableCell>
-                    <TableCell>
-                      {createdAt}
-                    </TableCell> */}
                   </TableRow>
                 );
               })}
@@ -126,6 +184,15 @@ export const VehiclesTable = (props) => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
+
+
+      <DeleteDialog
+        open={deleteDialogOpen}
+        handleClose={handleClose}
+        deleteId={deleteId}
+        apiUrl={apiUrl}
+        fetchData={fetchVehicle}
+      />
     </Card>
   );
 };
@@ -141,5 +208,6 @@ VehiclesTable.propTypes = {
   onSelectOne: PropTypes.func,
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
+  selected: PropTypes.array,
+  searchResults: PropTypes.array,
 };

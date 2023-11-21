@@ -13,7 +13,6 @@ import {
 
 export const IntermediaryAddForm = ({ data, setData, 
   apiUrl, intermediaryToEdit, setIntermediaryToEdit, setDisplayForm }) => {
-  const [newIntermediary, setNewIntermediary] = useState('');
 
   const [values, setValues] = useState({
     name: '',
@@ -42,9 +41,6 @@ export const IntermediaryAddForm = ({ data, setData,
 
   const handleSubmit = useCallback(async () => {
     if (intermediaryToEdit) {
-      console.log("gonna edit");
-      console.log( intermediaryToEdit);
-      console.log(intermediaryToEdit._id);
       // Handle editing by sending a PUT request
       const response = await fetch(`${apiUrl}/${intermediaryToEdit._id}`, {
         method: 'PUT',

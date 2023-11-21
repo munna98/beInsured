@@ -1,3 +1,6 @@
+import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
+import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
+import { SvgIcon, Tooltip, } from '@mui/material';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -6,16 +9,19 @@ import {
   Card,
   Checkbox,
   Stack,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
+import { useState } from 'react';
+import DeleteDialog from 'src/components/delete-dialog';
 
 export const CompaniesTable = (props) => {
   const {
@@ -23,17 +29,52 @@ export const CompaniesTable = (props) => {
     items = [],
     onDeselectAll,
     onDeselectOne,
-    onPageChange = () => {},
+    onPageChange = () => { },
     onRowsPerPageChange,
     onSelectAll,
     onSelectOne,
     page = 0,
     rowsPerPage = 0,
-    selected = []
+    selected = [],
+    setData,
+    apiUrl = '',
+    companyToEdit = {},
+    setCompanyToEdit,
+    setDisplayForm,
   } = props;
+
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
+
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteId, setdeleteId] = useState();
+
+  const handleClickOpen = (Id) => {
+    setDeleteDialogOpen(true);
+    setdeleteId(Id);
+  };
+
+  const handleClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+
+
+
+  const fetchCompany = async () => {
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    setData(data)
+  }
+
+  const handleEdit = (companyId) => {
+    setDisplayForm(prev => true) 
+    const company = items.find(company => company._id === companyId);
+    setCompanyToEdit(company);
+  }
+console.log(items);
 
   return (
     <Card>
@@ -58,17 +99,19 @@ export const CompaniesTable = (props) => {
                 <TableCell>
                   Name
                 </TableCell>
+                <TableCell>
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((Company) => {
-                const isSelected = selected.includes(Company.id);
-                // const createdAt = format(Company.createdAt, 'dd/MM/yyyy');
+                const isSelected = selected.includes(Company._id);
 
                 return (
                   <TableRow
                     hover
-                    key={Company.id}
+                    key={Company._id}
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox">
@@ -76,39 +119,54 @@ export const CompaniesTable = (props) => {
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(Company.id);
+                            onSelectOne?.(Company._id);
                           } else {
-                            onDeselectOne?.(Company.id);
+                            onDeselectOne?.(Company._id);
                           }
                         }}
                       />
                     </TableCell>
+
                     <TableCell>
                       <Stack
-                        alignItems="center"
-                        direction="coloumn"
+                        alignItems="left"
+                        direction="column"
                         spacing={2}
                       >
-                        {/* <Avatar src={Company.avatar}>
-                          {getInitials(Company.name)}
-                        </Avatar> */}
                         <Typography variant="subtitle2">
                           {Company.name}
                         </Typography>
                       </Stack>
                     </TableCell>
-                    {/* <TableCell>
-                      {Company.email}
-                    </TableCell>
+
                     <TableCell>
-                      {Company.address.city}, {Company.address.state}, {Company.address.country}
+                      <Stack direction="row" spacing={2}>
+                        <IconButton>
+                          <Tooltip title="Edit">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="neutral"
+                              aria-label="edit"
+                              onClick={() => handleEdit(Company._id)} // You should define the handleDelete function
+                            >
+                              <PencilIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                        <IconButton>
+                          <Tooltip title="Delete">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="neutral"
+                              aria-label="delete"
+                              onClick={() => handleClickOpen(Company._id)}
+                            >
+                              <TrashIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                      </Stack>
                     </TableCell>
-                    <TableCell>
-                      {Company.phone}
-                    </TableCell>
-                    <TableCell>
-                      {createdAt}
-                    </TableCell> */}
                   </TableRow>
                 );
               })}
@@ -125,6 +183,15 @@ export const CompaniesTable = (props) => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
+
+
+      <DeleteDialog
+        open={deleteDialogOpen}
+        handleClose={handleClose}
+        deleteId={deleteId}
+        apiUrl={apiUrl}
+        fetchData={fetchCompany}
+      />
     </Card>
   );
 };
@@ -140,5 +207,6 @@ CompaniesTable.propTypes = {
   onSelectOne: PropTypes.func,
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
+  selected: PropTypes.array,
+  searchResults: PropTypes.array,
 };

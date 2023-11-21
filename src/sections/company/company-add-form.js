@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -8,84 +8,93 @@ import {
   CardHeader,
   Divider,
   TextField,
-  Unstable_Grid2 as Grid
+  Unstable_Grid2 as Grid,
 } from '@mui/material';
 
-// const states = [
-//   {
-//     value: 'alabama',
-//     label: 'Alabama'
-//   },
-//   {
-//     value: 'new-york',
-//     label: 'New York'
-//   },
-//   {
-//     value: 'san-francisco',
-//     label: 'San Francisco'
-//   },
-//   {
-//     value: 'los-angeles',
-//     label: 'Los Angeles'
-//   }
-// ];
+export const CompanyAddForm = ({ data, setData, 
+  apiUrl, companyToEdit, setCompanyToEdit, setDisplayForm }) => {
 
-export const CompanyAddForm = () => {
   const [values, setValues] = useState({
-    intermediayName: '',
-    lastName: '',
-    email: 'example@gmail.com',
-    phone: '',
-    state: '',
-    country: ''
+    name: '',
   });
+
+  // Initialize form fields with the existing company's data
+  useEffect(() => {
+    document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
+
+    if (companyToEdit) {
+      setValues({
+        name: companyToEdit.name,
+      });
+    }
+  }, [companyToEdit]);
 
   const handleChange = useCallback(
     (event) => {
-      setValues((prevState) => ({
-        ...prevState,
-        [event.target.name]: event.target.value
+      setValues((prev) => ({
+        ...prev,
+        [event.target.name]: event.target.value,
       }));
     },
     []
   );
 
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-    },
-    []
-  );
-
+  const handleSubmit = useCallback(async () => {
+    if (companyToEdit) {
+      // Handle editing by sending a PUT request
+      const response = await fetch(`${apiUrl}/${companyToEdit._id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ values }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 200) {
+        const updatedValues = await response.json();
+        // Update the client-side data state with the edited company
+        const updatedData = data.map((company) =>
+          company._id === updatedValues._id ? updatedValues : company
+        );
+        setData(updatedData);
+        setCompanyToEdit();
+        setValues({ name: '' }); // Reset form fields
+        setDisplayForm(false)
+      }
+    } else {
+      console.log("gonna add");
+      // Handle adding a new company
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: JSON.stringify({ values }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 201) {
+        const newValues = await response.json();
+        // Update the client-side data state with the new company
+        setData([newValues, ...data]);
+        setValues({ name: '' }); // Reset form fields
+      }
+    }
+  }, [values, setData, data, apiUrl, companyToEdit, setValues]);
+  
   return (
-    <form
-      autoComplete="off"
-      noValidate
-      onSubmit={handleSubmit}
-    >
-      <Card>
-        <CardHeader
-          subheader="Fill the input to add a new company"
-          title="Add Company"
-        />
+    <form autoComplete="off" noValidate  Card id="editForm" >
+      <Card >
+        <CardHeader title={companyToEdit ? 'Edit Company' : 'Add Company'} />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                xs={12}
-                md={6}
-              >
+            <Grid container spacing={3}>
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   helperText="Please specify the Company name"
                   label="Company name"
-                  name="companyName"
+                  name="name"
                   onChange={handleChange}
                   required
-                  value={values.companyName}
+                  value={values.name}
                 />
               </Grid>
             </Grid>
@@ -93,8 +102,8 @@ export const CompanyAddForm = () => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button variant="contained">
-            Save Company
+          <Button variant="contained" onClick={handleSubmit}>
+            {companyToEdit ? 'Update Company' : 'Save Company'}
           </Button>
         </CardActions>
       </Card>

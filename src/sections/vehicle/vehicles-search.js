@@ -1,8 +1,10 @@
 import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import { Card, InputAdornment, OutlinedInput, SvgIcon } from '@mui/material';
 
-export const VehiclesSearch  = () => (
-  <Card sx={{ p: 2 }}>
+
+export const VehiclesSearch = ({searchTerm, handleSearchChange}) => {
+  return(
+    <Card sx={{ p: 2 }}>
     <OutlinedInput
       defaultValue=""
       fullWidth
@@ -20,4 +22,5 @@ export const VehiclesSearch  = () => (
       sx={{ maxWidth: 500 }}
     />
   </Card>
-);
+  )
+}; 

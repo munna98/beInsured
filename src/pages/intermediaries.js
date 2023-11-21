@@ -1,5 +1,4 @@
-import { useCallback, useMemo, useState, useEffect, useContext } from 'react';
-
+import { useCallback, useMemo, useState, useEffect} from 'react'
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -17,11 +16,9 @@ import TableLoader from 'src/components/table-loader';
 
 const Page = () => {
 
-
   const [data, setData] = useState([]);
   const apiUrl = '/api/intermediaries';
   const [loading, setLoading] = useState(true);
-
 
   // ***** Setting api *****
   useEffect(() => {
@@ -45,8 +42,8 @@ const Page = () => {
 
  
   // ***** End setting api *****
-  const { searchTerm, searchResults, setSearchTerm, handleSearchChange } = useSearch(data);
 
+  const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
 
   const useIntermediaries = (page, rowsPerPage) => {
     return useMemo(
@@ -66,8 +63,6 @@ const Page = () => {
     );
   };
 
-
-  const now = new Date();
   const [page, setPage] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -75,9 +70,6 @@ const Page = () => {
   const intermediaries = useIntermediaries(page, rowsPerPage);
   const intermediariesIds = useIntermediaryIds(intermediaries);
   const intermediariesSelection = useSelection(intermediariesIds);
-
-  console.log(data);
-  console.log(intermediaryToEdit);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -100,7 +92,7 @@ const Page = () => {
     },
     []
   );
-
+  console.log(intermediaries);
 
   return (
     <>

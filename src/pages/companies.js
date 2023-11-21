@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -11,29 +11,46 @@ import { CompaniesTable } from 'src/sections/company/companies-table';
 import { CompaniesSearch } from 'src/sections/company/companies-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { CompanyAddForm } from 'src/sections/company/company-add-form';
+import useSearch from 'src/hooks/use-search';
+import TableLoader from 'src/components/table-loader';
 
-const now = new Date();
+const Page = () => {
 
-const data = [
-  {
-    id: '5e887ac47eed253091be10cb',
-    name: 'BIG',
-  },
-  {
-    id: '5e887ac47eed253091be10cb',
-    name: 'JSK',
-  },
-  
-];
+  const [data, setData] = useState([]);
+  const apiUrl = '/api/companies';
+  const [loading, setLoading] = useState(true);
 
-const useCompanies = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(data, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
-};
+  // ***** Setting api *****
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+
+        const response = await fetch(apiUrl)
+        const data = await response.json()
+        setData(data)
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+ 
+  // ***** End setting api *****
+
+  const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
+
+  const useCompanies = (page, rowsPerPage) => {
+    return useMemo(
+      () => {
+        return applyPagination(searchResults, page, rowsPerPage);
+      },
+      [page, rowsPerPage, searchTerm, searchResults, data]
+    );
+  };
 
 const useCompanyIds = (companies) => {
   return useMemo(
@@ -44,9 +61,9 @@ const useCompanyIds = (companies) => {
   );
 };
 
-const Page = () => {
   const [page, setPage] = useState(0);
-  const [addCompany, setAddCompany] = useState(false);
+  const [displayForm, setDisplayForm] = useState(false);
+  const [companyToEdit, setCompanyToEdit] = useState();
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const companies = useCompanies(page, rowsPerPage);
   const companiesIds = useCompanyIds(companies);
@@ -66,76 +83,98 @@ const Page = () => {
     []
   );
 
+  const handleAdd = useCallback(
+    () => {
+      setDisplayForm((prev) => !prev)
+      setCompanyToEdit();
+    },
+    []
+  );
+
+console.log(companies);
   return (
     <>
-      <Head>
-        <title>
-          Companies | beInsured
-        </title>
-      </Head>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8
-        }}
-      >
-        <Container maxWidth="xl">
-          <Stack spacing={3}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              spacing={4}
-            >
-              <Stack spacing={1}>
-                <Typography variant="h4">
-                  Companies
-                </Typography>
-                <Stack
-                  alignItems="center"
-                  direction="row"
-                  spacing={1}
-                >
-                  <Button
-                    color="inherit"
-                    startIcon={(
-                      <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
-                      </SvgIcon>
-                    )}
-                  >
-                    Import
-                  </Button>
-                  <Button
-                    color="inherit"
-                    startIcon={(
-                      <SvgIcon fontSize="small">
-                        <ArrowDownOnSquareIcon />
-                      </SvgIcon>
-                    )}
-                  >
-                    Export
-                  </Button>
-                </Stack>
-              </Stack>
-              <div>
+    <Head>
+      <title>
+        Companies | beInsured
+      </title>
+    </Head>
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        py: 8
+      }}
+    >
+      <Container maxWidth="xl">
+        <Stack spacing={3}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            spacing={4}
+          >
+            <Stack spacing={1}>
+              <Typography variant="h4">
+                Companies
+              </Typography>
+              <Stack
+                alignItems="center"
+                direction="row"
+                spacing={1}
+              >
                 <Button
-                  onClick={()=>setAddCompany((prev)=>!prev)}
+                  color="inherit"
                   startIcon={(
                     <SvgIcon fontSize="small">
-                      <PlusIcon />
+                      <ArrowUpOnSquareIcon />
                     </SvgIcon>
                   )}
-                  variant="contained"
                 >
-                  Add
+                  Import
                 </Button>
-              </div>
+                <Button
+                  color="inherit"
+                  startIcon={(
+                    <SvgIcon fontSize="small">
+                      <ArrowDownOnSquareIcon />
+                    </SvgIcon>
+                  )}
+                >
+                  Export
+                </Button>
+              </Stack>
             </Stack>
-            {addCompany&& <CompanyAddForm />}
-            <CompaniesSearch />
-            <CompaniesTable
-              count={data.length}
+            <div>
+              <Button
+                onClick={() => handleAdd()}
+                startIcon={(
+                  <SvgIcon fontSize="small">
+                    <PlusIcon />
+                  </SvgIcon>
+                )}
+                variant="contained"
+              >
+                Add
+              </Button>
+            </div>
+          </Stack>
+          {displayForm   &&
+            <CompanyAddForm
+              data={data}
+              setData={setData}
+              apiUrl={apiUrl}
+              companyToEdit={companyToEdit}
+              setCompanyToEdit={setCompanyToEdit}
+              setDisplayForm={setDisplayForm}
+            />}
+          <CompaniesSearch
+            searchTerm={searchTerm}
+            handleSearchChange={handleSearchChange}
+          />
+          {loading ?
+            (<TableLoader/>)
+            :(<CompaniesTable
+              count={searchResults.length}
               items={companies}
               onDeselectAll={companiesSelection.handleDeselectAll}
               onDeselectOne={companiesSelection.handleDeselectOne}
@@ -146,11 +185,18 @@ const Page = () => {
               page={page}
               rowsPerPage={rowsPerPage}
               selected={companiesSelection.selected}
-            />
-          </Stack>
-        </Container>
-      </Box>
-    </>
+              searchResults={searchResults}
+              data={data}
+              setData={setData}
+              apiUrl={apiUrl}
+              companyToEdit={companyToEdit}
+              setCompanyToEdit={setCompanyToEdit}
+              setDisplayForm={setDisplayForm}
+            />)}
+        </Stack>
+      </Container>
+    </Box>
+  </>
   );
 };
 

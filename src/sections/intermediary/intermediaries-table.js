@@ -36,7 +36,6 @@ export const IntermediariesTable = (props) => {
     page = 0,
     rowsPerPage = 0,
     selected = [],
-    searchResults = [],
     setData,
     apiUrl = '',
     intermediaryToEdit = {},
@@ -45,21 +44,20 @@ export const IntermediariesTable = (props) => {
   } = props;
 
 
-
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
 
-  const [open, setOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setdeleteId] = useState();
 
   const handleClickOpen = (Id) => {
-    setOpen(true);
+    setDeleteDialogOpen(true);
     setdeleteId(Id);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setDeleteDialogOpen(false);
   };
 
 
@@ -71,15 +69,12 @@ export const IntermediariesTable = (props) => {
     setData(data)
   }
 
-
   const handleEdit = (intermediaryId) => {
     setDisplayForm(prev => true)
     const intermediary = items.find(intermediary => intermediary._id === intermediaryId);
     setIntermediaryToEdit(intermediary);
   }
-
-
-  console.log(intermediaryToEdit);
+  console.log(items);
 
   return (
     <Card>
@@ -191,7 +186,7 @@ export const IntermediariesTable = (props) => {
 
 
       <DeleteDialog
-        open={open}
+        open={deleteDialogOpen}
         handleClose={handleClose}
         deleteId={deleteId}
         apiUrl={apiUrl}
