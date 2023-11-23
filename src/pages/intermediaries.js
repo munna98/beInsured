@@ -29,7 +29,6 @@ const Page = () => {
         const response = await fetch(apiUrl)
         const data = await response.json()
         setData(data)
-
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -40,7 +39,6 @@ const Page = () => {
     fetchData();
   }, []);
 
- 
   // ***** End setting api *****
 
   const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
@@ -92,7 +90,6 @@ const Page = () => {
     },
     []
   );
-  console.log(intermediaries);
 
   return (
     <>

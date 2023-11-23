@@ -49,6 +49,7 @@ export const PolicyAddForm = () => {
     thirdParty: '',
     ownDamage: '',
     net: '',
+    company: '',
     intermediary: '',
     vehicleType: '',
     commission: '',
@@ -56,7 +57,7 @@ export const PolicyAddForm = () => {
     myPlan: '',
     agentPlan: '',
     policyNumber: '',
-    paidBank: '',
+    paymentMOde: '',
     capReached: '',
     amomuntRecieved: '',
     amountToBePaid: '',
@@ -138,6 +139,7 @@ export const PolicyAddForm = () => {
                 </Typography>
                   <FormControlLabel control={<Checkbox defaultChecked />} label="TP" />
                   <FormControlLabel control={<Checkbox />} label="PK" />
+                  <FormControlLabel control={<Checkbox />} label="OD" />
                 </FormGroup>
               </Grid>
               <Grid
@@ -219,6 +221,30 @@ export const PolicyAddForm = () => {
               >
                 <TextField
                   fullWidth
+                  label="Company"
+                  name="company"
+                  onChange={handleChange}
+                  value={values.state}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {states.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
                   label="Intermediary"
                   name="intermediary"
                   onChange={handleChange}
@@ -284,10 +310,21 @@ export const PolicyAddForm = () => {
                   label="Agent name"
                   name="agentName"
                   onChange={handleChange}
-                  value={values.country}
-                />
-              </Grid>
+                  value={values.state}
+                  select
+                  SelectProps={{ native: true }}
 
+                >
+                  {states.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
               <Grid
                 xs={12}
                 md={6}
@@ -354,11 +391,23 @@ export const PolicyAddForm = () => {
               >
                 <TextField
                   fullWidth
-                  label="Paid bank"
-                  name="paidBank"
+                  label="Payment mode"
+                  name="paymentMode"
                   onChange={handleChange}
-                  value={values.country}
-                />
+                  value={values.state}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {states.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
               <Grid
                 xs={12}
