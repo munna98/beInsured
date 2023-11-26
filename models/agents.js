@@ -11,13 +11,12 @@ const initializeAgentModel = async () => {
     const agentSchema = new mongoose.Schema(
       {
         firstName: String,
-        lastName: String,
+        lastName: String, 
         email: String,
         phone: String,
-        state: String,
         location: String,
       },
-      {
+      { 
         timestamps: true,
       }
     );

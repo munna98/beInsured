@@ -20,8 +20,7 @@ export const AgentAddForm = ({ data, setData,
     lastName: '',
     email: 'example@gmail.com',
     phone: '',
-    state: '',
-    location: ''
+    location: '', 
   });
 
   // Initialize form fields with the existing agent's data
@@ -34,7 +33,6 @@ export const AgentAddForm = ({ data, setData,
         lastName: agentToEdit.lastName,
         email: agentToEdit.email,
         phone: agentToEdit.phone,
-        state: agentToEdit.state,
         location: agentToEdit.location,
       });
     }
@@ -73,8 +71,7 @@ export const AgentAddForm = ({ data, setData,
           lastName: '',
           email: 'example@gmail.com',
           phone: '',
-          state: '',
-          location: ''
+          location: '',
         }); // Reset form fields
         setDisplayForm(false)
       }
@@ -96,8 +93,7 @@ export const AgentAddForm = ({ data, setData,
           lastName: '',
           email: 'example@gmail.com',
           phone: '',
-          state: '',
-          location: ''
+          location: '',
         }); // Reset form fields
       }
       // else {
@@ -168,7 +164,6 @@ export const AgentAddForm = ({ data, setData,
                   label="Phone Number"
                   name="phone"
                   onChange={handleChange}
-                  type="number"
                   value={values.phone}
                 />
               </Grid>
@@ -181,7 +176,7 @@ export const AgentAddForm = ({ data, setData,
                   label="Location"
                   name="location"
                   onChange={handleChange}
-                  value={values.country}
+                  value={values.location}
                 />
               </Grid>
             </Grid>
@@ -189,11 +184,11 @@ export const AgentAddForm = ({ data, setData,
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button variant="contained">
-            Save Agent
+          <Button variant="contained" onClick={handleSubmit}>
+            {agentToEdit ? 'Update Agent' : 'Save Agent'}
           </Button>
         </CardActions>
       </Card>
-    </form>
+    </form> 
   );
 };

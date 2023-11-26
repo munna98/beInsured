@@ -116,7 +116,7 @@ export const AgentsTable = (props) => {
             <TableBody>
               {items.map((agent) => {
                 const isSelected = selected.includes(agent.id);
-
+                const createdAt =new Date(agent.createdAt);
                 return (
                   <TableRow
                     hover
@@ -137,21 +137,22 @@ export const AgentsTable = (props) => {
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {agent.name}
+                        {agent.firstName}
                       </Typography>
                     </TableCell>
                     <TableCell>
                       {agent.email}
                     </TableCell>
                     <TableCell>
-                      {agent.location}
-                    </TableCell>
-                    <TableCell>
                       {agent.phone}
                     </TableCell>
                     <TableCell>
-                      {1}
+                      {agent.location}
+                    </TableCell>                    
+                    <TableCell>
+                      {/* {1} */}
                       {/* {agent.createdAt} */}
+                      {format(createdAt, 'dd-MM-yyyy')}
                     </TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={2}>

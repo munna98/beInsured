@@ -12,21 +12,19 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { agent } = req.body.values;
-
+      const { firstName, lastName, email, phone, location } = req.body.values;
       // Create a new agent using the Mongoose model
+      console.log(req.body.values);
       const newAgent = new agentModel({
-        firstName: agent.firstName,
-        lastName: agent.lastName,
-        email: agent.email,
-        phone: agent.phone,
-        state: agent.state,
-        location: agent.location,
+        firstName:firstName,
+        lastName:lastName,
+        email:email,
+        phone:phone,
+        location:location,
       });
-
+      console.log(newAgent);
       // Save the new agent to the database
       const savedAgent = await newAgent.save();
-
       res.status(201).json(savedAgent);
     } catch (error) {
       res.status(500).json({ message: 'Failed to create agent', error: error.message });
