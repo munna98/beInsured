@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState,useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -40,28 +40,28 @@ const Page = () => {
     fetchData();
   }, []);
 
- 
+
   // ***** End setting api *****
 
   const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
 
-const useAgents = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(data, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
-};
+  const useAgents = (page, rowsPerPage) => {
+    return useMemo(
+      () => {
+        return applyPagination(searchResults, page, rowsPerPage);
+      },
+      [page, rowsPerPage, searchTerm, searchResults, data]
+    );
+  };
 
-const useAgentIds = (agents) => {
-  return useMemo(
-    () => {
-      return agents.map((agent) => agent.id);
-    },
-    [agents]
-  );
-};
+  const useAgentIds = (agents) => {
+    return useMemo(
+      () => {
+        return agents.map((agent) => agent.id);
+      },
+      [agents]
+    );
+  };
 
   const [page, setPage] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
@@ -93,112 +93,111 @@ const useAgentIds = (agents) => {
     []
   );
 
-
   return (
     <>
-    <Head>
-      <title>
-        Agents | beInsured
-      </title>
-    </Head>
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8
-      }}
-    >
-      <Container maxWidth="xl">
-        <Stack spacing={3}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            spacing={4}
-          >
-            <Stack spacing={1}>
-              <Typography variant="h4">
-                Agents
-              </Typography>
-              <Stack
-                alignItems="center"
-                direction="row"
-                spacing={1}
-              >
-                <Button
-                  color="inherit"
-                  startIcon={(
-                    <SvgIcon fontSize="small">
-                      <ArrowUpOnSquareIcon />
-                    </SvgIcon>
-                  )}
+      <Head>
+        <title>
+          Agents | beInsured
+        </title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8
+        }}
+      >
+        <Container maxWidth="xl">
+          <Stack spacing={3}>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              spacing={4}
+            >
+              <Stack spacing={1}>
+                <Typography variant="h4">
+                  Agents
+                </Typography>
+                <Stack
+                  alignItems="center"
+                  direction="row"
+                  spacing={1}
                 >
-                  Import
-                </Button>
-                <Button
-                  color="inherit"
-                  startIcon={(
-                    <SvgIcon fontSize="small">
-                      <ArrowDownOnSquareIcon />
-                    </SvgIcon>
-                  )}
-                >
-                  Export
-                </Button>
+                  <Button
+                    color="inherit"
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <ArrowUpOnSquareIcon />
+                      </SvgIcon>
+                    )}
+                  >
+                    Import
+                  </Button>
+                  <Button
+                    color="inherit"
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <ArrowDownOnSquareIcon />
+                      </SvgIcon>
+                    )}
+                  >
+                    Export
+                  </Button>
+                </Stack>
               </Stack>
+              <div>
+                <Button
+                  onClick={() => handleAdd()}
+                  startIcon={(
+                    <SvgIcon fontSize="small">
+                      <PlusIcon />
+                    </SvgIcon>
+                  )}
+                  variant="contained"
+                >
+                  Add
+                </Button>
+              </div>
             </Stack>
-            <div>
-              <Button
-                onClick={() => handleAdd()}
-                startIcon={(
-                  <SvgIcon fontSize="small">
-                    <PlusIcon />
-                  </SvgIcon>
-                )}
-                variant="contained"
-              >
-                Add
-              </Button>
-            </div>
+            {displayForm &&
+              <AgentAddForm
+                data={data}
+                setData={setData}
+                apiUrl={apiUrl}
+                agentToEdit={agentToEdit}
+                setAgentToEdit={setAgentToEdit}
+                setDisplayForm={setDisplayForm}
+              />}
+            <AgentsSearch
+              searchTerm={searchTerm}
+              handleSearchChange={handleSearchChange}
+            />
+            {loading ?
+              (<TableLoader />)
+              : (<AgentsTable
+                count={searchResults.length}
+                items={agents}
+                onDeselectAll={agentsSelection.handleDeselectAll}
+                onDeselectOne={agentsSelection.handleDeselectOne}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                onSelectAll={agentsSelection.handleSelectAll}
+                onSelectOne={agentsSelection.handleSelectOne}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                selected={agentsSelection.selected}
+                searchResults={searchResults}
+                data={data}
+                setData={setData}
+                apiUrl={apiUrl}
+                agentToEdit={agentToEdit}
+                setAgentToEdit={setAgentToEdit}
+                setDisplayForm={setDisplayForm}
+              />)}
           </Stack>
-          {displayForm   &&
-            <AgentAddForm
-              data={data}
-              setData={setData}
-              apiUrl={apiUrl}
-              agentToEdit={agentToEdit}
-              setAgentToEdit={setAgentToEdit}
-              setDisplayForm={setDisplayForm}
-            />}
-          <AgentsSearch
-            searchTerm={searchTerm}
-            handleSearchChange={handleSearchChange}
-          />
-          {loading ?
-            (<TableLoader/>)
-            :(<AgentsTable
-              count={searchResults.length}
-              items={agents}
-              onDeselectAll={agentsSelection.handleDeselectAll}
-              onDeselectOne={agentsSelection.handleDeselectOne}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={agentsSelection.handleSelectAll}
-              onSelectOne={agentsSelection.handleSelectOne}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              selected={agentsSelection.selected}
-              searchResults={searchResults}
-              data={data}
-              setData={setData}
-              apiUrl={apiUrl}
-              agentToEdit={agentToEdit}
-              setAgentToEdit={setAgentToEdit}
-              setDisplayForm={setDisplayForm}
-            />)}
-        </Stack>
-      </Container>
-    </Box>
-  </>
+        </Container>
+      </Box>
+    </>
   );
 };
 
@@ -208,4 +207,4 @@ Page.getLayout = (page) => (
   </DashboardLayout>
 );
 
-export default Page;
+export default Page; 

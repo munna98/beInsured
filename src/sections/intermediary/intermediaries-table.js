@@ -12,7 +12,7 @@ import {
   IconButton,
   Table,
   TableBody,
-  TableCell,
+  TableCell, 
   TableHead,
   TablePagination,
   TableRow,
@@ -51,7 +51,7 @@ export const IntermediariesTable = (props) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setdeleteId] = useState();
 
-  const handleClickOpen = (Id) => {
+  const handleClickDeleteOpen = (Id) => {
     setDeleteDialogOpen(true);
     setdeleteId(Id);
   };
@@ -74,12 +74,12 @@ export const IntermediariesTable = (props) => {
     const intermediary = items.find(intermediary => intermediary._id === intermediaryId);
     setIntermediaryToEdit(intermediary);
   }
-  console.log(items);
+
 
   return (
-    <Card>
+    <Card  sx={{ maxWidth: 600 }}>
       <Scrollbar>
-        <Box sx={{ minWidth: 800 }}>
+        <Box sx={{ minWidth: 600 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -128,15 +128,9 @@ export const IntermediariesTable = (props) => {
                     </TableCell>
 
                     <TableCell>
-                      <Stack
-                        alignItems="left"
-                        direction="column"
-                        spacing={2}
-                      >
                         <Typography variant="subtitle2">
                           {Intermediary.name}
                         </Typography>
-                      </Stack>
                     </TableCell>
 
                     <TableCell>
@@ -147,7 +141,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="edit"
-                              onClick={() => handleEdit(Intermediary._id)} // You should define the handleDelete function
+                              onClick={() => handleEdit(Intermediary._id)} 
                             >
                               <PencilIcon />
                             </SvgIcon>
@@ -159,7 +153,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
-                              onClick={() => handleClickOpen(Intermediary._id)}
+                              onClick={() => handleClickDeleteOpen(Intermediary._id)}
                             >
                               <TrashIcon />
                             </SvgIcon>

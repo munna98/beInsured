@@ -60,7 +60,7 @@ const CommissionDialog = ({ open, onClose, onSave }) => {
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Add Commission</DialogTitle>
       <DialogContent>
-        <DialogContentText>
+        <DialogContentText sx={{ marginBottom: 2 }}>
           Please enter the details for the commission.
         </DialogContentText>
         <Grid container spacing={2}>

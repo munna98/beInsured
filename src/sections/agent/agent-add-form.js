@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -12,44 +12,107 @@ import {
 } from '@mui/material';
 
 
-export const AgentAddForm = () => {
+export const AgentAddForm = ({ data, setData,
+  apiUrl, agentToEdit, setAgentToEdit, setDisplayForm }) => {
+
   const [values, setValues] = useState({
     firstName: '',
     lastName: '',
     email: 'example@gmail.com',
     phone: '',
     state: '',
-    place: ''
+    location: ''
   });
+
+  // Initialize form fields with the existing agent's data
+  useEffect(() => {
+    document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
+
+    if (agentToEdit) {
+      setValues({
+        firstName: agentToEdit.firstName,
+        lastName: agentToEdit.lastName,
+        email: agentToEdit.email,
+        phone: agentToEdit.phone,
+        state: agentToEdit.state,
+        location: agentToEdit.location,
+      });
+    }
+  }, [agentToEdit]);
 
   const handleChange = useCallback(
     (event) => {
-      setValues((prevState) => ({
-        ...prevState,
+      setValues((prev) => ({
+        ...prev,
         [event.target.name]: event.target.value
       }));
     },
     []
   );
 
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-    },
-    []
-  );
+  const handleSubmit = useCallback(async () => {
+    if (agentToEdit) {
+      // Handle editing by sending a PUT request
+      const response = await fetch(`${apiUrl}/${agentToEdit._id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ values }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 200) {
+        const updatedValues = await response.json();
+        // Update the client-side data state with the edited agent
+        const updatedData = data.map((agent) =>
+          agent._id === updatedValues._id ? updatedValues : agent
+        );
+        setData(updatedData);
+        setAgentToEdit();
+        setValues({
+          firstName: '',
+          lastName: '',
+          email: 'example@gmail.com',
+          phone: '',
+          state: '',
+          location: ''
+        }); // Reset form fields
+        setDisplayForm(false)
+      }
+    } else {
+      // Handle adding a new agent
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: JSON.stringify({ values }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 201) {
+        const newValues = await response.json();
+        // Update the client-side data state with the new agent
+        setData([newValues, ...data]);
+        setValues({
+          firstName: '',
+          lastName: '',
+          email: 'example@gmail.com',
+          phone: '',
+          state: '',
+          location: ''
+        }); // Reset form fields
+      }
+      // else {
+      //   const errorData = await response.json();
+      //   setError(errorData.message); // Set error message state
+      //   setErrorDialogOpen(true)
+      // }
+    }
+  }, [values, setData, data, apiUrl, agentToEdit, setValues]);
+
 
   return (
-    <form
-      autoComplete="off"
-      noValidate
-      onSubmit={handleSubmit}
-    >
+    <form autoComplete="off" noValidate Card id="editForm" >
       <Card>
-        <CardHeader
-          subheader="Fill the form to add a new agent"
-          title="Add Agent"
-        />
+        <CardHeader title={agentToEdit ? 'Edit Agent' : 'Add Agent'} />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
             <Grid
@@ -115,35 +178,12 @@ export const AgentAddForm = () => {
               >
                 <TextField
                   fullWidth
-                  label="Place"
-                  name="place"
+                  label="Location"
+                  name="location"
                   onChange={handleChange}
                   value={values.country}
                 />
               </Grid>
-              {/* <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="State"
-                  name="state"
-                  onChange={handleChange}
-                  select
-                  SelectProps={{ native: true }}
-                  value={values.state}
-                >
-                  {states.map((option) => (
-                    <option
-                      key={option.value}
-                      value={option.value}
-                    >
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid> */}
             </Grid>
           </Box>
         </CardContent>

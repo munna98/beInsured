@@ -14,6 +14,13 @@ export default async function handler(req, res) {
     try {
       const { name } = req.body.values;
 
+      // Check if an vehicle with the given name already exists
+      const existingVehicle = await vehicleModel.findOne({ name });
+
+      if (existingVehicle) {
+        return res.status(400).json({ message: 'Vehicle with this name already exists' });
+      }
+      
       // Create a new vehicle using the Mongoose model
       const newVehicle = new vehicleModel({
         name: name,

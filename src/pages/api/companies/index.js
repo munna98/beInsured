@@ -14,6 +14,13 @@ export default async function handler(req, res) {
     try {
       const { name } = req.body.values;
 
+      // Check if a company with the given name already exists
+      const existingCompany = await companyModel.findOne({ name });
+
+      if (existingCompany) {
+        return res.status(400).json({ message: 'Company with this name already exists' });
+      }
+
       // Create a new company using the Mongoose model
       const newCompany = new companyModel({
         name: name,

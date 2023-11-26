@@ -1,3 +1,6 @@
+import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
+import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
+import { SvgIcon, Tooltip, } from '@mui/material';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -6,16 +9,19 @@ import {
   Card,
   Checkbox,
   Stack,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
+import { useState } from 'react';
+import DeleteDialog from 'src/components/delete-dialog';
 
 export const AgentsTable = (props) => {
   const {
@@ -23,22 +29,49 @@ export const AgentsTable = (props) => {
     items = [],
     onDeselectAll,
     onDeselectOne,
-    onPageChange = () => {},
+    onPageChange = () => { },
     onRowsPerPageChange,
     onSelectAll,
     onSelectOne,
     page = 0,
     rowsPerPage = 0,
-    selected = []
+    selected = [],
+    setData,
+    apiUrl = '',
+    agentToEdit = {},
+    setAgentToEdit,
+    setDisplayForm,
   } = props;
+
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
-  
-console.log(count,'=count');
-// console.log(searchResults,'search results');
-console.log(items,'items');
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteId, setdeleteId] = useState();
+
+  const handleClickDeleteOpen = (Id) => {
+    setDeleteDialogOpen(true);
+    setdeleteId(Id);
+  };
+
+  const handleClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const fetchAgent = async () => {
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    setData(data)
+  }
+
+  const handleEdit = (agentId) => {
+    setDisplayForm(prev => true)
+    const agent = items.find(agent => agent._id === agentId);
+    setAgentToEdit(agent);
+  }
+
 
   return (
     <Card>
@@ -67,20 +100,22 @@ console.log(items,'items');
                   Email
                 </TableCell>
                 <TableCell>
-                  Location
-                </TableCell>
-                <TableCell>
                   Phone
                 </TableCell>
                 <TableCell>
-                  Signed Up
+                  Location
+                </TableCell>
+                <TableCell>
+                  Created At
+                </TableCell>
+                <TableCell>
+                  Actions
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((agent) => {
                 const isSelected = selected.includes(agent.id);
-                const createdAt = format(agent.createdAt, 'dd/MM/yyyy');
 
                 return (
                   <TableRow
@@ -101,30 +136,50 @@ console.log(items,'items');
                       />
                     </TableCell>
                     <TableCell>
-                      <Stack
-                        alignItems="center"
-                        direction="coloumn"
-                        spacing={2}
-                      >
-                        <Avatar src={agent.avatar}>
-                          {getInitials(agent.name)}
-                        </Avatar>
-                        <Typography variant="subtitle2">
-                          {agent.name}
-                        </Typography>
-                      </Stack>
+                      <Typography variant="subtitle2">
+                        {agent.name}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       {agent.email}
                     </TableCell>
                     <TableCell>
-                      {agent.address.city}, {agent.address.state}, {agent.address.country}
+                      {agent.location}
                     </TableCell>
                     <TableCell>
                       {agent.phone}
                     </TableCell>
                     <TableCell>
-                      {createdAt}
+                      {1}
+                      {/* {agent.createdAt} */}
+                    </TableCell>
+                    <TableCell>
+                      <Stack direction="row" spacing={2}>
+                        <IconButton>
+                          <Tooltip title="Edit">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="neutral"
+                              aria-label="edit"
+                              onClick={() => handleEdit(Agent._id)} // You should define the handleDelete function
+                            >
+                              <PencilIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                        <IconButton>
+                          <Tooltip title="Delete">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="neutral"
+                              aria-label="delete"
+                              onClick={() => handleClickDeleteOpen(Agent._id)}
+                            >
+                              <TrashIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 );
@@ -142,13 +197,21 @@ console.log(items,'items');
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
+
+      <DeleteDialog
+        open={deleteDialogOpen}
+        handleClose={handleClose}
+        deleteId={deleteId}
+        apiUrl={apiUrl}
+        fetchData={fetchAgent}
+      />
     </Card>
   );
 };
 
 AgentsTable.propTypes = {
   count: PropTypes.number,
-  items: PropTypes.array,
+  items: PropTypes.array, 
   onDeselectAll: PropTypes.func,
   onDeselectOne: PropTypes.func,
   onPageChange: PropTypes.func,
@@ -157,5 +220,6 @@ AgentsTable.propTypes = {
   onSelectOne: PropTypes.func,
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
+  selected: PropTypes.array,
+  searchResults: PropTypes.array,
 };

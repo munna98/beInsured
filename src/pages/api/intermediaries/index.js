@@ -14,6 +14,13 @@ export default async function handler(req, res) {
     try {
       const { name } = req.body.values;
 
+      // Check if an intermediary with the given name already exists
+      const existingIntermediary = await intermediaryModel.findOne({ name });
+
+      if (existingIntermediary) {
+        return res.status(400).json({ message: 'Intermediary with this name already exists' });
+      }
+
       // Create a new intermediary using the Mongoose model
       const newIntermediary = new intermediaryModel({
         name: name,

@@ -10,6 +10,7 @@ import {
   TextField,
   Unstable_Grid2 as Grid,
 } from '@mui/material';
+import ErrorDialog from 'src/components/error-dialog';
 
 export const VehicleAddForm = ({ data, setData, 
   apiUrl, vehicleToEdit, setVehicleToEdit, setDisplayForm }) => {
@@ -18,6 +19,11 @@ export const VehicleAddForm = ({ data, setData,
     name: '',
   });
 
+  const [error, setError] = useState('');
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const handleErrorDialogClose =()=>{
+    setErrorDialogOpen(false)
+  }
   // Initialize form fields with the existing vehicle's data
   useEffect(() => {
     document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
@@ -75,6 +81,10 @@ export const VehicleAddForm = ({ data, setData,
         // Update the client-side data state with the new vehicle
         setData([newValues, ...data]);
         setValues({ name: '' }); // Reset form fields
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message); // Set error message state
+        setErrorDialogOpen(true)
       }
     }
   }, [values, setData, data, apiUrl, vehicleToEdit, setValues]);
@@ -107,6 +117,7 @@ export const VehicleAddForm = ({ data, setData,
           </Button>
         </CardActions>
       </Card>
+      <ErrorDialog open={errorDialogOpen} onClose={handleErrorDialogClose} errorMessage={error} />
     </form>
   );
 };

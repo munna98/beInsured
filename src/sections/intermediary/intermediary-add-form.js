@@ -10,13 +10,20 @@ import {
   TextField,
   Unstable_Grid2 as Grid,
 } from '@mui/material';
+import ErrorDialog from 'src/components/error-dialog';
 
-export const IntermediaryAddForm = ({ data, setData, 
+export const IntermediaryAddForm = ({ data, setData,
   apiUrl, intermediaryToEdit, setIntermediaryToEdit, setDisplayForm }) => {
 
   const [values, setValues] = useState({
     name: '',
   });
+
+  const [error, setError] = useState('');
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const handleErrorDialogClose = () => {
+    setErrorDialogOpen(false)
+  }
 
   // Initialize form fields with the existing intermediary's data
   useEffect(() => {
@@ -61,7 +68,6 @@ export const IntermediaryAddForm = ({ data, setData,
         setDisplayForm(false)
       }
     } else {
-      console.log("gonna add");
       // Handle adding a new intermediary
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -75,12 +81,16 @@ export const IntermediaryAddForm = ({ data, setData,
         // Update the client-side data state with the new intermediary
         setData([newValues, ...data]);
         setValues({ name: '' }); // Reset form fields
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message); // Set error message state
+        setErrorDialogOpen(true)
       }
     }
   }, [values, setData, data, apiUrl, intermediaryToEdit, setValues]);
-  
+
   return (
-    <form autoComplete="off" noValidate  Card id="editForm" >
+    <form autoComplete="off" noValidate Card id="editForm" >
       <Card >
         <CardHeader title={intermediaryToEdit ? 'Edit Intermediary' : 'Add Intermediary'} />
         <CardContent sx={{ pt: 0 }}>
@@ -107,6 +117,7 @@ export const IntermediaryAddForm = ({ data, setData,
           </Button>
         </CardActions>
       </Card>
+      <ErrorDialog open={errorDialogOpen} onClose={handleErrorDialogClose} errorMessage={error} />
     </form>
   );
 };

@@ -39,6 +39,7 @@ const Page = () => {
     fetchData();
   }, []);
 
+  
   // ***** End setting api *****
 
   const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
