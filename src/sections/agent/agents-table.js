@@ -150,8 +150,6 @@ export const AgentsTable = (props) => {
                       {agent.location}
                     </TableCell>                    
                     <TableCell>
-                      {/* {1} */}
-                      {/* {agent.createdAt} */}
                       {format(createdAt, 'dd-MM-yyyy')}
                     </TableCell>
                     <TableCell>
@@ -162,7 +160,7 @@ export const AgentsTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="edit"
-                              onClick={() => handleEdit(Agent._id)} // You should define the handleDelete function
+                              onClick={() => handleEdit(agent._id)} // You should define the handleDelete function
                             >
                               <PencilIcon />
                             </SvgIcon>
@@ -174,7 +172,7 @@ export const AgentsTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
-                              onClick={() => handleClickDeleteOpen(Agent._id)}
+                              onClick={() => handleClickDeleteOpen(agent._id)}
                             >
                               <TrashIcon />
                             </SvgIcon>
