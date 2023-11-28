@@ -161,7 +161,7 @@ export const AgentsTable = (props) => {
                               color="neutral"
                               aria-label="edit"
                               onClick={() => handleEdit(agent._id)} // You should define the handleDelete function
-                            >
+                            > 
                               <PencilIcon />
                             </SvgIcon>
                           </Tooltip>

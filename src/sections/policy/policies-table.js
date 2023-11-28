@@ -1,3 +1,6 @@
+import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
+import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
+import { SvgIcon, Tooltip, } from '@mui/material';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
@@ -6,16 +9,19 @@ import {
   Card,
   Checkbox,
   Stack,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
+import { useState } from 'react';
+import DeleteDialog from 'src/components/delete-dialog';
 
 export const PoliciesTable = (props) => {
   const {
@@ -23,22 +29,54 @@ export const PoliciesTable = (props) => {
     items = [],
     onDeselectAll,
     onDeselectOne,
-    onPageChange = () => {},
+    onPageChange = () => { },
     onRowsPerPageChange,
     onSelectAll,
     onSelectOne,
     page = 0,
     rowsPerPage = 0,
-    selected = []
+    selected = [],
+    setData,
+    apiUrl = '',
+    policyToEdit = {},
+    setPolicyToEdit,
+    setDisplayForm,
   } = props;
 
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteId, setdeleteId] = useState();
+
+  const handleClickDeleteOpen = (Id) => {
+    setDeleteDialogOpen(true);
+    setdeleteId(Id);
+  };
+
+  const handleClose = () => {
+    setDeleteDialogOpen(false);
+  };
+
+
+
+
+  const fetchPolicy = async () => {
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    setData(data)
+  }
+
+  const handleEdit = (policyId) => {
+    setDisplayForm(prev => true)
+    const policy = items.find(policy => policy._id === policyId);
+    setPolicyToEdit(policy);
+  }
+
   return (
-    <Card>
+    <Card style={{ overflowX: 'auto' }}>
       <Scrollbar>
-        <Box sx={{ minWidth: 800 }}>
+        <Box sx={{ minWidth: 3700 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -56,26 +94,68 @@ export const PoliciesTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  Issue Date
                 </TableCell>
                 <TableCell>
-                  Email
+                  Customer Name
                 </TableCell>
                 <TableCell>
-                  Location
+                  Policy Type
                 </TableCell>
                 <TableCell>
-                  Phone
+                  Vehicle No
                 </TableCell>
                 <TableCell>
-                  Signed Up
+                  Premium
+                </TableCell>
+                <TableCell>
+                  OD Amount
+                </TableCell>
+                <TableCell>
+                  Net Amount
+                </TableCell>
+                <TableCell>
+                  Company
+                </TableCell>
+                <TableCell>
+                  Policy
+                </TableCell>
+                <TableCell>
+                  Vehicle Type
+                </TableCell>
+                <TableCell>
+                  Commission
+                </TableCell>
+                <TableCell>
+                  Agent Name
+                </TableCell>
+                <TableCell>
+                  My Plan
+                </TableCell>
+                <TableCell>
+                  Agent Plan
+                </TableCell>
+                <TableCell>
+                  Policy No
+                </TableCell>
+                <TableCell>
+                  Payment Mode
+                </TableCell>
+                <TableCell>
+                  Cap Reached
+                </TableCell>
+                <TableCell>
+                  Amount Recieved
+                </TableCell>
+                <TableCell>
+                  Actions
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((policy) => {
                 const isSelected = selected.includes(policy.id);
-                const createdAt = format(policy.createdAt, 'dd/MM/yyyy');
+                const createdAt = format(policy.createdAt, 'dd-MM-yyyy');
 
                 return (
                   <TableRow
@@ -96,30 +176,88 @@ export const PoliciesTable = (props) => {
                       />
                     </TableCell>
                     <TableCell>
-                      <Stack
-                        alignItems="center"
-                        direction="coloumn"
-                        spacing={2}
-                      >
-                        {/* <Avatar src={policy.avatar}>
-                          {getInitials(policy.name)}
-                        </Avatar> */}
-                        <Typography variant="subtitle2">
-                          {policy.name}
-                        </Typography>
-                      </Stack>
+                      {policy.issueDate}
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="subtitle2">
+                        {policy.name}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       {policy.email}
                     </TableCell>
                     <TableCell>
-                      {policy.address.city}, {policy.address.state}, {policy.address.country}
+                      {policy.policyType}
                     </TableCell>
                     <TableCell>
-                      {policy.phone}
+                      {policy.vehicleNo}
                     </TableCell>
                     <TableCell>
-                      {createdAt}
+                      {policy.premium}
+                    </TableCell>
+                    <TableCell>
+                      {policy.ownDamage}
+                    </TableCell>
+                    <TableCell>
+                      {policy.net}
+                    </TableCell>
+                    <TableCell>
+                      {policy.company}
+                    </TableCell>
+                    <TableCell>
+                      {policy.policy}
+                    </TableCell>
+                    <TableCell>
+                      {policy.vehicleType}
+                    </TableCell>
+                    <TableCell>
+                      {policy.commission}
+                    </TableCell>
+                    <TableCell>
+                      {policy.myPlan}
+                    </TableCell>
+                    <TableCell>
+                      {policy.agentPlan}
+                    </TableCell>
+                    <TableCell>
+                      {policy.policyNo}
+                    </TableCell>
+                    <TableCell>
+                      {policy.paymentMode}
+                    </TableCell>
+                    <TableCell>
+                      {policy.capReached}
+                    </TableCell>
+                    <TableCell>
+                      {policy.amountRecieved}
+                    </TableCell>
+                    <TableCell>
+                      <Stack direction="row" spacing={2}>
+                        <IconButton>
+                          <Tooltip title="Edit">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="neutral"
+                              aria-label="edit"
+                              onClick={() => handleEdit(policy._id)}
+                            >
+                              <PencilIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                        <IconButton>
+                          <Tooltip title="Delete">
+                            <SvgIcon fontSize="small"
+                              cursor="pointer"
+                              color="neutral"
+                              aria-label="delete"
+                              onClick={() => handleClickDeleteOpen(policy._id)}
+                            >
+                              <TrashIcon />
+                            </SvgIcon>
+                          </Tooltip>
+                        </IconButton>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 );
@@ -137,6 +275,13 @@ export const PoliciesTable = (props) => {
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
       />
+      <DeleteDialog
+        open={deleteDialogOpen}
+        handleClose={handleClose}
+        deleteId={deleteId}
+        apiUrl={apiUrl}
+        fetchData={fetchPolicy}
+      />
     </Card>
   );
 };
@@ -152,5 +297,7 @@ PoliciesTable.propTypes = {
   onSelectOne: PropTypes.func,
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
+  selected: PropTypes.array,
+  searchResults: PropTypes.array,
 };
+

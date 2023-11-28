@@ -13,177 +13,64 @@ import { applyPagination } from 'src/utils/apply-pagination';
 import { PolicyAddForm } from 'src/sections/policy/policy-add-form';
 import useSearch from 'src/hooks/use-search';
 import TableLoader from 'src/components/table-loader';
-
-const now = new Date();
-
-const data = [
-  {
-    id: '5e887ac47eed253091be10cb',
-    address: {
-      city: 'Cleveland',
-      country: 'USA',
-      state: 'Ohio',
-      street: '2849 Fulton Street'
-    },
-    avatar: '/assets/avatars/avatar-carson-darrin.png',
-    createdAt: subDays(subHours(now, 7), 1).getTime(),
-    email: 'carson.darrin@devias.io',
-    name: 'Carson Darrin',
-    phone: '304-428-3097'
-  },
-  {
-    id: '5e887b209c28ac3dd97f6db5',
-    address: {
-      city: 'Atlanta',
-      country: 'USA',
-      state: 'Georgia',
-      street: '1865  Pleasant Hill Road'
-    },
-    avatar: '/assets/avatars/avatar-fran-perez.png',
-    createdAt: subDays(subHours(now, 1), 2).getTime(),
-    email: 'fran.perez@devias.io',
-    name: 'Fran Perez',
-    phone: '712-351-5711'
-  },
-  {
-    id: '5e887b7602bdbc4dbb234b27',
-    address: {
-      city: 'North Canton',
-      country: 'USA',
-      state: 'Ohio',
-      street: '4894  Lakeland Park Drive'
-    },
-    avatar: '/assets/avatars/avatar-jie-yan-song.png',
-    createdAt: subDays(subHours(now, 4), 2).getTime(),
-    email: 'jie.yan.song@devias.io',
-    name: 'Jie Yan Song',
-    phone: '770-635-2682'
-  },
-  {
-    id: '5e86809283e28b96d2d38537',
-    address: {
-      city: 'Madrid',
-      country: 'Spain',
-      name: 'JSK KVR',
-      street: '4158  Hedge Street'
-    },
-    avatar: '/assets/avatars/avatar-anika-visser.png',
-    createdAt: subDays(subHours(now, 11), 2).getTime(),
-    email: 'anika.visser@devias.io',
-    name: 'JSK KVR',
-    phone: '908-691-3242'
-  },
-  {
-    id: '5e86805e2bafd54f66cc95c3',
-    address: {
-      city: 'San Diego',
-      country: 'USA',
-      state: 'California',
-      street: '75247'
-    },
-    avatar: '/assets/avatars/avatar-miron-vitold.png',
-    createdAt: subDays(subHours(now, 7), 3).getTime(),
-    email: 'miron.vitold@devias.io',
-    name: 'Miron Vitold',
-    phone: '972-333-4106'
-  },
-  {
-    id: '5e887a1fbefd7938eea9c981',
-    address: {
-      city: 'Berkeley',
-      country: 'USA',
-      state: 'California',
-      street: '317 Angus Road'
-    },
-    avatar: '/assets/avatars/avatar-penjani-inyene.png',
-    createdAt: subDays(subHours(now, 5), 4).getTime(),
-    email: 'penjani.inyene@devias.io',
-    name: 'Penjani Inyene',
-    phone: '858-602-3409'
-  },
-  {
-    id: '5e887d0b3d090c1b8f162003',
-    address: {
-      city: 'Carson City',
-      country: 'USA',
-      state: 'Nevada',
-      street: '2188  Armbrester Drive'
-    },
-    avatar: '/assets/avatars/avatar-omar-darboe.png',
-    createdAt: subDays(subHours(now, 15), 4).getTime(),
-    email: 'omar.darobe@devias.io',
-    name: 'Omar Darobe',
-    phone: '415-907-2647'
-  },
-  {
-    id: '5e88792be2d4cfb4bf0971d9',
-    address: {
-      city: 'Los Angeles',
-      country: 'USA',
-      state: 'California',
-      street: '1798  Hickory Ridge Drive'
-    },
-    avatar: '/assets/avatars/avatar-siegbert-gottfried.png',
-    createdAt: subDays(subHours(now, 2), 5).getTime(),
-    email: 'siegbert.gottfried@devias.io',
-    name: 'Siegbert Gottfried',
-    phone: '702-661-1654'
-  },
-  {
-    id: '5e8877da9a65442b11551975',
-    address: {
-      city: 'Murray',
-      country: 'USA',
-      state: 'Utah',
-      street: '3934  Wildrose Lane'
-    },
-    avatar: '/assets/avatars/avatar-iulia-albu.png',
-    createdAt: subDays(subHours(now, 8), 6).getTime(),
-    email: 'iulia.albu@devias.io',
-    name: 'Iulia Albu',
-    phone: '313-812-8947'
-  },
-  {
-    id: '5e8680e60cba5019c5ca6fda',
-    address: {
-      city: 'Salt Lake City',
-      country: 'USA',
-      state: 'Utah',
-      street: '368 Lamberts Branch Road'
-    },
-    avatar: '/assets/avatars/avatar-nasimiyu-danai.png',
-    createdAt: subDays(subHours(now, 1), 9).getTime(),
-    email: 'nasimiyu.danai@devias.io',
-    name: 'Nasimiyu Danai',
-    phone: '801-301-7894'
-  }
-];
-
-const usePolicies = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(data, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
-};
-
-const usePolicyIds = (policies) => {
-  return useMemo(
-    () => {
-      return policies.map((agent) => agent.id);
-    },
-    [policies]
-  );
-};
+ 
+const now = new Date(); 
 
 const Page = () => {
+
+  const [data, setData] = useState([]);
+  const apiUrl = '/api/policies';
+  const [loading, setLoading] = useState(true);
+
+  // ***** Setting api *****
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+
+        const response = await fetch(apiUrl)
+        const data = await response.json()
+        setData(data)
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  
+  // ***** End setting api *****
+
+  const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
+
+  const usePolicies = (page, rowsPerPage) => {
+    return useMemo(
+      () => {
+        return applyPagination(searchResults, page, rowsPerPage);
+      },
+      [page, rowsPerPage, searchTerm, searchResults, data]
+    );
+  };
+
+  const usePolicyIds = (policies) => {
+    return useMemo(
+      () => {
+        return policies.map((policy) => policy.id);
+      },
+      [policies]
+    );
+  };
+
   const [page, setPage] = useState(0);
-  const [addPolicy, setAddPolicy] = useState(false);
+  const [displayForm, setDisplayForm] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [policyToEdit, setPolicyToEdit] = useState();
   const policies = usePolicies(page, rowsPerPage);
-  const agentsIds = usePolicyIds(policies);
-  const agentsSelection = useSelection(agentsIds);
+  const policiesIds = usePolicyIds(policies);
+  const policiesSelection = useSelection(policiesIds);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -195,6 +82,14 @@ const Page = () => {
   const handleRowsPerPageChange = useCallback(
     (event) => {
       setRowsPerPage(event.target.value);
+    },
+    []
+  );
+
+  const handleAdd = useCallback(
+    () => {
+      setDisplayForm((prev) => !prev)
+      setPolicyToEdit();
     },
     []
   );
@@ -253,7 +148,7 @@ const Page = () => {
               </Stack>
               <div>
                 <Button
-                  onClick={()=>setAddPolicy((prev)=>!prev)}
+                  onClick={() => handleAdd()}
                   startIcon={(
                     <SvgIcon fontSize="small">
                       <PlusIcon />
@@ -265,21 +160,41 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {addPolicy&& <PolicyAddForm />}
-            <PoliciesSearch />
-            <PoliciesTable
-              count={data.length}
-              items={policies}
-              onDeselectAll={agentsSelection.handleDeselectAll}
-              onDeselectOne={agentsSelection.handleDeselectOne}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={agentsSelection.handleSelectAll}
-              onSelectOne={agentsSelection.handleSelectOne}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              selected={agentsSelection.selected}
+            {displayForm   &&
+              <PolicyAddForm
+                data={data}
+                setData={setData}
+                apiUrl={apiUrl}
+                policyToEdit={policyToEdit}
+                setPolicyToEdit={setPolicyToEdit}
+                setDisplayForm={setDisplayForm}
+              />}
+            <PoliciesSearch
+              searchTerm={searchTerm}
+              handleSearchChange={handleSearchChange}
             />
+            {loading ?
+              (<TableLoader/>)
+              :(<PoliciesTable
+                count={searchResults.length}
+                items={policies}
+                onDeselectAll={policiesSelection.handleDeselectAll}
+                onDeselectOne={policiesSelection.handleDeselectOne}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                onSelectAll={policiesSelection.handleSelectAll}
+                onSelectOne={policiesSelection.handleSelectOne}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                selected={policiesSelection.selected}
+                searchResults={searchResults}
+                data={data}
+                setData={setData}
+                apiUrl={apiUrl}
+                policyToEdit={policyToEdit}
+                setPolicyToEdit={setPolicyToEdit}
+                setDisplayForm={setDisplayForm}
+              />)}
           </Stack>
         </Container>
       </Box>

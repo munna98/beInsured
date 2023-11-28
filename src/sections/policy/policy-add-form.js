@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
-
+import React, { useCallback, useState, useEffect } from 'react';
+import { useContext } from "react";
+import { DataContext } from 'src/contexts/data-context';
 import {
   Box,
   Button,
@@ -14,35 +15,17 @@ import {
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import Checkbox from '@mui/material/Checkbox';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
 
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
-  },
-  {
-    value: 'los-angeles',
-    label: 'Los Angeles'
-  }
-];
-
-export const PolicyAddForm = () => {
-
-  const [now, setNow] = useState(new Date());
-
-  const [values, setValues] = useState({
-    date: Date,
+export const PolicyAddForm = ({ data, setData,
+  apiUrl, policyToEdit, setPolicyToEdit, setDisplayForm }) => {
+  const { intermediaryData, agentData, companyData, vehicleData } = useContext(DataContext);
+  const [issueDate, setIssueDate] = useState(new Date());
+  console.log(agentData);
+  const initialValues = useState({
+    date: '',
+    customerName: '',
+    policyType: '',
     customerName: '',
     vehicleNumber: '',
     premium: '',
@@ -53,42 +36,127 @@ export const PolicyAddForm = () => {
     intermediary: '',
     vehicleType: '',
     commission: '',
-    agentName: '',
+    policyName: '',
     myPlan: '',
-    agentPlan: '',
+    policyPlan: '',
     policyNumber: '',
     paymentMOde: '',
     capReached: '',
     amomuntRecieved: '',
     amountToBePaid: '',
-  });
+  })
+  const [values, setValues] = useState(initialValues);
 
   const handleChange = useCallback(
     (event) => {
-      setValues((prevState) => ({
-        ...prevState,
+      setValues((prev) => ({
+        ...prev,
         [event.target.name]: event.target.value
       }));
     },
     []
   );
+
+  useEffect(() => {
+    document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
+
+    if (policyToEdit) {
+      const { date,
+        customerName,
+        policyType,
+        vehicleNumber,
+        premium,
+        thirdParty,
+        ownDamage,
+        net,
+        company,
+        intermediary,
+        vehicleType,
+        commission,
+        agentName,
+        myPlan,
+        agentPlan,
+        policyNumber,
+        paymentMOde,
+        capReached,
+        amomuntRecieved,
+        amountToBePaid, } = policyToEdit;
+      setValues({
+        date,
+        customerName,
+        policyType,
+        vehicleNumber,
+        premium,
+        thirdParty,
+        ownDamage,
+        net,
+        company,
+        intermediary,
+        vehicleType,
+        commission,
+        agentName,
+        myPlan,
+        agentPlan,
+        policyNumber,
+        paymentMOde,
+        capReached,
+        amomuntRecieved,
+        amountToBePaid,
+      });
+    }
+  }, [policyToEdit]);
+
   const handleDateChange = (date) => {
-    setNow(date);
+    setIssueDate(date);
   };
 
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-    },
-    []
-  );
+  const handleSubmit = useCallback(async () => {
+    if (policyToEdit) {
+      // Handle editing by sending a PUT request
+      const response = await fetch(`${apiUrl}/${policyToEdit._id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ values }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 200) {
+        const updatedValues = await response.json();
+        // Update the client-side data state with the edited policy
+        const updatedData = data.map((policy) =>
+          policy._id === updatedValues._id ? updatedValues : policy
+        );
+        setData(updatedData);
+        setPolicyToEdit();
+        setValues(initialValues); // Reset form fields
+        setDisplayForm(false)
+      }
+    } else {
+      // Handle adding a new policy
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        body: JSON.stringify({ values }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.status === 201) {
+        const newValues = await response.json();
+        // Update the client-side data state with the new policy
+        setData([newValues, ...data]);
+        setValues(initialValues); // Reset form fields
+      }
+      // else {
+      //   const errorData = await response.json();
+      //   setError(errorData.message); // Set error message state
+      //   setErrorDialogOpen(true)
+      // }
+    }
+  }, [values, setData, data, apiUrl, policyToEdit, setValues]);
+
 
   return (
-    <form
-      autoComplete="off"
-      noValidate
-      onSubmit={handleSubmit}
-    >
+    <form autoComplete="off" noValidate Card id="editForm" >
       <Card>
         <CardHeader
           subheader="Fill the form to add a new policy"
@@ -100,7 +168,7 @@ export const PolicyAddForm = () => {
               container
               spacing={3}
             >
-              
+
               <Grid
                 xs={12}
                 md={6}
@@ -110,7 +178,7 @@ export const PolicyAddForm = () => {
                   label="Policy issue date"
                   name="date"
                   renderInput={(params) => <TextField {...params} />}
-                  value={now}
+                  value={issueDate}
                   onChange={handleDateChange}
                 />
               </Grid>
@@ -128,20 +196,48 @@ export const PolicyAddForm = () => {
                   value={values.customerName}
                 />
               </Grid>
+
+              {/*               
               <Grid
                 xs={12}
                 md={6}
               >
                 <FormGroup>
-                {/* color="text.secondary" */}
-                <Typography color="text.secondary"  variant="subtitle2" style={{  padding: 10}}>
-                  Policy type
-                </Typography>
+                  color="text.secondary"
+                  <Typography color="text.secondary" variant="subtitle2" style={{ padding: 10 }}>
+                    Policy type
+                  </Typography>
                   <FormControlLabel control={<Checkbox defaultChecked />} label="TP" />
                   <FormControlLabel control={<Checkbox />} label="PK" />
                   <FormControlLabel control={<Checkbox />} label="OD" />
                 </FormGroup>
+              </Grid>  */}
+
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Policy type"
+                  name="policyType"
+                  onChange={handleChange}
+                  value={values.policyType}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {companyData.map((option) => (
+                    <option
+                      key={option._id}
+                      value={option.name}
+                    >
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
+
               <Grid
                 xs={12}
                 md={6}
@@ -152,7 +248,7 @@ export const PolicyAddForm = () => {
                   name="vehicleNumber"
                   onChange={handleChange}
                   type="text"
-                  value={values.phone}
+                  value={values.vehicleNumber}
                   required
                 />
               </Grid>
@@ -166,7 +262,7 @@ export const PolicyAddForm = () => {
                   label="Premium"
                   name="premium"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.premium}
                 >
 
                 </TextField>
@@ -181,7 +277,7 @@ export const PolicyAddForm = () => {
                   label="TP amount"
                   name="thirdParty"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.thirdParty}
                 >
 
                 </TextField>
@@ -196,7 +292,7 @@ export const PolicyAddForm = () => {
                   label="OD amount"
                   name="ownDamage"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.ownDamage}
                 >
                 </TextField>
               </Grid>
@@ -224,17 +320,17 @@ export const PolicyAddForm = () => {
                   label="Company"
                   name="company"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.company}
                   select
                   SelectProps={{ native: true }}
 
                 >
-                  {states.map((option) => (
+                  {companyData.map((option) => (
                     <option
                       key={option.value}
-                      value={option.value}
+                      value={option.name}
                     >
-                      {option.label}
+                      {option.name}
                     </option>
                   ))}
                 </TextField>
@@ -248,17 +344,17 @@ export const PolicyAddForm = () => {
                   label="Intermediary"
                   name="intermediary"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.intermediary}
                   select
                   SelectProps={{ native: true }}
 
                 >
-                  {states.map((option) => (
+                  {intermediaryData.map((option) => (
                     <option
-                      key={option.value}
-                      value={option.value}
+                      key={option._id}
+                      value={option.name}
                     >
-                      {option.label}
+                      {option.name}
                     </option>
                   ))}
                 </TextField>
@@ -272,17 +368,17 @@ export const PolicyAddForm = () => {
                   label="Vehicle type"
                   name="vehicleType"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.vehicleType}
                   select
                   SelectProps={{ native: true }}
 
                 >
-                  {states.map((option) => (
+                  {vehicleData.map((option) => (
                     <option
-                      key={option.value}
-                      value={option.value}
+                      key={option._id}
+                      value={option.name}
                     >
-                      {option.label}
+                      {option.name}
                     </option>
                   ))}
                 </TextField>
@@ -297,7 +393,7 @@ export const PolicyAddForm = () => {
                   label="Commission"
                   name="commission"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.commission}
                 >
                 </TextField>
               </Grid>
@@ -310,17 +406,17 @@ export const PolicyAddForm = () => {
                   label="Agent name"
                   name="agentName"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.agentName}
                   select
                   SelectProps={{ native: true }}
 
                 >
-                  {states.map((option) => (
+                  {agentData.map((option) => (
                     <option
-                      key={option.value}
-                      value={option.value}
+                      key={option._id}
+                      value={option.firstName}
                     >
-                      {option.label}
+                      {option.firstName}
                     </option>
                   ))}
                 </TextField>
@@ -334,17 +430,17 @@ export const PolicyAddForm = () => {
                   label="My plan"
                   name="myPlan"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.myPlan}
                   select
                   SelectProps={{ native: true }}
 
                 >
-                  {states.map((option) => (
+                  {companyData.map((option) => (
                     <option
-                      key={option.value}
-                      value={option.value}
+                      key={option._id}
+                      value={option.name}
                     >
-                      {option.label}
+                      {option.name}
                     </option>
                   ))}
                 </TextField>
@@ -358,17 +454,17 @@ export const PolicyAddForm = () => {
                   label="Agent plan"
                   name="agentPlan"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.agentPlan}
                   select
                   SelectProps={{ native: true }}
 
                 >
-                  {states.map((option) => (
+                  {companyData.map((option) => (
                     <option
-                      key={option.value}
-                      value={option.value}
+                      key={option._id}
+                      value={option.name}
                     >
-                      {option.label}
+                      {option.name}
                     </option>
                   ))}
                 </TextField>
@@ -382,7 +478,7 @@ export const PolicyAddForm = () => {
                   label="Policy number"
                   name="policyNumber"
                   onChange={handleChange}
-                  value={values.country}
+                  value={values.policyNumber}
                 />
               </Grid>
               <Grid
@@ -394,17 +490,17 @@ export const PolicyAddForm = () => {
                   label="Payment mode"
                   name="paymentMode"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.paymentMode}
                   select
                   SelectProps={{ native: true }}
 
                 >
-                  {states.map((option) => (
+                  {companyData.map((option) => (
                     <option
-                      key={option.value}
-                      value={option.value}
+                      key={option._id}
+                      value={option.name}
                     >
-                      {option.label}
+                      {option.name}
                     </option>
                   ))}
                 </TextField>
@@ -419,7 +515,7 @@ export const PolicyAddForm = () => {
                   label="CAP reached"
                   name="capReached"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.capReached}
                 >
 
                 </TextField>
@@ -434,7 +530,7 @@ export const PolicyAddForm = () => {
                   label="Amomunt recieved"
                   name="amomuntRecieved"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.amomuntRecieved}
                 >
 
                 </TextField>
@@ -449,10 +545,9 @@ export const PolicyAddForm = () => {
                   label="Amount to be paid"
                   name="amountToBePaid"
                   onChange={handleChange}
-                  value={values.state}
+                  value={values.amountToBePaid}
                   disabled
                 >
-
                 </TextField>
               </Grid>
             </Grid>
@@ -460,8 +555,8 @@ export const PolicyAddForm = () => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
-          <Button variant="contained">
-            Save Policy
+          <Button variant="contained" onClick={handleSubmit}>
+            {policyToEdit ? 'Update Policy' : 'Save Policy'}
           </Button>
         </CardActions>
       </Card>
