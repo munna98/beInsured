@@ -21,8 +21,7 @@ export const PolicyAddForm = ({ data, setData,
   apiUrl, policyToEdit, setPolicyToEdit, setDisplayForm }) => {
   const { intermediaryData, agentData, companyData, vehicleData } = useContext(DataContext);
   const [issueDate, setIssueDate] = useState(new Date());
-  console.log(agentData);
-  const initialValues = useState({
+  const initialValues = {
     date: '',
     customerName: '',
     policyType: '',
@@ -40,11 +39,11 @@ export const PolicyAddForm = ({ data, setData,
     myPlan: '',
     policyPlan: '',
     policyNumber: '',
-    paymentMOde: '',
+    paymentMode: '',
     capReached: '',
     amomuntRecieved: '',
     amountToBePaid: '',
-  })
+  }
   const [values, setValues] = useState(initialValues);
 
   const handleChange = useCallback(
@@ -77,7 +76,7 @@ export const PolicyAddForm = ({ data, setData,
         myPlan,
         agentPlan,
         policyNumber,
-        paymentMOde,
+        paymentMode,
         capReached,
         amomuntRecieved,
         amountToBePaid, } = policyToEdit;
@@ -98,7 +97,7 @@ export const PolicyAddForm = ({ data, setData,
         myPlan,
         agentPlan,
         policyNumber,
-        paymentMOde,
+        paymentMode,
         capReached,
         amomuntRecieved,
         amountToBePaid,
@@ -154,7 +153,8 @@ export const PolicyAddForm = ({ data, setData,
     }
   }, [values, setData, data, apiUrl, policyToEdit, setValues]);
 
-
+  console.log(values.date)
+  console.log(issueDate)
   return (
     <form autoComplete="off" noValidate Card id="editForm" >
       <Card>
@@ -173,6 +173,7 @@ export const PolicyAddForm = ({ data, setData,
                 xs={12}
                 md={6}
               >
+                
                 <DatePicker
                   fullWidth
                   label="Policy issue date"
@@ -182,6 +183,20 @@ export const PolicyAddForm = ({ data, setData,
                   onChange={handleDateChange}
                 />
               </Grid>
+{/* 
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <DatePicker
+                  fullWidth
+                  label="Policy issue date"
+                  name="date"
+                  renderInput={(params) => <TextField {...params} />}
+                  value={issueDate}
+                  onChange={handleDateChange}
+                />
+              </Grid> */}
 
               <Grid
                 xs={12}
@@ -222,7 +237,7 @@ export const PolicyAddForm = ({ data, setData,
                   label="Policy type"
                   name="policyType"
                   onChange={handleChange}
-                  value={values.policyType}
+                  // value={values.policyType}
                   select
                   SelectProps={{ native: true }}
 
@@ -230,7 +245,7 @@ export const PolicyAddForm = ({ data, setData,
                   {companyData.map((option) => (
                     <option
                       key={option._id}
-                      value={option.name}
+                      value={option._id}
                     >
                       {option.name}
                     </option>
@@ -306,7 +321,7 @@ export const PolicyAddForm = ({ data, setData,
                   label="Net"
                   name="net"
                   onChange={handleChange}
-                  value={4000}
+                  value={values.net}
                   disabled
                 >
                 </TextField>
@@ -320,7 +335,7 @@ export const PolicyAddForm = ({ data, setData,
                   label="Company"
                   name="company"
                   onChange={handleChange}
-                  value={values.company}
+                  // value={values.company}
                   select
                   SelectProps={{ native: true }}
 
@@ -344,7 +359,7 @@ export const PolicyAddForm = ({ data, setData,
                   label="Intermediary"
                   name="intermediary"
                   onChange={handleChange}
-                  value={values.intermediary}
+                  // value={values.intermediary}
                   select
                   SelectProps={{ native: true }}
 
@@ -368,7 +383,7 @@ export const PolicyAddForm = ({ data, setData,
                   label="Vehicle type"
                   name="vehicleType"
                   onChange={handleChange}
-                  value={values.vehicleType}
+                  // value={values.vehicleType}
                   select
                   SelectProps={{ native: true }}
 
@@ -406,7 +421,7 @@ export const PolicyAddForm = ({ data, setData,
                   label="Agent name"
                   name="agentName"
                   onChange={handleChange}
-                  value={values.agentName}
+                  // value={values.agentName}
                   select
                   SelectProps={{ native: true }}
 
@@ -427,20 +442,20 @@ export const PolicyAddForm = ({ data, setData,
               >
                 <TextField
                   fullWidth
-                  label="My plan"
+                  label="My Plan"
                   name="myPlan"
                   onChange={handleChange}
-                  value={values.myPlan}
+                  // value={values.myPlan}
                   select
                   SelectProps={{ native: true }}
 
                 >
-                  {companyData.map((option) => (
+                  {agentData.map((option) => (
                     <option
                       key={option._id}
-                      value={option.name}
+                      value={option.firstName}
                     >
-                      {option.name}
+                      {option.firstName}
                     </option>
                   ))}
                 </TextField>
@@ -454,7 +469,7 @@ export const PolicyAddForm = ({ data, setData,
                   label="Agent plan"
                   name="agentPlan"
                   onChange={handleChange}
-                  value={values.agentPlan}
+                  // value={values.agentPlan}
                   select
                   SelectProps={{ native: true }}
 
@@ -490,7 +505,7 @@ export const PolicyAddForm = ({ data, setData,
                   label="Payment mode"
                   name="paymentMode"
                   onChange={handleChange}
-                  value={values.paymentMode}
+                  // value={values.paymentMode}
                   select
                   SelectProps={{ native: true }}
 

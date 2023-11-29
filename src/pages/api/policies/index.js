@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const {  date,
+      const { date,
         customerName,
         policyType,
         vehicleNumber,
@@ -28,14 +28,14 @@ export default async function handler(req, res) {
         myPlan,
         agentPlan,
         policyNumber,
-        paymentMOde,
+        paymentMode,
         capReached,
         amomuntRecieved,
-        amountToBePaid,} = req.body.values;
+        amountToBePaid, } = req.body.values;
       // Create a new policy using the Mongoose model
       console.log(req.body.values);
       const newPolicy = new policyModel({
-        date:date,
+        date: date,
         customerName: customerName,
         policyType: policyType,
         vehicleNumber: vehicleNumber,
@@ -43,15 +43,15 @@ export default async function handler(req, res) {
         thirdParty: thirdParty,
         ownDamage: ownDamage,
         net: net,
-        company: comopany,
+        company: company,
         intermediary: intermediary,
         vehicleType: vehicleType,
-        commission: commimssion,
+        commission: commission,
         agentName: agentName,
         myPlan: myPlan,
         agentPlan: agentPlan,
         policyNumber: policyNumber,
-        paymentMOde: paymentMOde,
+        paymentMode: paymentMode,
         capReached: capReached,
         amomuntRecieved: amomuntRecieved,
         amountToBePaid: amountToBePaid,

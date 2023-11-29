@@ -62,9 +62,13 @@ export const PoliciesTable = (props) => {
 
 
   const fetchPolicy = async () => {
-    const response = await fetch(apiUrl)
-    const data = await response.json()
-    setData(data)
+    try {
+      const response = await fetch(apiUrl)
+      const data = await response.json()
+      setData(data)
+    } catch (error) {
+      console.error('Error fetching policy:', error);
+    }
   }
 
   const handleEdit = (policyId) => {
@@ -109,6 +113,9 @@ export const PoliciesTable = (props) => {
                   Premium
                 </TableCell>
                 <TableCell>
+                  Third Party
+                </TableCell>
+                <TableCell>
                   OD Amount
                 </TableCell>
                 <TableCell>
@@ -118,7 +125,7 @@ export const PoliciesTable = (props) => {
                   Company
                 </TableCell>
                 <TableCell>
-                  Policy
+                  Intermediary
                 </TableCell>
                 <TableCell>
                   Vehicle Type
@@ -155,7 +162,7 @@ export const PoliciesTable = (props) => {
             <TableBody>
               {items.map((policy) => {
                 const isSelected = selected.includes(policy.id);
-                const createdAt = format(policy.createdAt, 'dd-MM-yyyy');
+                // const createdAt = format(policy.createdAt, 'dd-MM-yyyy');
 
                 return (
                   <TableRow
@@ -176,36 +183,36 @@ export const PoliciesTable = (props) => {
                       />
                     </TableCell>
                     <TableCell>
-                      {policy.issueDate}
+                      {policy.date || 'N/A'}
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">
-                        {policy.name}
+                        {policy.customerName}
                       </Typography>
-                    </TableCell>
-                    <TableCell>
-                      {policy.email}
                     </TableCell>
                     <TableCell>
                       {policy.policyType}
                     </TableCell>
                     <TableCell>
-                      {policy.vehicleNo}
+                      {policy.vehicleNumber}
                     </TableCell>
                     <TableCell>
                       {policy.premium}
                     </TableCell>
                     <TableCell>
+                      {policy.thirdParty}
+                    </TableCell>
+                    <TableCell>
                       {policy.ownDamage}
                     </TableCell>
                     <TableCell>
-                      {policy.net}
+                      {policy.net || 'N/A'}
                     </TableCell>
                     <TableCell>
-                      {policy.company}
+                      {policy.company || 'N/A'}
                     </TableCell>
                     <TableCell>
-                      {policy.policy}
+                      {policy.intermediary}
                     </TableCell>
                     <TableCell>
                       {policy.vehicleType}
@@ -214,13 +221,16 @@ export const PoliciesTable = (props) => {
                       {policy.commission}
                     </TableCell>
                     <TableCell>
+                      {policy.agentName || 'N/A'}
+                    </TableCell>
+                    <TableCell>
                       {policy.myPlan}
                     </TableCell>
                     <TableCell>
-                      {policy.agentPlan}
+                      {policy.agentPlan || 'N/A'}
                     </TableCell>
                     <TableCell>
-                      {policy.policyNo}
+                      {policy.policyNumber}
                     </TableCell>
                     <TableCell>
                       {policy.paymentMode}
@@ -229,7 +239,7 @@ export const PoliciesTable = (props) => {
                       {policy.capReached}
                     </TableCell>
                     <TableCell>
-                      {policy.amountRecieved}
+                      {policy.amountRecieved || 'N/A'}
                     </TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={2}>
