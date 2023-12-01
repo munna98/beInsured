@@ -19,7 +19,8 @@ import { useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { usePopover } from 'src/hooks/use-popover';
 import { AccountPopover } from './account-popover';
-import CommissionDialog from 'src/components/commission-dialog';
+import { CommissionPopover } from './commission-popover';
+
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -28,14 +29,8 @@ export const TopNav = (props) => {
   const { onNavOpen } = props;
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
   const accountPopover = usePopover();
+  const commissionPopover = usePopover();
 
-  const [isDialogOpen, setDialogOpen] = useState(false);
-
-  const handleSaveCommission = (commissionData) => {
-    // Handle saving commission data
-    console.log('Commission Data:', commissionData);
-    setDialogOpen(false);
-  };
 
 
 
@@ -80,9 +75,16 @@ export const TopNav = (props) => {
               </IconButton>
             )}
             <Tooltip title="Set commission">
-            <IconButton onClick={() => setDialogOpen(true)}>                <SvgIcon fontSize="small">
-                  <ReceiptPercentIcon />
-                </SvgIcon>
+              <IconButton onClick={() => console.log("Hi")}>                <SvgIcon fontSize="small">
+                <ReceiptPercentIcon 
+                onClick={commissionPopover.handleOpen}
+                ref={commissionPopover.anchorRef}
+                sx={{
+                  cursor: 'pointer',
+                  height: 40,
+                  width: 40
+                }}/>
+              </SvgIcon>
               </IconButton>
             </Tooltip>
           </Stack>
@@ -129,10 +131,10 @@ export const TopNav = (props) => {
         open={accountPopover.open}
         onClose={accountPopover.handleClose}
       />
-      <CommissionDialog
-        open={isDialogOpen}
-        onClose={() => setDialogOpen(false)}
-        onSave={handleSaveCommission}
+      <CommissionPopover
+        anchorEl={commissionPopover.anchorRef.current}
+        open={commissionPopover.open}
+        onClose={commissionPopover.handleClose}
       />
     </>
   );
