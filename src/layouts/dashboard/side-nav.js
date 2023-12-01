@@ -110,7 +110,11 @@ export const SideNav = (props) => {
           >
             {items.map((item) => {
               const active = item.path ? (pathname === item.path) : false;
+              const subItem = item.subItem && true;
 
+              if(subItem){
+                return null
+              }
               return (
                 <SideNavItem
                   active={active}
@@ -120,6 +124,7 @@ export const SideNav = (props) => {
                   key={item.title}
                   path={item.path}
                   title={item.title}
+                  subItem={item.subItem}
                 />
               );
             })}

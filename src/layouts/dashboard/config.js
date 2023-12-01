@@ -97,27 +97,35 @@ export const items = [
         <BarsArrowDownIcon />
       </SvgIcon>
     ),
-
-    subItems: [
-      {
-        title: 'Register',
-        path: '/auth/register',
-        icon: (
-          <SvgIcon fontSize="small">
-            <UserPlusIcon />
-          </SvgIcon>
-        )
-      },
-      {
-        title: 'Error',
-        path: '/404',
-        icon: (
-          <SvgIcon fontSize="small">
-            <XCircleIcon />
-          </SvgIcon>
-        )
-      }
-      // You can add more sub-items if needed
-    ]
+  },
+  {
+    title: 'Register',
+    subItem: true,
+    path: '/auth/register',
+    icon: (
+      <SvgIcon fontSize="small">
+        <UserPlusIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Dont Register',
+    subItem: true,
+    path: '/auth/register',
+    icon: (
+      <SvgIcon fontSize="small">
+        <UserPlusIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Error',
+    subItem: true,
+    path: '/404',
+    icon: (
+      <SvgIcon fontSize="small">
+        <XCircleIcon />
+      </SvgIcon>
+    )
   }
 ];

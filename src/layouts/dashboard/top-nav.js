@@ -75,8 +75,9 @@ export const TopNav = (props) => {
               </IconButton>
             )}
             <Tooltip title="Set commission">
-              <IconButton onClick={() => console.log("Hi")}>                <SvgIcon fontSize="small">
-                <ReceiptPercentIcon 
+              <IconButton onClick={() => console.log("Hi")}>                
+              <SvgIcon fontSize="small">
+                <ReceiptPercentIcon
                 onClick={commissionPopover.handleOpen}
                 ref={commissionPopover.anchorRef}
                 sx={{

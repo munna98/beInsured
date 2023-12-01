@@ -41,7 +41,7 @@ const Page = () => (
               difference={12}
               positive
               sx={{ height: '100%' }}
-              value="$24k"
+              value="₹24k"
             />
           </Grid>
           <Grid
@@ -73,7 +73,7 @@ const Page = () => (
           >
             <OverviewTotalProfit
               sx={{ height: '100%' }}
-              value="$15k"
+              value="₹15k"
             />
           </Grid>
           <Grid
@@ -85,7 +85,7 @@ const Page = () => (
               difference={12}
               positive
               sx={{ height: '100%' }}
-              value="$24k"
+              value="₹-24k"
             />
           </Grid>
           <Grid
@@ -117,7 +117,7 @@ const Page = () => (
           >
             <OverviewTotalProfit
               sx={{ height: '100%' }}
-              value="$15k"
+              value="₹-15k"
             />
           </Grid>
           <Grid
@@ -129,7 +129,7 @@ const Page = () => (
               difference={12}
               positive
               sx={{ height: '100%' }}
-              value="$24k"
+              value="₹-24k"
             />
           </Grid>
           <Grid
@@ -161,7 +161,7 @@ const Page = () => (
           >
             <OverviewTotalProfit
               sx={{ height: '100%' }}
-              value="$15k"
+              value="₹-15k"
             />
           </Grid>
           <Grid
