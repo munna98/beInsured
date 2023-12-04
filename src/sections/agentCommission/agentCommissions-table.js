@@ -141,7 +141,7 @@ export const AgentCommissionsTable = (props) => {
                         }}
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell> 
                       <Typography variant="subtitle2">
                         {agentCommission.agent}
                       </Typography>

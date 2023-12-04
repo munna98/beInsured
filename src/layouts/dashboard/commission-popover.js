@@ -19,7 +19,7 @@ export const CommissionPopover = (props) => {
   const handleIntermediaryCommission = useCallback(
     () => {
       onClose?.();
-      router.push('/agentCommissions');
+      router.push('/intermediaryCommissions');
     },
     [onClose,  router]
   );

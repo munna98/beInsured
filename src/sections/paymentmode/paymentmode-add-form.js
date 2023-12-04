@@ -12,11 +12,11 @@ import {
 } from '@mui/material';
 import ErrorDialog from 'src/components/error-dialog';
 
-export const IntermediaryAddForm = ({ data, setData,
-  apiUrl, intermediaryToEdit, setIntermediaryToEdit, setDisplayForm }) => {
+export const PaymentmodeAddForm = ({ data, setData,
+  apiUrl, paymentmodeToEdit, setPaymentmodeToEdit, setDisplayForm }) => {
 
   const [values, setValues] = useState({
-    name: '', 
+    name: '',
   });
 
   const [error, setError] = useState('');
@@ -25,16 +25,16 @@ export const IntermediaryAddForm = ({ data, setData,
     setErrorDialogOpen(false)
   }
 
-  // Initialize form fields with the existing intermediary's data
+  // Initialize form fields with the existing paymentmode's data
   useEffect(() => {
     document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
 
-    if (intermediaryToEdit) {
+    if (paymentmodeToEdit) {
       setValues({
-        name: intermediaryToEdit.name,
+        name: paymentmodeToEdit.name,
       });
     }
-  }, [intermediaryToEdit]);
+  }, [paymentmodeToEdit]);
 
   const handleChange = useCallback(
     (event) => {
@@ -47,9 +47,9 @@ export const IntermediaryAddForm = ({ data, setData,
   );
 
   const handleSubmit = useCallback(async () => {
-    if (intermediaryToEdit) {
+    if (paymentmodeToEdit) {
       // Handle editing by sending a PUT request
-      const response = await fetch(`${apiUrl}/${intermediaryToEdit._id}`, {
+      const response = await fetch(`${apiUrl}/${paymentmodeToEdit._id}`, {
         method: 'PUT',
         body: JSON.stringify({ values }),
         headers: {
@@ -58,17 +58,17 @@ export const IntermediaryAddForm = ({ data, setData,
       });
       if (response.status === 200) {
         const updatedValues = await response.json();
-        // Update the client-side data state with the edited intermediary
-        const updatedData = data.map((intermediary) =>
-          intermediary._id === updatedValues._id ? updatedValues : intermediary
+        // Update the client-side data state with the edited paymentmode
+        const updatedData = data.map((paymentmode) =>
+          paymentmode._id === updatedValues._id ? updatedValues : paymentmode
         );
         setData(updatedData);
-        setIntermediaryToEdit();
+        setPaymentmodeToEdit();
         setValues({ name: '' }); // Reset form fields
         setDisplayForm(false)
       }
     } else {
-      // Handle adding a new intermediary
+      // Handle adding a new paymentmode
       const response = await fetch(apiUrl, {
         method: 'POST',
         body: JSON.stringify({ values }),
@@ -78,29 +78,29 @@ export const IntermediaryAddForm = ({ data, setData,
       });
       if (response.status === 201) {
         const newValues = await response.json();
-        // Update the client-side data state with the new intermediary
+        // Update the client-side data state with the new paymentmode
         setData([newValues, ...data]);
         setValues({ name: '' }); // Reset form fields
       } else {
         const errorData = await response.json();
         setError(errorData.message); // Set error message state
         setErrorDialogOpen(true)
-      } 
+      }
     }
-  }, [values, setData, data, apiUrl, intermediaryToEdit, setValues]);
+  }, [values, setData, data, apiUrl, paymentmodeToEdit, setValues]);
 
   return (
     <form autoComplete="off" noValidate Card id="editForm" >
       <Card >
-        <CardHeader title={intermediaryToEdit ? 'Edit Intermediary' : 'Add Intermediary'} />
+        <CardHeader title={paymentmodeToEdit ? 'Edit Paymentmode' : 'Add Paymentmode'} />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
             <Grid container spacing={3}>
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  helperText="Please specify the Intermediary name"
-                  label="Intermediary name"
+                  helperText="Please specify the Paymentmode name"
+                  label="Paymentmode name"
                   name="name"
                   onChange={handleChange}
                   required
@@ -113,7 +113,7 @@ export const IntermediaryAddForm = ({ data, setData,
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
           <Button variant="contained" onClick={handleSubmit}>
-            {intermediaryToEdit ? 'Update Intermediary' : 'Save Intermediary'}
+            {paymentmodeToEdit ? 'Update Paymentmode' : 'Save Paymentmode'}
           </Button>
         </CardActions>
       </Card>

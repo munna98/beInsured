@@ -6,9 +6,9 @@ export default async function handler(req, res) {
   const { intermediaryId } = req.query;
 
   if (req.method === 'PUT') {
-    try {
+    try { 
       const { values } = req.body;
-      const { name } = values;
+      const { name } = values; 
 
       // Find the intermediary by ID and update its name
       const updatedIntermediary = await intermediaryModel.findByIdAndUpdate(

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box, ButtonBase } from '@mui/material';
 
 export const SideNavItem = (props) => {
-  const { active = false, disabled, external, icon, path, title, subItem } = props;
+  const { active = false, disabled, external, icon, path, title, extrasSubItem } = props;
 
   const linkProps = path
     ? external
@@ -18,9 +18,14 @@ export const SideNavItem = (props) => {
       }
     : {};
 
+      const handleClick=()=>{
+        console.log('clicked on a side nav item')
+      }
+
   return (
     <li>
       <ButtonBase
+        onClick={() => handleClick()}
         sx={{
           alignItems: 'center',
           borderRadius: 1,
@@ -89,5 +94,5 @@ SideNavItem.propTypes = {
   icon: PropTypes.node,
   path: PropTypes.string,
   title: PropTypes.string.isRequired,
-  subItem: PropTypes.bool,
+  extrasSubItem: PropTypes.bool,
 };

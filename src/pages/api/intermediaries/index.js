@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { name } = req.body.values;
+      const { name } = req.body.values; 
 
       // Check if an intermediary with the given name already exists
       const existingIntermediary = await intermediaryModel.findOne({ name });

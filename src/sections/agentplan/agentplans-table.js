@@ -11,7 +11,7 @@ import {
   Stack,
   IconButton,
   Table,
-  TableBody, 
+  TableBody,
   TableCell, 
   TableHead,
   TablePagination,
@@ -23,7 +23,7 @@ import { getInitials } from 'src/utils/get-initials';
 import { useState } from 'react';
 import DeleteDialog from 'src/components/delete-dialog';
 
-export const IntermediariesTable = (props) => {
+export const AgentplansTable = (props) => {
   const {
     count = 0,
     items = [],
@@ -38,8 +38,8 @@ export const IntermediariesTable = (props) => {
     selected = [],
     setData,
     apiUrl = '',
-    intermediaryToEdit = {},
-    setIntermediaryToEdit,
+    agentplanToEdit = {},
+    setAgentplanToEdit,
     setDisplayForm,
   } = props;
 
@@ -63,16 +63,16 @@ export const IntermediariesTable = (props) => {
 
 
 
-  const fetchIntermediary = async () => {
+  const fetchAgentplan = async () => {
     const response = await fetch(apiUrl)
     const data = await response.json()
     setData(data)
   }
 
-  const handleEdit = (intermediaryId) => {
+  const handleEdit = (agentplanId) => {
     setDisplayForm(prev => true)
-    const intermediary = items.find(intermediary => intermediary._id === intermediaryId);
-    setIntermediaryToEdit(intermediary);
+    const agentplan = items.find(agentplan => agentplan._id === agentplanId);
+    setAgentplanToEdit(agentplan);
   }
 
 
@@ -105,13 +105,13 @@ export const IntermediariesTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((Intermediary) => {
-                const isSelected = selected.includes(Intermediary._id);
+              {items.map((Agentplan) => {
+                const isSelected = selected.includes(Agentplan._id);
 
                 return (
                   <TableRow
                     hover
-                    key={Intermediary._id}
+                    key={Agentplan._id}
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox">
@@ -119,9 +119,9 @@ export const IntermediariesTable = (props) => {
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(Intermediary._id);
+                            onSelectOne?.(Agentplan._id);
                           } else {
-                            onDeselectOne?.(Intermediary._id);
+                            onDeselectOne?.(Agentplan._id);
                           }
                         }}
                       />
@@ -129,7 +129,7 @@ export const IntermediariesTable = (props) => {
 
                     <TableCell>
                         <Typography variant="subtitle2">
-                          {Intermediary.name}
+                          {Agentplan.name}
                         </Typography>
                     </TableCell>
 
@@ -141,7 +141,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="edit"
-                              onClick={() => handleEdit(Intermediary._id)} 
+                              onClick={() => handleEdit(Agentplan._id)} 
                             >
                               <PencilIcon />
                             </SvgIcon>
@@ -153,7 +153,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
-                              onClick={() => handleClickDeleteOpen(Intermediary._id)}
+                              onClick={() => handleClickDeleteOpen(Agentplan._id)}
                             >
                               <TrashIcon />
                             </SvgIcon>
@@ -184,13 +184,13 @@ export const IntermediariesTable = (props) => {
         handleClose={handleClose}
         deleteId={deleteId}
         apiUrl={apiUrl}
-        fetchData={fetchIntermediary}
+        fetchData={fetchAgentplan}
       />
     </Card>
   );
 };
 
-IntermediariesTable.propTypes = {
+AgentplansTable.propTypes = {
   count: PropTypes.number,
   items: PropTypes.array,
   onDeselectAll: PropTypes.func,

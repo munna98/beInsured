@@ -6,13 +6,13 @@ import { format } from 'date-fns';
 import {
   Avatar,
   Box,
-  Card, 
+  Card,
   Checkbox,
   Stack,
   IconButton,
   Table,
-  TableBody, 
-  TableCell, 
+  TableBody,
+  TableCell,
   TableHead,
   TablePagination,
   TableRow,
@@ -23,7 +23,7 @@ import { getInitials } from 'src/utils/get-initials';
 import { useState } from 'react';
 import DeleteDialog from 'src/components/delete-dialog';
 
-export const IntermediariesTable = (props) => {
+export const IntermediaryCommissionsTable = (props) => {
   const {
     count = 0,
     items = [],
@@ -38,8 +38,8 @@ export const IntermediariesTable = (props) => {
     selected = [],
     setData,
     apiUrl = '',
-    intermediaryToEdit = {},
-    setIntermediaryToEdit,
+    intermediaryCommissionToEdit = {},
+    setIntermediaryCommissionToEdit,
     setDisplayForm,
   } = props;
 
@@ -60,26 +60,23 @@ export const IntermediariesTable = (props) => {
     setDeleteDialogOpen(false);
   };
 
-
-
-
-  const fetchIntermediary = async () => {
+  const fetchIntermediaryCommission = async () => {
     const response = await fetch(apiUrl)
     const data = await response.json()
     setData(data)
   }
 
-  const handleEdit = (intermediaryId) => {
+  const handleEdit = (intermediaryCommissionId) => {
     setDisplayForm(prev => true)
-    const intermediary = items.find(intermediary => intermediary._id === intermediaryId);
-    setIntermediaryToEdit(intermediary);
+    const intermediaryCommission = items.find(intermediaryCommission => intermediaryCommission._id === intermediaryCommissionId);
+    setIntermediaryCommissionToEdit(intermediaryCommission);
   }
 
 
   return (
-    <Card  sx={{ maxWidth: 600 }}>
+    <Card>
       <Scrollbar>
-        <Box sx={{ minWidth: 600 }}>
+        <Box sx={{ minWidth: 800 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -97,7 +94,25 @@ export const IntermediariesTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  Agent
+                </TableCell>
+                <TableCell>
+                  Vehicle
+                </TableCell>
+                <TableCell>
+                  Commission
+                </TableCell>
+                <TableCell>
+                  Company
+                </TableCell>
+                <TableCell>
+                  Intermediary
+                </TableCell>
+                <TableCell>
+                  Type
+                </TableCell>
+                <TableCell>
+                  Tds
                 </TableCell>
                 <TableCell>
                   Actions
@@ -105,13 +120,13 @@ export const IntermediariesTable = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((Intermediary) => {
-                const isSelected = selected.includes(Intermediary._id);
-
+              {items.map((intermediaryCommission) => {
+                const isSelected = selected.includes(intermediaryCommission.id);
+                const createdAt =new Date(intermediaryCommission.createdAt);
                 return (
                   <TableRow
                     hover
-                    key={Intermediary._id}
+                    key={intermediaryCommission.id}
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox">
@@ -119,20 +134,39 @@ export const IntermediariesTable = (props) => {
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(Intermediary._id);
+                            onSelectOne?.(intermediaryCommission.id);
                           } else {
-                            onDeselectOne?.(Intermediary._id);
+                            onDeselectOne?.(intermediaryCommission.id);
                           }
                         }}
                       />
                     </TableCell>
-
                     <TableCell>
-                        <Typography variant="subtitle2">
-                          {Intermediary.name}
-                        </Typography>
+                      <Typography variant="subtitle2">
+                        {intermediaryCommission.agent}
+                      </Typography>
                     </TableCell>
-
+                    <TableCell>
+                      {intermediaryCommission.vehicle}
+                    </TableCell>
+                    <TableCell>
+                      {intermediaryCommission.commission}
+                    </TableCell>
+                    <TableCell>
+                      {intermediaryCommission.company}
+                    </TableCell>                    
+                    <TableCell>
+                      {intermediaryCommission.intermediary}
+                    </TableCell>                    
+                    <TableCell>
+                      {intermediaryCommission.type}
+                    </TableCell>                    
+                    <TableCell>
+                      {intermediaryCommission.tds}
+                    </TableCell>                    
+                    {/* <TableCell>
+                      {format(createdAt, 'dd-MM-yyyy')}
+                    </TableCell> */}
                     <TableCell>
                       <Stack direction="row" spacing={2}>
                         <IconButton>
@@ -141,8 +175,8 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="edit"
-                              onClick={() => handleEdit(Intermediary._id)} 
-                            >
+                              onClick={() => handleEdit(intermediaryCommission._id)} // You should define the handleDelete function
+                            > 
                               <PencilIcon />
                             </SvgIcon>
                           </Tooltip>
@@ -153,7 +187,7 @@ export const IntermediariesTable = (props) => {
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
-                              onClick={() => handleClickDeleteOpen(Intermediary._id)}
+                              onClick={() => handleClickDeleteOpen(intermediaryCommission._id)}
                             >
                               <TrashIcon />
                             </SvgIcon>
@@ -178,21 +212,20 @@ export const IntermediariesTable = (props) => {
         rowsPerPageOptions={[5, 10, 25]}
       />
 
-
       <DeleteDialog
         open={deleteDialogOpen}
         handleClose={handleClose}
         deleteId={deleteId}
         apiUrl={apiUrl}
-        fetchData={fetchIntermediary}
+        fetchData={fetchIntermediaryCommission}
       />
     </Card>
   );
 };
 
-IntermediariesTable.propTypes = {
+IntermediaryCommissionsTable.propTypes = {
   count: PropTypes.number,
-  items: PropTypes.array,
+  items: PropTypes.array, 
   onDeselectAll: PropTypes.func,
   onDeselectOne: PropTypes.func,
   onPageChange: PropTypes.func,

@@ -10,7 +10,7 @@ import {
   Button,
   Divider,
   Drawer,
-  Stack,
+  Stack, 
   SvgIcon,
   Typography,
   useMediaQuery
@@ -110,11 +110,7 @@ export const SideNav = (props) => {
           >
             {items.map((item) => {
               const active = item.path ? (pathname === item.path) : false;
-              const subItem = item.subItem && true;
 
-              if(subItem){
-                return null
-              }
               return (
                 <SideNavItem
                   active={active}
@@ -213,7 +209,7 @@ export const SideNav = (props) => {
         sx: {
           backgroundColor: 'neutral.800',
           color: 'common.white',
-          width: 280
+          width: 100
         }
       }}
       sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
