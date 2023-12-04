@@ -44,7 +44,7 @@ const Page = () => {
   // ***** End setting api *****
 
   const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
-
+  console.log(data);
   const useAgents = (page, rowsPerPage) => {
     return useMemo(
       () => {

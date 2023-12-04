@@ -7,7 +7,7 @@ export const AgentsSearch = ({ searchTerm, handleSearchChange }) => {
       <OutlinedInput
         value={searchTerm}
         fullWidth
-        placeholder="Search Intermediary"
+        placeholder="Search Agents" 
         onChange={handleSearchChange}
         startAdornment={(
           <InputAdornment position="start">

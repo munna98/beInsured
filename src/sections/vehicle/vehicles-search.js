@@ -1,7 +1,6 @@
 import MagnifyingGlassIcon from '@heroicons/react/24/solid/MagnifyingGlassIcon';
 import { Card, InputAdornment, OutlinedInput, SvgIcon } from '@mui/material';
 
-
 export const VehiclesSearch = ({searchTerm, handleSearchChange}) => {
   return(
     <Card sx={{ p: 2 }}>
@@ -9,8 +8,9 @@ export const VehiclesSearch = ({searchTerm, handleSearchChange}) => {
       defaultValue=""
       fullWidth
       placeholder="Search Vehicle"
+      onChange={handleSearchChange}
       startAdornment={(
-        <InputAdornment position="start">
+        <InputAdornment position="start"> 
           <SvgIcon
             color="action"
             fontSize="small"

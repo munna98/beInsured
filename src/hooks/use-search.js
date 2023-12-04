@@ -5,10 +5,18 @@ const useSearch = (initialData) => {
   
   const searchResults = useMemo(() => {
     if(searchTerm==''){
-      return initialData
+      return initialData 
     }
       return initialData.filter(item =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        item.name?
+        (item.name.toLowerCase().includes(searchTerm.toLowerCase())):
+        //for policies
+        item.customerName? 
+        (item.customerName.toLowerCase().includes(searchTerm.toLowerCase())):
+        //for agents
+        item.firstName? 
+        (item.firstName.toLowerCase().includes(searchTerm.toLowerCase())):
+        (null)
       );
 
   }, [searchTerm, initialData]);
@@ -17,7 +25,7 @@ const useSearch = (initialData) => {
     setSearchTerm(event.target.value);
   }, []);
 
-
+ 
   return {
     searchTerm,
     searchResults,

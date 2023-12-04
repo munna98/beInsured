@@ -13,7 +13,7 @@ import { applyPagination } from 'src/utils/apply-pagination';
 import { IntermediaryAddForm } from 'src/sections/intermediary/intermediary-add-form';
 import useSearch from 'src/hooks/use-search';
 import TableLoader from 'src/components/table-loader';
-
+ 
 const Page = () => {
 
   const [data, setData] = useState([]);
@@ -43,7 +43,7 @@ const Page = () => {
   // ***** End setting api *****
 
   const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
-
+console.log(data);
   const useIntermediaries = (page, rowsPerPage) => {
     return useMemo(
       () => {

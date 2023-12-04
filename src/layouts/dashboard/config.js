@@ -12,6 +12,10 @@ import DocumentIcon from '@heroicons/react/24/solid/DocumentIcon';
 import ScaleIcon from '@heroicons/react/24/solid/ScaleIcon';
 import TruckIcon from '@heroicons/react/24/solid/TruckIcon';
 import BarsArrowDownIcon from '@heroicons/react/24/solid/BarsArrowDownIcon';
+import SwatchIcon from '@heroicons/react/24/solid/SwatchIcon';
+import BankNotesIcon from '@heroicons/react/24/solid/BankNotesIcon';
+import RectangleStackIcon from '@heroicons/react/24/solid/RectangleStackIcon';
+import RectangleGroupIcon from '@heroicons/react/24/solid/RectangleGroupIcon';
 
 
 import { SvgIcon } from '@mui/material';
@@ -81,6 +85,66 @@ export const items = [
   //     </SvgIcon>
   //   )
   // },
+
+  // {
+  //   title: 'Extras',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <BarsArrowDownIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
+  {
+    title: 'Our plans',
+    extrasSubItem: true,
+    path: '/ourplans',
+    icon: (
+      <SvgIcon fontSize="small">
+        <RectangleGroupIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Agent plans',
+    extrasSubItem: true,
+    path: '/agentplans',
+    icon: (
+      <SvgIcon fontSize="small">
+        <RectangleStackIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Policy types',
+    path: '/policytypes',
+    icon: (
+      <SvgIcon fontSize="small">
+        <SwatchIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Payment modes',
+    extrasSubItem: true,
+    path: '/paymentmodes',
+    icon: (
+      <SvgIcon fontSize="small">
+        <BankNotesIcon />
+      </SvgIcon>
+    )
+  },
+
+  
+  // {
+  //   title: 'Error',
+  //   extrasSubItem: true,
+  //   path: '/404',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <XCircleIcon />
+  //     </SvgIcon>
+  //   )
+  // }
   {
     title: 'Settings',
     path: '/settings',
@@ -90,42 +154,4 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Extras',
-    icon: (
-      <SvgIcon fontSize="small">
-        <BarsArrowDownIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: 'Register',
-    extrasSubItem: true,
-    path: '/auth/register',
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserPlusIcon />
-      </SvgIcon>
-    )
-  },
-  {
-    title: 'Dont Register',
-    extrasSubItem: true,
-    path: '/auth/register',
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserPlusIcon />
-      </SvgIcon>
-    )
-  },
-  {
-    title: 'Error',
-    extrasSubItem: true,
-    path: '/404',
-    icon: (
-      <SvgIcon fontSize="small">
-        <XCircleIcon />
-      </SvgIcon>
-    )
-  }
 ];

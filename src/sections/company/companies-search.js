@@ -9,6 +9,7 @@ export const CompaniesSearch = ({searchTerm, handleSearchChange}) => {
       defaultValue=""
       fullWidth
       placeholder="Search company"
+      onChange={handleSearchChange}
       startAdornment={(
         <InputAdornment position="start">
           <SvgIcon
