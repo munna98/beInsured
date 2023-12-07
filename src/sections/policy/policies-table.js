@@ -156,13 +156,13 @@ export const PoliciesTable = (props) => {
                 </TableCell>
                 <TableCell>
                   Actions
-                </TableCell>
+                </TableCell> 
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((policy) => {
                 const isSelected = selected.includes(policy.id);
-                // const createdAt = format(policy.createdAt, 'dd-MM-yyyy');
+                const date = new Date(policy.date)
 
                 return (
                   <TableRow
@@ -183,7 +183,7 @@ export const PoliciesTable = (props) => {
                       />
                     </TableCell>
                     <TableCell>
-                      {policy.date || 'N/A'}
+                      {format(date, 'dd-MM-yyyy')}
                     </TableCell>
                     <TableCell>
                       <Typography variant="subtitle2">

@@ -10,7 +10,7 @@ const initializePolicyModel = async () => {
     // If the model hasn't been registered, define it
     const policySchema = new mongoose.Schema(
       {
-        date: String,
+        date: Date,
         customerName: String,
         policyType: String,
         vehicleNumber: String,

@@ -55,7 +55,18 @@ export const PolicyAddForm = ({ data, setData,
     },
     []
   );
-
+  
+  const handleDateChange = useCallback(
+  (date) => {
+    setIssueDate(date);
+    setValues((prev) => ({
+      ...prev,
+      date: date
+    }));
+  },
+  []
+  );
+  
   useEffect(() => {
     document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
 
@@ -105,9 +116,6 @@ export const PolicyAddForm = ({ data, setData,
     }
   }, [policyToEdit]);
 
-  const handleDateChange = (date) => {
-    setIssueDate(date);
-  };
 
   const handleSubmit = useCallback(async () => {
     if (policyToEdit) {
@@ -153,8 +161,7 @@ export const PolicyAddForm = ({ data, setData,
     }
   }, [values, setData, data, apiUrl, policyToEdit, setValues]);
 
-  console.log(values.date)
-  console.log(issueDate)
+  
   return (
     <form autoComplete="off" noValidate Card id="editForm" >
       <Card>
@@ -176,6 +183,7 @@ export const PolicyAddForm = ({ data, setData,
                 
                 <DatePicker
                   fullWidth
+                  type='date'
                   label="Policy issue date"
                   name="date"
                   renderInput={(params) => <TextField {...params} />}
