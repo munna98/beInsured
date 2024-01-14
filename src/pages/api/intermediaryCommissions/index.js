@@ -12,16 +12,17 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { agent,vehicle,commission, company, intermediary, type, tds } = req.body.values;
+      const { intermediary, company, vehicle, type, policytype, ourplan, commission,tds  } = req.body.values;
       // Create a new intermediaryCommission using the Mongoose model
 
       const newIntermediaryCommission = new intermediaryCommissionModel({
-        agent: agent,
-        vehicle: vehicle,
-        commission: commission,
-        company: company,
         intermediary: intermediary,
+        company: company,
+        vehicle: vehicle,
         type: type,
+        policytype: policytype,
+        ourplan: ourplan,
+        commission: commission,
         tds: tds,
       });
       console.log(newIntermediaryCommission);

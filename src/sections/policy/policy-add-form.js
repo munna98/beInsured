@@ -19,7 +19,8 @@ import Checkbox from '@mui/material/Checkbox';
 
 export const PolicyAddForm = ({ data, setData,
   apiUrl, policyToEdit, setPolicyToEdit, setDisplayForm }) => {
-  const { intermediaryData, agentData, companyData, vehicleData } = useContext(DataContext);
+  const { intermediaryData, agentData, companyData,vehicleData
+    , ourplanData, agentplanData, policyTypeData, paymentModeData } = useContext(DataContext);
   const [issueDate, setIssueDate] = useState(new Date());
   const initialValues = {
     date: '',
@@ -36,7 +37,7 @@ export const PolicyAddForm = ({ data, setData,
     vehicleType: '',
     commission: '',
     policyName: '',
-    myPlan: '',
+    ourPlan: '',
     policyPlan: '',
     policyNumber: '',
     paymentMode: '',
@@ -84,7 +85,7 @@ export const PolicyAddForm = ({ data, setData,
         vehicleType,
         commission,
         agentName,
-        myPlan,
+        ourPlan,
         agentPlan,
         policyNumber,
         paymentMode,
@@ -105,7 +106,7 @@ export const PolicyAddForm = ({ data, setData,
         vehicleType,
         commission,
         agentName,
-        myPlan,
+        ourPlan,
         agentPlan,
         policyNumber,
         paymentMode,
@@ -250,14 +251,15 @@ export const PolicyAddForm = ({ data, setData,
                   SelectProps={{ native: true }}
 
                 >
-                  {companyData.map((option) => (
+                  {policyTypeData.map((option) => (
                     <option
                       key={option._id}
-                      value={option._id}
+                      value={option.name}
                     >
                       {option.name}
                     </option>
                   ))}
+
                 </TextField>
               </Grid>
 
@@ -329,8 +331,8 @@ export const PolicyAddForm = ({ data, setData,
                   label="Net"
                   name="net"
                   onChange={handleChange}
-                  value={values.net}
-                  disabled
+                  value={values.thirdParty - - values.ownDamage}
+                  // disabled
                 >
                 </TextField>
               </Grid>
@@ -412,48 +414,10 @@ export const PolicyAddForm = ({ data, setData,
               >
                 <TextField
                   fullWidth
-                  type='number'
-                  label="Commission"
-                  name="commission"
-                  onChange={handleChange}
-                  value={values.commission}
-                >
-                </TextField>
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
                   label="Agent name"
                   name="agentName"
                   onChange={handleChange}
                   // value={values.agentName}
-                  select
-                  SelectProps={{ native: true }}
-
-                >
-                  {agentData.map((option) => (
-                    <option
-                      key={option._id}
-                      value={option.firstName}
-                    >
-                      {option.firstName}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="My Plan"
-                  name="myPlan"
-                  onChange={handleChange}
-                  // value={values.myPlan}
                   select
                   SelectProps={{ native: true }}
 
@@ -482,7 +446,7 @@ export const PolicyAddForm = ({ data, setData,
                   SelectProps={{ native: true }}
 
                 >
-                  {companyData.map((option) => (
+                  {agentplanData.map((option) => (
                     <option
                       key={option._id}
                       value={option.name}
@@ -492,6 +456,46 @@ export const PolicyAddForm = ({ data, setData,
                   ))}
                 </TextField>
               </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  type='number'
+                  label="Commission"
+                  name="commission"
+                  onChange={handleChange}
+                  value={values.commission}
+                >
+                </TextField>
+              </Grid>
+              
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Our Plan"
+                  name="ourPlan"
+                  onChange={handleChange}
+                  // value={values.ourPlan}
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {ourplanData.map((option) => (
+                    <option
+                      key={option._id}
+                      value={option.name}
+                    >
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              
               <Grid
                 xs={12}
                 md={6}
@@ -518,7 +522,7 @@ export const PolicyAddForm = ({ data, setData,
                   SelectProps={{ native: true }}
 
                 >
-                  {companyData.map((option) => (
+                  {paymentModeData.map((option) => (
                     <option
                       key={option._id}
                       value={option.name}

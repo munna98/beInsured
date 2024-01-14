@@ -2,6 +2,9 @@ import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
 import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
 import { SvgIcon, Tooltip, } from '@mui/material';
 import PropTypes from 'prop-types';
+
+import { useContext } from "react";
+import { DataContext } from 'src/contexts/data-context';
 import { format } from 'date-fns';
 import {
   Avatar,
@@ -43,7 +46,10 @@ export const IntermediaryCommissionsTable = (props) => {
     setDisplayForm,
   } = props;
 
+  const { intermediaryData, agentData, companyData,vehicleData
+    , ourplanData, agentplanData, policyTypeData, paymentModeData } = useContext(DataContext);
 
+  
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
@@ -72,11 +78,10 @@ export const IntermediaryCommissionsTable = (props) => {
     setIntermediaryCommissionToEdit(intermediaryCommission);
   }
 
-
   return (
     <Card>
       <Scrollbar>
-        <Box sx={{ minWidth: 800 }}>
+        <Box sx={{ minWidth: 1800 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -94,22 +99,25 @@ export const IntermediaryCommissionsTable = (props) => {
                   />
                 </TableCell>
                 <TableCell>
-                  Agent
-                </TableCell>
-                <TableCell>
-                  Vehicle
-                </TableCell>
-                <TableCell>
-                  Commission
+                  Intermediary
                 </TableCell>
                 <TableCell>
                   Company
                 </TableCell>
                 <TableCell>
-                  Intermediary
+                  Vehicle
                 </TableCell>
                 <TableCell>
                   Type
+                </TableCell>
+                <TableCell>
+                  Policy type
+                </TableCell>
+                <TableCell>
+                  Our plan
+                </TableCell>
+                <TableCell>
+                  Commission
                 </TableCell>
                 <TableCell>
                   Tds
@@ -123,6 +131,11 @@ export const IntermediaryCommissionsTable = (props) => {
               {items.map((intermediaryCommission) => {
                 const isSelected = selected.includes(intermediaryCommission.id);
                 const createdAt =new Date(intermediaryCommission.createdAt);
+                const intermediary = intermediaryData.find(intermediary=> intermediary._id === intermediaryCommission.intermediary);
+                const vehicle = vehicleData.find(vehicle=> vehicle._id === intermediaryCommission.vehicle);
+                const company = companyData.find(company=> company._id === intermediaryCommission.company);
+                const policytype = policyTypeData.find(policytype=> policytype._id === intermediaryCommission.policytype);
+                const ourplan = ourplanData.find(ourplan=> ourplan._id === intermediaryCommission.ourplan);
                 return (
                   <TableRow
                     hover
@@ -141,26 +154,29 @@ export const IntermediaryCommissionsTable = (props) => {
                         }}
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell> 
                       <Typography variant="subtitle2">
-                        {intermediaryCommission.agent}
+                        {intermediary && intermediary.name}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {intermediaryCommission.vehicle}
-                    </TableCell>
+                      {company && company.name}
+                    </TableCell> 
                     <TableCell>
-                      {intermediaryCommission.commission}
-                    </TableCell>
-                    <TableCell>
-                      {intermediaryCommission.company}
-                    </TableCell>                    
-                    <TableCell>
-                      {intermediaryCommission.intermediary}
-                    </TableCell>                    
+                      {vehicle && vehicle.name}
+                    </TableCell>                                      
                     <TableCell>
                       {intermediaryCommission.type}
-                    </TableCell>                    
+                    </TableCell>    
+                    <TableCell>
+                      {policytype && policytype.name}
+                    </TableCell>    
+                    <TableCell>
+                      {ourplan && ourplan.name}
+                    </TableCell>    
+                    <TableCell>
+                      {intermediaryCommission.commission}
+                    </TableCell>                
                     <TableCell>
                       {intermediaryCommission.tds}
                     </TableCell>                    

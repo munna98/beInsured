@@ -2,6 +2,9 @@ import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
 import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
 import { SvgIcon, Tooltip, } from '@mui/material';
 import PropTypes from 'prop-types';
+
+import { useContext } from "react";
+import { DataContext } from 'src/contexts/data-context';
 import { format } from 'date-fns';
 import {
   Avatar,
@@ -43,7 +46,10 @@ export const AgentCommissionsTable = (props) => {
     setDisplayForm,
   } = props;
 
+  const { intermediaryData, agentData, companyData,vehicleData
+    , ourplanData, agentplanData, policyTypeData, paymentModeData } = useContext(DataContext);
 
+  
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
 
@@ -72,11 +78,10 @@ export const AgentCommissionsTable = (props) => {
     setAgentCommissionToEdit(agentCommission);
   }
 
-
   return (
     <Card>
       <Scrollbar>
-        <Box sx={{ minWidth: 800 }}>
+        <Box sx={{ minWidth: 1800 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -100,9 +105,6 @@ export const AgentCommissionsTable = (props) => {
                   Vehicle
                 </TableCell>
                 <TableCell>
-                  Commission
-                </TableCell>
-                <TableCell>
                   Company
                 </TableCell>
                 <TableCell>
@@ -110,6 +112,15 @@ export const AgentCommissionsTable = (props) => {
                 </TableCell>
                 <TableCell>
                   Type
+                </TableCell>
+                <TableCell>
+                  Policy type
+                </TableCell>
+                <TableCell>
+                  Agent plan
+                </TableCell>
+                <TableCell>
+                  Commission
                 </TableCell>
                 <TableCell>
                   Tds
@@ -123,6 +134,12 @@ export const AgentCommissionsTable = (props) => {
               {items.map((agentCommission) => {
                 const isSelected = selected.includes(agentCommission.id);
                 const createdAt =new Date(agentCommission.createdAt);
+                const agent = agentData.find(agent=> agent._id === agentCommission.agent);
+                const vehicle = vehicleData.find(vehicle=> vehicle._id === agentCommission.vehicle);
+                const company = companyData.find(company=> company._id === agentCommission.company);
+                const intermediary = intermediaryData.find(intermediary=> intermediary._id === agentCommission.intermediary);
+                const policytype = policyTypeData.find(policytype=> policytype._id === agentCommission.policytype);
+                const agentplan = agentplanData.find(agentplan=> agentplan._id === agentCommission.agentplan);
                 return (
                   <TableRow
                     hover
@@ -143,24 +160,30 @@ export const AgentCommissionsTable = (props) => {
                     </TableCell>
                     <TableCell> 
                       <Typography variant="subtitle2">
-                        {agentCommission.agent}
+                        {agent && agent.firstName}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {agentCommission.vehicle}
+                      {vehicle && vehicle.name}
                     </TableCell>
                     <TableCell>
-                      {agentCommission.commission}
-                    </TableCell>
-                    <TableCell>
-                      {agentCommission.company}
+                      {company && company.name}
                     </TableCell>                    
                     <TableCell>
-                      {agentCommission.intermediary}
+                      {intermediary&& intermediary.name}
                     </TableCell>                    
                     <TableCell>
                       {agentCommission.type}
-                    </TableCell>                    
+                    </TableCell>    
+                    <TableCell>
+                      {policytype&& policytype.name}
+                    </TableCell>    
+                    <TableCell>
+                      {agentplan&& agentplan.name}
+                    </TableCell>    
+                    <TableCell>
+                      {agentCommission.commission}
+                    </TableCell>                
                     <TableCell>
                       {agentCommission.tds}
                     </TableCell>                    

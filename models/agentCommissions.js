@@ -12,11 +12,13 @@ const initializeAgentCommissionModel = async () => {
     const agentCommissionSchema = new mongoose.Schema(
       {
         agent: String,
-        vehicle: String,
-        commission: Number,
+        vehicle: String, 
         company: String,
         intermediary: String,
         type: String,
+        policytype: String,
+        agentplan: String,
+        commission: Number,
         tds: Number,
       },
       { 

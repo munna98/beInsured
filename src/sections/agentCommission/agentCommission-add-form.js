@@ -1,4 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
+import { useContext } from "react";
+import { DataContext } from 'src/contexts/data-context';
 import {
   Box,
   Button,
@@ -15,13 +17,20 @@ import {
 export const AgentCommissionAddForm = ({ data, setData,
   apiUrl, agentCommissionToEdit, setAgentCommissionToEdit, setDisplayForm }) => {
 
+  const { intermediaryData, agentData, companyData,vehicleData
+      , ourplanData, agentplanData, policyTypeData, paymentModeData } = useContext(DataContext);
+    
+  const commissionTypes =[{_id:1, name: 'Flat'},{_id:2, name: 'Percentage'}];
+
   const [values, setValues] = useState({
     agent: '',
     vehicle: '',
-    commission: '',
     company: '',
     intermediary: '',
     type: '',
+    policytype: '',
+    agentplan: '',
+    commission: '',
     tds: '',
   });
 
@@ -33,10 +42,12 @@ export const AgentCommissionAddForm = ({ data, setData,
       setValues({
         agent: agentCommissionToEdit.agent,
         vehicle: agentCommissionToEdit.vehicle,
-        commission: agentCommissionToEdit.commission,
         company: agentCommissionToEdit.company,
         intermediary: agentCommissionToEdit.intermediary,
         type: agentCommissionToEdit.type,
+        policytype: agentCommissionToEdit.policytype,
+        agentplan: agentCommissionToEdit.agentplan,
+        commission: agentCommissionToEdit.commission,
         tds: agentCommissionToEdit.tds,
       });
     }
@@ -73,10 +84,12 @@ export const AgentCommissionAddForm = ({ data, setData,
         setValues({
           agent: '',
           vehicle: '',
-          commission: '',
           company: '',
           intermediary: '',
           type: '',
+          policytype: '',
+          agentplan: '',
+          commission: '',
           tds: '',
         }); // Reset form fields
         setDisplayForm(false)
@@ -97,10 +110,12 @@ export const AgentCommissionAddForm = ({ data, setData,
         setValues({
           agent: '',
           vehicle: '',
-          commission: '',
           company: '',
           intermediary: '',
           type: '',
+          policytype: '',
+          agentplan: '',
+          commission: '',
           tds: '',
         }); // Reset form fields
       }
@@ -129,12 +144,22 @@ export const AgentCommissionAddForm = ({ data, setData,
               >
                 <TextField
                   fullWidth
-                  label="Agent"
+                  label="Agent name"
                   name="agent"
                   onChange={handleChange}
-                  required
-                  value={values.agent}
-                />
+                  select
+                  SelectProps={{ native: true }}
+
+                >
+                  {agentData.map((option) => (
+                    <option
+                      key={option._id}
+                      value={option._id}
+                    >
+                      {option.firstName}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
               <Grid
                 xs={12}
@@ -145,8 +170,128 @@ export const AgentCommissionAddForm = ({ data, setData,
                   label="Vehicle"
                   name="vehicle"
                   onChange={handleChange}
-                  value={values.vehicle}
-                />
+                  select
+                  SelectProps={{ native: true }}
+                >
+                   {vehicleData.map((option) => (
+                    <option
+                      key={option._id}
+                      value={option._id}
+                    >
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Company"
+                  name="company"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {companyData.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option._id}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Intermediary"
+                  name="intermediary"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {intermediaryData.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option._id}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Type"
+                  name="type"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {commissionTypes.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option.name}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Policy type"
+                  name="policytype"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {policyTypeData.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option._id}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Agent plan"
+                  name="agentplan"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {agentplanData.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option._id}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
               </Grid>
               <Grid
                 xs={12}
@@ -162,42 +307,8 @@ export const AgentCommissionAddForm = ({ data, setData,
                   value={values.commission}
                 />
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Company"
-                  name="company"
-                  onChange={handleChange}
-                  value={values.company}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Intermediary"
-                  name="intermediary"
-                  onChange={handleChange}
-                  value={values.intermediary}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Type"
-                  name="type"
-                  onChange={handleChange}
-                  value={values.type}
-                />
-              </Grid>
+              
+              
               <Grid
                 xs={12}
                 md={6}

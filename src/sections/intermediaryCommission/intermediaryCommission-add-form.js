@@ -1,4 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
+import { useContext } from "react";
+import { DataContext } from 'src/contexts/data-context';
 import {
   Box,
   Button,
@@ -13,15 +15,21 @@ import {
 
 
 export const IntermediaryCommissionAddForm = ({ data, setData,
-  apiUrl, intermediaryCommissionToEdit, setIntermediaryCommissionToEdit, setDisplayForm }) => {
+  apiUrl, intermediaryCommissionToEdit, setintermediaryCommissionToEdit, setDisplayForm }) => {
+
+  const { intermediaryData, agentData, companyData,vehicleData
+      , ourplanData, agentplanData, policyTypeData, paymentModeData } = useContext(DataContext);
+    
+  const commissionTypes =[{_id:1, name: 'Flat'},{_id:2, name: 'Percentage'}];
 
   const [values, setValues] = useState({
-    agent: '',
-    vehicle: '',
-    commission: '',
-    company: '',
     intermediary: '',
+    company: '',
+    vehicle: '',
     type: '',
+    policytype: '',
+    ourplan: '',
+    commission: '',
     tds: '',
   });
 
@@ -31,12 +39,13 @@ export const IntermediaryCommissionAddForm = ({ data, setData,
 
     if (intermediaryCommissionToEdit) {
       setValues({
-        agent: intermediaryCommissionToEdit.agent,
-        vehicle: intermediaryCommissionToEdit.vehicle,
-        commission: intermediaryCommissionToEdit.commission,
-        company: intermediaryCommissionToEdit.company,
         intermediary: intermediaryCommissionToEdit.intermediary,
+        company: intermediaryCommissionToEdit.company,
+        vehicle: intermediaryCommissionToEdit.vehicle,
         type: intermediaryCommissionToEdit.type,
+        policytype: intermediaryCommissionToEdit.policytype,
+        ourplan: intermediaryCommissionToEdit.ourplan,
+        commission: intermediaryCommissionToEdit.commission,
         tds: intermediaryCommissionToEdit.tds,
       });
     }
@@ -69,14 +78,15 @@ export const IntermediaryCommissionAddForm = ({ data, setData,
           intermediaryCommission._id === updatedValues._id ? updatedValues : intermediaryCommission
         );
         setData(updatedData);
-        setIntermediaryCommissionToEdit();
+        setintermediaryCommissionToEdit();
         setValues({
-          agent: '',
-          vehicle: '',
-          commission: '',
-          company: '',
           intermediary: '',
+          company: '',
+          vehicle: '',
           type: '',
+          policytype: '',
+          ourplan: '',
+          commission: '',
           tds: '',
         }); // Reset form fields
         setDisplayForm(false)
@@ -95,12 +105,13 @@ export const IntermediaryCommissionAddForm = ({ data, setData,
         // Update the client-side data state with the new intermediaryCommission
         setData([newValues, ...data]);
         setValues({
-          agent: '',
-          vehicle: '',
-          commission: '',
-          company: '',
           intermediary: '',
+          company: '',
+          vehicle: '',
           type: '',
+          policytype: '',
+          ourplan: '',
+          commission: '',
           tds: '',
         }); // Reset form fields
       }
@@ -129,12 +140,43 @@ export const IntermediaryCommissionAddForm = ({ data, setData,
               >
                 <TextField
                   fullWidth
-                  label="Agent"
-                  name="agent"
+                  label="Intermediary"
+                  name="intermediary"
                   onChange={handleChange}
-                  required
-                  value={values.agent}
-                />
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {intermediaryData.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option._id}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Company"
+                  name="company"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {companyData.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option._id}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
               </Grid>
               <Grid
                 xs={12}
@@ -145,8 +187,84 @@ export const IntermediaryCommissionAddForm = ({ data, setData,
                   label="Vehicle"
                   name="vehicle"
                   onChange={handleChange}
-                  value={values.vehicle}
-                />
+                  select
+                  SelectProps={{ native: true }}
+                >
+                   {vehicleData.map((option) => (
+                    <option
+                      key={option._id}
+                      value={option._id}
+                    >
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Type"
+                  name="type"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {commissionTypes.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option.name}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Policy type"
+                  name="policytype"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {policyTypeData.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option._id}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Our plan"
+                  name="ourplan"
+                  onChange={handleChange}
+                  select
+                  SelectProps={{ native: true }}
+                  >
+                  {ourplanData.map((option) => (
+                   <option
+                     key={option._id}
+                     value={option._id}
+                   >
+                     {option.name}
+                   </option>
+                 ))}
+               </TextField>
               </Grid>
               <Grid
                 xs={12}
@@ -162,42 +280,8 @@ export const IntermediaryCommissionAddForm = ({ data, setData,
                   value={values.commission}
                 />
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Company"
-                  name="company"
-                  onChange={handleChange}
-                  value={values.company}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Intermediary"
-                  name="intermediary"
-                  onChange={handleChange}
-                  value={values.intermediary}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Type"
-                  name="type"
-                  onChange={handleChange}
-                  value={values.type}
-                />
-              </Grid>
+              
+              
               <Grid
                 xs={12}
                 md={6}

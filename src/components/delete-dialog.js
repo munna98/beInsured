@@ -24,10 +24,10 @@ const DeleteDialog = ({ open, handleClose, deleteId, apiUrl, fetchData}) => {
             // Update the client-side data and fetch updated data.
             fetchData();
           } else {
-            console.error('Failed to delete intermediary. Status code:', response.status);
+            console.error('Failed to delete item. Status code:', response.status);
           }
         } catch (error) {
-          console.error('Error deleting intermediary:', error);
+          console.error('Error deleting item:', error);
         }
         handleClose();
       };

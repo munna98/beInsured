@@ -24,4 +24,3 @@ export const IntermediariesSearch = ({ searchTerm, handleSearchChange }) => {
     </Card>
   )
 };
-new line

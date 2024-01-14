@@ -8,19 +8,20 @@ export default async function handler(req, res) {
   if (req.method === 'PUT') {
     try {
       const { values } = req.body;
-      const {agent, vehicle, commission, company, intermediary, type, tds } = values;
+      const {intermediary, company, vehicle, type, policytype, ourplan, commission,tds } = values;
 
       // Find the intermediaryCommission by ID and update its name
       const updatedIntermediaryCommission = await intermediaryCommissionModel.findByIdAndUpdate(
         intermediaryCommissionId,
 
         { 
-          agent: agent,
-          vehicle: vehicle,
-          commission: commission,
-          company: company,
           intermediary: intermediary,
+          company: company,
+          vehicle: vehicle,
           type: type,
+          policytype: policytype,
+          ourplan: ourplan,
+          commission: commission,
           tds: tds, }, // Update the name field
         { new: true } // Return the updated document
       );

@@ -6,6 +6,10 @@ export const DataProvider = ({ children }) => {
     const [agentData, setAgentData] = useState([]);
     const [companyData, setCompanyData] = useState([]);
     const [vehicleData, setVehicleData] = useState([]);
+    const [ourplanData, setOurplanData] = useState([]);
+    const [agentplanData, setAgentplanData] = useState([]);
+    const [policyTypeData, setPolicyTypeData] = useState([]);
+    const [paymentModeData, setPaymentModeData] = useState([]);
     const [isLoading, setIsLoading] = useState(true); // Track loading state
 
     useEffect(() => {
@@ -27,6 +31,22 @@ export const DataProvider = ({ children }) => {
                 const vehicleData = await vehicleResponse.json();
                 setVehicleData(vehicleData);
 
+                const ourplanResponse = await fetch('api/ourplans');
+                const ourplanData = await ourplanResponse.json();
+                setOurplanData(ourplanData);
+
+                const agentplanResponse = await fetch('api/agentplans');
+                const agentplanData = await agentplanResponse.json();
+                setAgentplanData(agentplanData);
+
+                const policyTypeResponse = await fetch('api/policytypes');
+                const policyTypeData = await policyTypeResponse.json();
+                setPolicyTypeData(policyTypeData);
+
+                const paymentModeResponse = await fetch('api/paymentmodes');
+                const paymentModeData = await paymentModeResponse.json();
+                setPaymentModeData(paymentModeData);
+
                 setIsLoading(false); // Set loading to false once data is fetched
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -37,7 +57,8 @@ export const DataProvider = ({ children }) => {
     }, []);
 
     return (
-        <DataContext.Provider value={{ intermediaryData, agentData, companyData,vehicleData }}>
+        <DataContext.Provider value={{ intermediaryData, agentData, companyData,vehicleData
+        , ourplanData, agentplanData, policyTypeData, paymentModeData }}>
             {children}
         </DataContext.Provider >
     );
