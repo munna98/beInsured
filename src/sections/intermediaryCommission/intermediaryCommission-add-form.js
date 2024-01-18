@@ -127,7 +127,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData,
   return (
     <form autoComplete="off" noValidate Card id="editForm" >
       <Card>
-        <CardHeader title={intermediaryCommissionToEdit ? 'Edit Agent Commission' : 'Add Agent Commission'} />
+        <CardHeader title={intermediaryCommissionToEdit ? 'Edit Intermediary Commission' : 'Add Intermediary Commission'} />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
             <Grid
@@ -301,7 +301,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData,
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
           <Button variant="contained" onClick={handleSubmit}>
-            {intermediaryCommissionToEdit ? 'Update Agent Commission' : 'Save Agent Commission'}
+            {intermediaryCommissionToEdit ? 'Update Intermediary Commission' : 'Save Intermediary Commission'}
           </Button>
         </CardActions>
       </Card>

@@ -1,7 +1,17 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from "react";
 import { useContext } from "react";
-import { DataContext } from 'src/contexts/data-context';
+import { DataContext } from "src/contexts/data-context";
 import {
+  // Box,
+  // Button,
+  // Card,
+  // CardActions,
+  // CardContent,
+  // CardHeader,
+  // Divider,
+  // TextField,
+  // Unstable_Grid2 as Grid
+
   Box,
   Button,
   Card,
@@ -10,37 +20,57 @@ import {
   CardHeader,
   Divider,
   TextField,
-  Unstable_Grid2 as Grid
-} from '@mui/material';
+  Select,
+  MenuItem,
+  InputLabel,
+  Chip,
+  FormControl,
+  Unstable_Grid2 as Grid,
+} from "@mui/material";
 
+export const AgentCommissionAddForm = ({
+  data,
+  setData,
+  apiUrl,
+  agentCommissionToEdit,
+  setAgentCommissionToEdit,
+  setDisplayForm,
+}) => {
+  const {
+    intermediaryData,
+    agentData,
+    companyData,
+    vehicleData,
+    ourplanData,
+    agentplanData,
+    policyTypeData,
+    paymentModeData,
+  } = useContext(DataContext);
 
-export const AgentCommissionAddForm = ({ data, setData,
-  apiUrl, agentCommissionToEdit, setAgentCommissionToEdit, setDisplayForm }) => {
-
-  const { intermediaryData, agentData, companyData,vehicleData
-      , ourplanData, agentplanData, policyTypeData, paymentModeData } = useContext(DataContext);
-    
-  const commissionTypes =[{_id:1, name: 'Flat'},{_id:2, name: 'Percentage'}];
+  const commissionTypes = [
+    { _id: 1, name: "Flat" },
+    { _id: 2, name: "Percentage" },
+  ];
 
   const [values, setValues] = useState({
-    agent: '',
-    vehicle: '',
-    company: '',
-    intermediary: '',
-    type: '',
-    policytype: '',
-    agentplan: '',
-    commission: '',
-    tds: '',
+    agents: [],
+    vehicle: "",
+    company: "",
+    intermediary: "",
+    type: "",
+    policytype: "",
+    agentplan: "",
+    commission: "",
+    tds: "",
   });
 
   // Initialize form fields with the existing agentCommission's data
   useEffect(() => {
-    document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
+    document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
 
     if (agentCommissionToEdit) {
       setValues({
-        agent: agentCommissionToEdit.agent,
+        agents: agentCommissionToEdit.agent,
         vehicle: agentCommissionToEdit.vehicle,
         company: agentCommissionToEdit.company,
         intermediary: agentCommissionToEdit.intermediary,
@@ -53,24 +83,69 @@ export const AgentCommissionAddForm = ({ data, setData,
     }
   }, [agentCommissionToEdit]);
 
+  // const handleChange = useCallback((event) => {
+  //   setValues((prev) => ({
+  //     ...prev,
+  //     [event.target.name]: event.target.value,
+  //   }));
+  // }, []);
+
   const handleChange = useCallback(
     (event) => {
-      setValues((prev) => ({
-        ...prev,
-        [event.target.name]: event.target.value
-      }));
+      const { name, value } = event.target;
+  
+      // Handle "Select All" option
+      if (value.includes('selectAll')) {
+        const allAgentNames = agentData.map((agent) => agent.firstName);
+        
+        // If "Select All" is already selected, deselect all agents
+        if (values.agents.length === allAgentNames.length) {
+          setValues((prevValues) => ({
+            ...prevValues,
+            [name]: [],
+          }));
+        } else {
+          // Otherwise, select all agents
+          setValues((prevValues) => ({
+            ...prevValues,
+            [name]: allAgentNames,
+          }));
+        }
+      } else {
+        // Handle other options
+        setValues((prevValues) => ({
+          ...prevValues,
+          [name]: value,
+        }));
+      }
     },
-    []
+    [setValues, values.agents, agentData]
   );
 
+  const renderValue = (selected) => {
+    const displayChips = selected.slice(0, 5); // Display the first 5 selected agents
+    const additionalAgentsCount = selected.length - displayChips.length;
+
+    return (
+      <div>
+        {displayChips.map((value) => (
+          <Chip key={value} label={value} style={{ marginRight: 4 }}/>
+        ))}
+        {additionalAgentsCount > 0 && (
+          <Chip label={`+${additionalAgentsCount}`} style={{ marginLeft: 4 }} />
+        )}
+      </div>
+    );
+  };
+  
   const handleSubmit = useCallback(async () => {
     if (agentCommissionToEdit) {
       // Handle editing by sending a PUT request
       const response = await fetch(`${apiUrl}/${agentCommissionToEdit._id}`, {
-        method: 'PUT',
+        method: "PUT",
         body: JSON.stringify({ values }),
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
       if (response.status === 200) {
@@ -82,25 +157,25 @@ export const AgentCommissionAddForm = ({ data, setData,
         setData(updatedData);
         setAgentCommissionToEdit();
         setValues({
-          agent: '',
-          vehicle: '',
-          company: '',
-          intermediary: '',
-          type: '',
-          policytype: '',
-          agentplan: '',
-          commission: '',
-          tds: '',
+          agents: [],
+          vehicle: "",
+          company: "",
+          intermediary: "",
+          type: "",
+          policytype: "",
+          agentplan: "",
+          commission: "",
+          tds: "",
         }); // Reset form fields
-        setDisplayForm(false)
+        setDisplayForm(false);
       }
     } else {
       // Handle adding a new agentCommission
       const response = await fetch(apiUrl, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({ values }),
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
       if (response.status === 201) {
@@ -108,15 +183,15 @@ export const AgentCommissionAddForm = ({ data, setData,
         // Update the client-side data state with the new agentCommission
         setData([newValues, ...data]);
         setValues({
-          agent: '',
-          vehicle: '',
-          company: '',
-          intermediary: '',
-          type: '',
-          policytype: '',
-          agentplan: '',
-          commission: '',
-          tds: '',
+          agents: [],
+          vehicle: "",
+          company: "",
+          intermediary: "",
+          type: "",
+          policytype: "",
+          agentplan: "",
+          commission: "",
+          tds: "",
         }); // Reset form fields
       }
       // else {
@@ -127,18 +202,16 @@ export const AgentCommissionAddForm = ({ data, setData,
     }
   }, [values, setData, data, apiUrl, agentCommissionToEdit, setValues]);
 
-
   return (
-    <form autoComplete="off" noValidate Card id="editForm" >
+    <form autoComplete="off" noValidate Card id="editForm">
       <Card>
-        <CardHeader title={agentCommissionToEdit ? 'Edit Agent Commission' : 'Add Agent Commission'} />
+        <CardHeader
+          title={agentCommissionToEdit ? "Edit Agent Commission" : "Add Agent Commission"}
+        />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
+            <Grid container spacing={3}>
+              {/* <Grid
                 xs={12}
                 md={6}
               >
@@ -160,11 +233,29 @@ export const AgentCommissionAddForm = ({ data, setData,
                     </option>
                   ))}
                 </TextField>
+              </Grid> */}
+              <Grid xs={12} md={6}>
+                <FormControl fullWidth>
+                  <InputLabel>Agents</InputLabel>
+                  <Select
+                    fullWidth
+                    label="Agents"
+                    name="agents"
+                    multiple
+                    value={values.agents}
+                    onChange={handleChange}
+                    renderValue={renderValue}
+                  >
+                    <MenuItem value="selectAll">Select All</MenuItem>
+                    {agentData.map((option) => (
+                      <MenuItem key={option._id} value={option.firstName}>
+                        {option.firstName}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Vehicle"
@@ -173,20 +264,14 @@ export const AgentCommissionAddForm = ({ data, setData,
                   select
                   SelectProps={{ native: true }}
                 >
-                   {vehicleData.map((option) => (
-                    <option
-                      key={option._id}
-                      value={option._id}
-                    >
+                  {vehicleData.map((option) => (
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Company"
@@ -194,21 +279,15 @@ export const AgentCommissionAddForm = ({ data, setData,
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-                  >
+                >
                   {companyData.map((option) => (
-                   <option
-                     key={option._id}
-                     value={option._id}
-                   >
-                     {option.name}
-                   </option>
-                 ))}
-               </TextField>
+                    <option key={option._id} value={option._id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Intermediary"
@@ -216,21 +295,15 @@ export const AgentCommissionAddForm = ({ data, setData,
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-                  >
+                >
                   {intermediaryData.map((option) => (
-                   <option
-                     key={option._id}
-                     value={option._id}
-                   >
-                     {option.name}
-                   </option>
-                 ))}
-               </TextField>
+                    <option key={option._id} value={option._id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Type"
@@ -238,21 +311,15 @@ export const AgentCommissionAddForm = ({ data, setData,
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-                  >
+                >
                   {commissionTypes.map((option) => (
-                   <option
-                     key={option._id}
-                     value={option.name}
-                   >
-                     {option.name}
-                   </option>
-                 ))}
-               </TextField>
+                    <option key={option._id} value={option.name}>
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Policy type"
@@ -260,21 +327,15 @@ export const AgentCommissionAddForm = ({ data, setData,
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-                  >
+                >
                   {policyTypeData.map((option) => (
-                   <option
-                     key={option._id}
-                     value={option._id}
-                   >
-                     {option.name}
-                   </option>
-                 ))}
-               </TextField>
+                    <option key={option._id} value={option._id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Agent plan"
@@ -282,24 +343,18 @@ export const AgentCommissionAddForm = ({ data, setData,
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-                  >
+                >
                   {agentplanData.map((option) => (
-                   <option
-                     key={option._id}
-                     value={option._id}
-                   >
-                     {option.name}
-                   </option>
-                 ))}
-               </TextField>
+                    <option key={option._id} value={option._id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type='number'
+                  type="number"
                   label="Commission"
                   name="commission"
                   onChange={handleChange}
@@ -307,15 +362,11 @@ export const AgentCommissionAddForm = ({ data, setData,
                   value={values.commission}
                 />
               </Grid>
-              
-              
-              <Grid
-                xs={12}
-                md={6}
-              >
+
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  type='number'
+                  type="number"
                   label="Tds"
                   name="tds"
                   onChange={handleChange}
@@ -326,9 +377,9 @@ export const AgentCommissionAddForm = ({ data, setData,
           </Box>
         </CardContent>
         <Divider />
-        <CardActions sx={{ justifyContent: 'flex-end' }}>
+        <CardActions sx={{ justifyContent: "flex-end" }}>
           <Button variant="contained" onClick={handleSubmit}>
-            {agentCommissionToEdit ? 'Update Agent Commission' : 'Save Agent Commission'}
+            {agentCommissionToEdit ? "Update Agent Commission" : "Save Agent Commission"}
           </Button>
         </CardActions>
       </Card>

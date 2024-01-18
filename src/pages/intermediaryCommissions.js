@@ -12,6 +12,8 @@ import { IntermediaryCommissionsSearch } from 'src/sections/intermediaryCommissi
 import { applyPagination } from 'src/utils/apply-pagination';
 import { IntermediaryCommissionAddForm } from 'src/sections/intermediaryCommission/intermediaryCommission-add-form';
 import useSearch from 'src/hooks/use-search';
+import { useContext } from "react";
+import { DataContext } from 'src/contexts/data-context';
 import TableLoader from 'src/components/table-loader';
 
 const Page = () => {
@@ -19,6 +21,7 @@ const Page = () => {
   const [data, setData] = useState([]);
   const apiUrl = '/api/intermediaryCommissions';
   const [loading, setLoading] = useState(true);
+  const { isFetching, refreshData } = useContext(DataContext);
 
   // ***** Setting api *****
   useEffect(() => {
@@ -38,6 +41,7 @@ const Page = () => {
     };
 
     fetchData();
+    refreshData();
   }, []);
 
 
@@ -159,15 +163,16 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {displayForm &&
-              <IntermediaryCommissionAddForm
+            {displayForm  && 
+            (isFetching? (<p1>Please wait...</p1>):
+              (<IntermediaryCommissionAddForm
                 data={data}
                 setData={setData}
                 apiUrl={apiUrl}
                 intermediaryCommissionToEdit={intermediaryCommissionToEdit}
                 setIntermediaryCommissionToEdit={setIntermediaryCommissionToEdit}
                 setDisplayForm={setDisplayForm}
-              />}
+                />))}
             <IntermediaryCommissionsSearch
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}

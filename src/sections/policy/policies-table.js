@@ -137,7 +137,7 @@ export const PoliciesTable = (props) => {
                   Agent Name
                 </TableCell>
                 <TableCell>
-                  My Plan
+                  Our Plan
                 </TableCell>
                 <TableCell>
                   Agent Plan
@@ -224,7 +224,7 @@ export const PoliciesTable = (props) => {
                       {policy.agentName || 'N/A'}
                     </TableCell>
                     <TableCell>
-                      {policy.myPlan}
+                      {policy.ourPlan}
                     </TableCell>
                     <TableCell>
                       {policy.agentPlan || 'N/A'}

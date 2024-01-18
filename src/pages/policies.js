@@ -12,16 +12,17 @@ import { PoliciesSearch } from 'src/sections/policy/policies-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { PolicyAddForm } from 'src/sections/policy/policy-add-form';
 import useSearch from 'src/hooks/use-search';
+import { useContext } from "react";
+import { DataContext } from 'src/contexts/data-context';
 import TableLoader from 'src/components/table-loader';
  
 const now = new Date(); 
-
 const Page = () => {
 
   const [data, setData] = useState([]);
   const apiUrl = '/api/policies';
   const [loading, setLoading] = useState(true);
-
+  const { isFetching, refreshData } = useContext(DataContext);
   // ***** Setting api *****
   useEffect(() => {
 
@@ -39,6 +40,7 @@ const Page = () => {
     };
 
     fetchData();
+    refreshData();
   }, []);
 
   
@@ -93,6 +95,7 @@ const Page = () => {
     },
     []
   );
+
 
   return (
     <>
@@ -160,15 +163,16 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {displayForm   &&
-              <PolicyAddForm
+            {displayForm  && 
+            (isFetching? (<p1>Please wait...</p1>):
+              (<PolicyAddForm
                 data={data}
                 setData={setData}
                 apiUrl={apiUrl}
                 policyToEdit={policyToEdit}
                 setPolicyToEdit={setPolicyToEdit}
                 setDisplayForm={setDisplayForm}
-              />}
+              />))}
             <PoliciesSearch
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}

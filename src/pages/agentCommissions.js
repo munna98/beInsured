@@ -12,6 +12,8 @@ import { AgentCommissionsSearch } from 'src/sections/agentCommission/agentCommis
 import { applyPagination } from 'src/utils/apply-pagination';
 import { AgentCommissionAddForm } from 'src/sections/agentCommission/agentCommission-add-form';
 import useSearch from 'src/hooks/use-search';
+import { useContext } from "react";
+import { DataContext } from 'src/contexts/data-context';
 import TableLoader from 'src/components/table-loader';
 
 const Page = () => {
@@ -19,7 +21,7 @@ const Page = () => {
   const [data, setData] = useState([]);
   const apiUrl = '/api/agentCommissions';
   const [loading, setLoading] = useState(true);
-
+  const { isFetching, refreshData } = useContext(DataContext);
   // ***** Setting api *****
   useEffect(() => {
 
@@ -38,6 +40,7 @@ const Page = () => {
     };
 
     fetchData();
+    refreshData();
   }, []);
 
 
@@ -158,16 +161,17 @@ const Page = () => {
                   Add
                 </Button>
               </div>
-            </Stack>
-            {displayForm &&
-              <AgentCommissionAddForm
+            </Stack>  
+            {displayForm  && 
+            (isFetching? (<p1>Please wait...</p1>):
+              (<AgentCommissionAddForm
                 data={data}
                 setData={setData}
                 apiUrl={apiUrl}
                 agentCommissionToEdit={agentCommissionToEdit}
                 setAgentCommissionToEdit={setAgentCommissionToEdit}
                 setDisplayForm={setDisplayForm}
-              />}
+              />))}
             <AgentCommissionsSearch
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}
