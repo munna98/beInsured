@@ -81,7 +81,7 @@ export const AgentCommissionsTable = (props) => {
   return (
     <Card>
       <Scrollbar>
-        <Box sx={{ minWidth: 1800 }}>
+        <Box sx={{ minWidth: 1100 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -139,7 +139,7 @@ export const AgentCommissionsTable = (props) => {
                 const company = companyData.find(company=> company._id === agentCommission.company);
                 const intermediary = intermediaryData.find(intermediary=> intermediary._id === agentCommission.intermediary);
                 const policytype = policyTypeData.find(policytype=> policytype._id === agentCommission.policytype);
-                const agentplan = agentplanData.find(agentplan=> agentplan._id === agentCommission.agentplan);
+                const agentplan = agentplanData.find(agentplan=> agentplan._id === agentCommission.agentplan);      
                 return (
                   <TableRow
                     hover
