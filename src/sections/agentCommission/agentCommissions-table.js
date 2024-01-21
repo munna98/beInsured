@@ -76,6 +76,7 @@ export const AgentCommissionsTable = (props) => {
     setDisplayForm(prev => true)
     const agentCommission = items.find(agentCommission => agentCommission._id === agentCommissionId);
     setAgentCommissionToEdit(agentCommission);
+    console.log(agentCommission,"agent commission to edit");
   }
 
   return (
@@ -243,7 +244,7 @@ export const AgentCommissionsTable = (props) => {
         fetchData={fetchAgentCommission}
       />
     </Card>
-  );
+  ); 
 };
 
 AgentCommissionsTable.propTypes = {

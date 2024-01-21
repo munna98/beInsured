@@ -11,6 +11,7 @@ import { IntermediaryCommissionsTable } from 'src/sections/intermediaryCommissio
 import { IntermediaryCommissionsSearch } from 'src/sections/intermediaryCommission/intermediaryCommissions-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { IntermediaryCommissionAddForm } from 'src/sections/intermediaryCommission/intermediaryCommission-add-form';
+import { IntermediaryCommissionEditForm } from 'src/sections/intermediaryCommission/intermediaryCommission-edit-form';
 import useSearch from 'src/hooks/use-search';
 import { useContext } from "react";
 import { DataContext } from 'src/contexts/data-context';
@@ -165,6 +166,16 @@ const Page = () => {
             </Stack>
             {displayForm  && 
             (isFetching? (<p1>Please wait...</p1>):
+            (intermediaryCommissionToEdit ? 
+              (<IntermediaryCommissionEditForm
+                data={data}
+                setData={setData}
+                apiUrl={apiUrl}
+                intermediaryCommissionToEdit={intermediaryCommissionToEdit}
+                setIntermediaryCommissionToEdit={setIntermediaryCommissionToEdit}
+                setDisplayForm={setDisplayForm}
+                />
+              ):
               (<IntermediaryCommissionAddForm
                 data={data}
                 setData={setData}
@@ -172,7 +183,11 @@ const Page = () => {
                 intermediaryCommissionToEdit={intermediaryCommissionToEdit}
                 setIntermediaryCommissionToEdit={setIntermediaryCommissionToEdit}
                 setDisplayForm={setDisplayForm}
-                />))}
+                />
+                )
+              )
+            )}
+
             <IntermediaryCommissionsSearch
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}

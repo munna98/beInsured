@@ -1,0 +1,34 @@
+// commissionType.js
+
+import mongoose from 'mongoose';
+
+const commissionTypeSchema = new mongoose.Schema({
+  _id: Number,
+  name: String,
+});
+
+// Create the model and insert the predefined data
+const CommissionType = mongoose.model('commissionType', commissionTypeSchema);
+
+// Define the predefined data
+const commissionTypes = [
+  { _id: "651e435tge5h6df43432", name: "Flat" },
+  { _id: "65dfg4353terget43egc", name: "Percentage" },
+];
+
+// Insert the data into the collection if it doesn't exist
+CommissionType.collection.estimatedDocumentCount({}, (err, count) => {
+  if (err) {
+    console.error(err);
+  } else if (count === 0) {
+    CommissionType.insertMany(commissionTypes, (insertError) => {
+      if (insertError) {
+        console.error(insertError);
+      } else {
+        console.log('Commission types data inserted successfully.');
+      }
+    });
+  }
+});
+
+export default CommissionType;

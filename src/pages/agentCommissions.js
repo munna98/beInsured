@@ -11,6 +11,7 @@ import { AgentCommissionsTable } from 'src/sections/agentCommission/agentCommiss
 import { AgentCommissionsSearch } from 'src/sections/agentCommission/agentCommissions-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { AgentCommissionAddForm } from 'src/sections/agentCommission/agentCommission-add-form';
+import { AgentCommissionEditForm } from 'src/sections/agentCommission/agentCommission-edit-form';
 import useSearch from 'src/hooks/use-search';
 import { useContext } from "react";
 import { DataContext } from 'src/contexts/data-context';
@@ -21,7 +22,8 @@ const Page = () => {
   const [data, setData] = useState([]);
   const apiUrl = '/api/agentCommissions';
   const [loading, setLoading] = useState(true);
-  const { isFetching, refreshData } = useContext(DataContext);
+  const { isFetching, refreshData, agentcommissionData } = useContext(DataContext);
+ 
   // ***** Setting api *****
   useEffect(() => {
 
@@ -164,6 +166,16 @@ const Page = () => {
             </Stack>  
             {displayForm  && 
             (isFetching? (<p1>Please wait...</p1>):
+            (agentCommissionToEdit ? 
+              (<AgentCommissionEditForm
+                data={data}
+                setData={setData}
+                apiUrl={apiUrl}
+                agentCommissionToEdit={agentCommissionToEdit}
+                setAgentCommissionToEdit={setAgentCommissionToEdit}
+                setDisplayForm={setDisplayForm}
+                />
+              ) : 
               (<AgentCommissionAddForm
                 data={data}
                 setData={setData}
@@ -171,7 +183,11 @@ const Page = () => {
                 agentCommissionToEdit={agentCommissionToEdit}
                 setAgentCommissionToEdit={setAgentCommissionToEdit}
                 setDisplayForm={setDisplayForm}
-              />))}
+                />
+                )
+              )
+            )}
+
             <AgentCommissionsSearch
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}
