@@ -17,8 +17,6 @@ import {
   FormControl,
   Unstable_Grid2 as Grid,
 } from "@mui/material";
-import agentCommissionModel from "models/agentCommissions";
-
 
 export const AgentCommissionAddForm = ({
   data,
@@ -52,8 +50,6 @@ export const AgentCommissionAddForm = ({
     commission: "",
     tds: "",
   });
-
-
 
   useEffect(() => {
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });

@@ -1,6 +1,6 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from 'react';
 import { useContext } from "react";
-import { DataContext } from "src/contexts/data-context";
+import { DataContext } from 'src/contexts/data-context';
 import {
   Box,
   Button,
@@ -11,138 +11,139 @@ import {
   Divider,
   TextField,
   Unstable_Grid2 as Grid,
-  Typography,
-} from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
-import Checkbox from "@mui/material/Checkbox";
-import { number } from "prop-types";
-import useAgentCommission from "src/hooks/use-agent-commission"; // Updated import
+  Typography
+} from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import Checkbox from '@mui/material/Checkbox';
+import { number } from 'prop-types';
 
 
-export const PolicyAddForm = ({
-  data,
-  setData,
-  apiUrl,
-  policyToEdit,
-  setPolicyToEdit,
-  setDisplayForm,
-}) => {
-
-  const {
-    intermediaryData,
-    agentData,
-    companyData,
-    vehicleData,
-    ourplanData,
-    agentplanData,
-    policyTypeData,
-    paymentModeData,
-  } = useContext(DataContext);
-
-
-  const [issueDate, setIssueDate] = useState(new Date());
-
-   const { findAgentCommission } = useAgentCommission(); // Use the hook
-
+export const PolicyAddForm = ({ data, setData,
+  apiUrl, policyToEdit, setPolicyToEdit, setDisplayForm }) => {
+  const { intermediaryData, agentData, companyData,vehicleData
+    , ourplanData, agentplanData, policyTypeData, paymentModeData } = useContext(DataContext);
+    const [issueDate, setIssueDate] = useState(new Date());
   const initialValues = {
     date: new Date(),
-    customerName: "",
+    customerName:'',
     policyType: policyTypeData[0].name,
-    vehicleNumber: "",
-    premium: "",
-    thirdParty: "",
-    ownDamage: "",
-    net: "",
+    vehicleNumber: '',
+    premium: '',
+    thirdParty: '',
+    ownDamage: '',
+    net: '',
     company: companyData[0].name,
-    intermediary: intermediaryData[0].name,
+    intermediary:intermediaryData[0].name,
     vehicleType: vehicleData[0].name,
     agentName: agentData[0].name,
     agentPlan: agentplanData[0].name,
-    commission: "",
+    commission: '',
     ourPlan: ourplanData[0].name,
-    policyNumber: "",
+    policyNumber: '',
     paymentMode: paymentModeData[0].name,
-    capReached: "",
-    amomuntRecieved: "",
-    amountToBePaid: "",
-  };
-  
-
+    capReached: '',
+    amomuntRecieved: '',
+    amountToBePaid: '',
+  }
   const [values, setValues] = useState(initialValues);
 
-
-  const handleChange = useCallback((event) => {
-
-    const { name, value } = event.target;
-
-    // Handle the "Net" calculation when either thirdParty or ownDamage changes
-if (name === "thirdParty" || name === "ownDamage") {
-      setValues((prev) => {
-        const updatedValues = {
-          ...prev,
-          [name]: value,
-        };
-
-        const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
-        return {
-          ...updatedValues,
-          net: isNaN(netValue) ? null : netValue,
-        };
-      });
-    }
-    
-  //   else {
-  //     // Handle other fields
+  // const handleChange = useCallback(
+  //   (event) => {
   //     setValues((prev) => ({
   //       ...prev,
-  //       [name]: value,
+  //       [event.target.name]: event.target.value
   //     }));
-  //   }
-  // }, []);
+  //   },
+  //   []
+  // );
+  
 
-  else {
-    // Handle other fields
+  // const handleChange = useCallback(
+  //   (event) => {
+  //     const { name, value } = event.target;
+  
+  //     // Handle the "Net" calculation when either thirdParty or ownDamage changes
+  //     if (name === 'thirdParty' || name === 'ownDamage') {
+  //       const netValue = values.thirdParty - - values.ownDamage;
+  //       setValues((prev) => ({
+  //         ...prev,
+  //         net: isNaN(netValue) ? null : netValue,
+  //         [name]: value,
+  //       }));
+  //     } else {
+  //       // Handle other fields
+  //       setValues((prev) => ({
+  //         ...prev,
+  //         [name]: value,
+  //       }));
+  //     }
+  //   },
+  //   [values]
+  // );
 
-    // Dynamically update the commission value
-    if (name === "agentName" || name === "vehicleType" || name === "company" || name === "intermediary" || name === "policyType" || name === "agentPlan") {
-      const commission = findAgentCommission({ ...values, [name]: value });
+
+  const handleChange = useCallback(
+    (event) => {
+      const { name, value } = event.target;
+  
+      // Handle the "Net" calculation when either thirdParty or ownDamage changes
+      if (name === 'thirdParty' || name === 'ownDamage') {
+        setValues((prev) => {
+          const updatedValues = {
+            ...prev,
+            [name]: value,
+          };
+  
+          const netValue = updatedValues.thirdParty - - updatedValues.ownDamage;
+          return {
+            ...updatedValues,
+            net: isNaN(netValue) ? null : netValue,
+          };
+        });
+      } else {
+        // Handle other fields
+        setValues((prev) => ({
+          ...prev,
+          [name]: value,
+        }));
+      }
+    },
+    []
+  );
+
+
+  
+  // const handleDateChange = useCallback(
+  // (date) => {
+  //   setIssueDate(date);
+  //   setValues((prev) => ({
+  //     ...prev,
+  //     date: date
+  //   }));
+  // },
+  // []
+  // );
+
+  const handleDateChange = useCallback(
+    (date) => {
+      const selectedDate = date  || new Date(); // If date is not provided, use today's date
+  
+      setIssueDate(selectedDate);
       setValues((prev) => ({
         ...prev,
-        [name]: value,
-        commission, // Update the commission field
+        date: selectedDate,
       }));
-      console.log("one of the input value changed...");
-    } else {
-      setValues((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  }
-},
-[setValues, values, findAgentCommission]
-);
+    },
+    []
+  );
 
-
-  const handleDateChange = useCallback((date) => {
-    const selectedDate = date || new Date(); // If date is not provided, use today's date
-
-    setIssueDate(selectedDate);
-    setValues((prev) => ({
-      ...prev,
-      date: selectedDate,
-    }));
-  }, []);
-
+  
+  
   useEffect(() => {
-
-    // **********
-
-    document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
+    document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
 
     if (policyToEdit) {
-      const {
-        date,
+      const { date,
         customerName,
         policyType,
         vehicleNumber,
@@ -161,8 +162,7 @@ if (name === "thirdParty" || name === "ownDamage") {
         paymentMode,
         capReached,
         amomuntRecieved,
-        amountToBePaid,
-      } = policyToEdit;
+        amountToBePaid, } = policyToEdit;
       setValues({
         date,
         customerName,
@@ -188,14 +188,15 @@ if (name === "thirdParty" || name === "ownDamage") {
     }
   }, [policyToEdit]);
 
+
   const handleSubmit = useCallback(async () => {
     if (policyToEdit) {
       // Handle editing by sending a PUT request
       const response = await fetch(`${apiUrl}/${policyToEdit._id}`, {
-        method: "PUT",
+        method: 'PUT',
         body: JSON.stringify({ values }),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
       if (response.status === 200) {
@@ -207,15 +208,15 @@ if (name === "thirdParty" || name === "ownDamage") {
         setData(updatedData);
         setPolicyToEdit();
         setValues(initialValues); // Reset form fields
-        setDisplayForm(false);
+        setDisplayForm(false)
       }
     } else {
       // Handle adding a new policy
       const response = await fetch(apiUrl, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({ values }),
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
       if (response.status === 201) {
@@ -230,16 +231,29 @@ if (name === "thirdParty" || name === "ownDamage") {
       //   setErrorDialogOpen(true)
       // }
     }
-  }, [values, initialValues, setData, data, apiUrl, policyToEdit, setValues]);
+  }, [values, setData, data, apiUrl, policyToEdit, setValues]);
 
+  
   return (
-    <form autoComplete="off" noValidate Card id="editForm">
+    <form autoComplete="off" noValidate Card id="editForm" >
       <Card>
-        <CardHeader subheader="Fill the form to add a new policy" title="Add Policy" />
+
+        <CardHeader
+          subheader="Fill the form to add a new policy"
+          title="Add Policy"
+        />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
-            <Grid container spacing={3}>
-              <Grid xs={12} md={6}>
+            <Grid
+              container
+              spacing={3}
+            >
+
+              <Grid
+                xs={12}
+                md={6}
+              >
+                
                 <DatePicker
                   fullWidth
                   // type='date'
@@ -250,7 +264,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   onChange={handleDateChange}
                 />
               </Grid>
-              {/* 
+{/* 
               <Grid
                 xs={12}
                 md={6}
@@ -265,7 +279,10 @@ if (name === "thirdParty" || name === "ownDamage") {
                 />
               </Grid> */}
 
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Customer name"
@@ -292,7 +309,10 @@ if (name === "thirdParty" || name === "ownDamage") {
                 </FormGroup>
               </Grid>  */}
 
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Policy type"
@@ -301,16 +321,25 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.policyType}
                   select
                   SelectProps={{ native: true }}
+
                 >
+
                   {policyTypeData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option
+                      key={option._id}
+                      value={option.name}
+                    >
                       {option.name}
                     </option>
                   ))}
+
                 </TextField>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Vehicle number"
@@ -321,48 +350,69 @@ if (name === "thirdParty" || name === "ownDamage") {
                   required
                 />
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  type="number"
+                  type='number'
                   label="Premium"
                   name="premium"
                   onChange={handleChange}
                   value={values.premium}
-                ></TextField>
+                >
+
+                </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  type="number"
+                  type='number'
                   label="TP amount"
                   name="thirdParty"
                   onChange={handleChange}
                   value={values.thirdParty}
-                ></TextField>
+                >
+
+                </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  type="number"
+                  type='number'
                   label="OD amount"
                   name="ownDamage"
                   onChange={handleChange}
                   value={values.ownDamage}
-                ></TextField>
+                >
+                </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  type="number"
+                  type='number'
                   label="Net"
                   name="net"
                   onChange={handleChange}
-                  value={values.thirdParty - -values.ownDamage}
+                  value={values.thirdParty - - values.ownDamage}
                   // disabled
-                ></TextField>
+                >
+                </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Company"
@@ -371,15 +421,22 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.company}
                   select
                   SelectProps={{ native: true }}
+
                 >
                   {companyData.map((option) => (
-                    <option key={option.value} value={option.name}>
+                    <option
+                      key={option.value}
+                      value={option.name}
+                    >
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Intermediary"
@@ -388,15 +445,22 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.intermediary}
                   select
                   SelectProps={{ native: true }}
+
                 >
                   {intermediaryData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option
+                      key={option._id}
+                      value={option.name}
+                    >
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Vehicle type"
@@ -405,15 +469,22 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.vehicleType}
                   select
                   SelectProps={{ native: true }}
+
                 >
                   {vehicleData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option
+                      key={option._id}
+                      value={option.name}
+                    >
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Agent name"
@@ -422,15 +493,22 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.agentName}
                   select
                   SelectProps={{ native: true }}
+
                 >
                   {agentData.map((option) => (
-                    <option key={option._id} value={option.firstName}>
+                    <option
+                      key={option._id}
+                      value={option.firstName}
+                    >
                       {option.firstName}
                     </option>
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Agent plan"
@@ -439,26 +517,37 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.agentPlan}
                   select
                   SelectProps={{ native: true }}
+
                 >
                   {agentplanData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option
+                      key={option._id}
+                      value={option.name}
+                    >
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  type="number"
+                  type='number'
                   label="Commission"
                   name="commission"
                   onChange={handleChange}
                   value={values.commission}
-                ></TextField>
+                >
+                </TextField>
               </Grid>
-
-              <Grid xs={12} md={6}>
+              
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Our Plan"
@@ -467,16 +556,23 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.ourPlan}
                   select
                   SelectProps={{ native: true }}
+
                 >
                   {ourplanData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option
+                      key={option._id}
+                      value={option.name}
+                    >
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
-
-              <Grid xs={12} md={6}>
+              
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Policy number"
@@ -485,7 +581,10 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.policyNumber}
                 />
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
                   label="Payment mode"
@@ -494,52 +593,70 @@ if (name === "thirdParty" || name === "ownDamage") {
                   value={values.paymentMode}
                   select
                   SelectProps={{ native: true }}
+
                 >
                   {paymentModeData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option
+                      key={option._id}
+                      value={option.name}
+                    >
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  type="number"
+                  type='number'
                   label="CAP reached"
                   name="capReached"
                   onChange={handleChange}
                   value={values.capReached}
-                ></TextField>
+                >
+
+                </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  type="number"
+                  type='number'
                   label="Amomunt recieved"
                   name="amomuntRecieved"
                   onChange={handleChange}
                   value={values.amomuntRecieved}
-                ></TextField>
+                >
+
+                </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid
+                xs={12}
+                md={6}
+              >
                 <TextField
                   fullWidth
-                  type="number"
+                  type='number'
                   label="Amount to be paid"
                   name="amountToBePaid"
                   onChange={handleChange}
                   value={values.amountToBePaid}
                   disabled
-                ></TextField>
+                >
+                </TextField>
               </Grid>
             </Grid>
           </Box>
         </CardContent>
         <Divider />
-        <CardActions sx={{ justifyContent: "flex-end" }}>
+        <CardActions sx={{ justifyContent: 'flex-end' }}>
           <Button variant="contained" onClick={handleSubmit}>
-            {policyToEdit ? "Update Policy" : "Save Policy"}
+            {policyToEdit ? 'Update Policy' : 'Save Policy'}
           </Button>
         </CardActions>
       </Card>

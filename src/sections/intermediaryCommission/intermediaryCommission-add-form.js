@@ -24,7 +24,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
     agentData,
     companyData,
     vehicleData,
-    ourplanData,
+    ourplanData, 
     agentplanData,
     policyTypeData,
     paymentModeData,
@@ -36,12 +36,12 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
   ];
 
   const [values, setValues] = useState({
-    intermediary: "",
+    intermediary: intermediaryData[0].name,
     company: [],
     vehicle: [],
-    type: "",
-    policytype: "",
-    ourplan: "",
+    type: commissionTypes[0].name,
+    policytype: policyTypeData[0].name,
+    ourplan: ourplanData[0].name,
     commission: "",
     tds: "",
   });
@@ -162,6 +162,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
+                  value={values.intermediary}
                 >
                   {intermediaryData.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -220,6 +221,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
+                  value={values.type}
                 >
                   {commissionTypes.map((option) => (
                     <option key={option._id} value={option.name}>
@@ -236,6 +238,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
+                  value={values.policytype}
                 >
                   {policyTypeData.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -252,6 +255,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
+                  value={values.ourplan}
                 >
                   {ourplanData.map((option) => (
                     <option key={option._id} value={option._id}>

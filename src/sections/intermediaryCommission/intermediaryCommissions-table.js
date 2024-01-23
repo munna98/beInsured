@@ -81,7 +81,7 @@ export const IntermediaryCommissionsTable = (props) => {
   return (
     <Card>
       <Scrollbar>
-        <Box sx={{ minWidth: 1800 }}>
+        <Box sx={{ minWidth: 1000 }}>
           <Table>
             <TableHead>
               <TableRow>

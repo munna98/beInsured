@@ -163,7 +163,9 @@ export const PoliciesTable = (props) => {
               {items.map((policy) => {
                 const isSelected = selected.includes(policy.id);
                 const date = new Date(policy.date)
-
+                if(policy._id== "659ff4e1a81d8b2a317e7aab"){
+                  console.log(policy);
+                }
                 return (
                   <TableRow
                     hover
