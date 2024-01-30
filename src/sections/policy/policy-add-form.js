@@ -16,7 +16,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import Checkbox from "@mui/material/Checkbox";
 import { number } from "prop-types";
-import useAgentCommission from "src/hooks/use-agent-commission"; // Updated import
+import useAgentCommission from "src/hooks/use-agent-commission";
 
 
 export const PolicyAddForm = ({
@@ -42,86 +42,139 @@ export const PolicyAddForm = ({
 
   const [issueDate, setIssueDate] = useState(new Date());
 
-   const { findAgentCommission } = useAgentCommission(); // Use the hook
-
   const initialValues = {
     date: new Date(),
     customerName: "",
-    policyType: policyTypeData[0].name,
+    policyType: policyTypeData[0]._id,
     vehicleNumber: "",
     premium: "",
     thirdParty: "",
     ownDamage: "",
     net: "",
-    company: companyData[0].name,
-    intermediary: intermediaryData[0].name,
-    vehicleType: vehicleData[0].name,
-    agentName: agentData[0].name,
-    agentPlan: agentplanData[0].name,
+    company: companyData[0]._id,
+    intermediary: intermediaryData[0]._id,
+    vehicleType: vehicleData[0]._id,
+    agentName: agentData[0]._id,
+    agentPlan: agentplanData[0]._id,
     commission: "",
-    ourPlan: ourplanData[0].name,
+    ourPlan: ourplanData[0]._id,
     policyNumber: "",
-    paymentMode: paymentModeData[0].name,
+    paymentMode: paymentModeData[0]._id,
     capReached: "",
-    amomuntRecieved: "",
+    amountRecieved: "",
     amountToBePaid: "",
   };
   
 
   const [values, setValues] = useState(initialValues);
+  const { findAgentCommission } = useAgentCommission();
+
+  // console.log(values);
 
 
-  const handleChange = useCallback((event) => {
 
-    const { name, value } = event.target;
+//   const handleChange = useCallback((event) => {
 
-    // Handle the "Net" calculation when either thirdParty or ownDamage changes
-if (name === "thirdParty" || name === "ownDamage") {
-      setValues((prev) => {
-        const updatedValues = {
-          ...prev,
-          [name]: value,
-        };
+//     const { name, value } = event.target;
 
-        const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
-        return {
-          ...updatedValues,
-          net: isNaN(netValue) ? null : netValue,
-        };
-      });
-    }
-    
-  //   else {
-  //     // Handle other fields
-  //     setValues((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //     }));
-  //   }
-  // }, []);
+//     // Handle the "Net" calculation when either thirdParty or ownDamage changes
+// if (name === "thirdParty" || name === "ownDamage") {
+//       setValues((prev) => {
+//         const updatedValues = {
+//           ...prev,
+//           [name]: value,
+//         };
 
-  else {
-    // Handle other fields
+//         const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
+//         return {
+//           ...updatedValues,
+//           net: isNaN(netValue) ? null : netValue,
+//         };
+//       });
+//     }
 
-    // Dynamically update the commission value
-    if (name === "agentName" || name === "vehicleType" || name === "company" || name === "intermediary" || name === "policyType" || name === "agentPlan") {
-      const commission = findAgentCommission({ ...values, [name]: value });
-      setValues((prev) => ({
+//   else {
+//     // Handle other fields
+
+//     // Dynamically update the commission value
+//     if (name === "agentName" || name === "vehicleType" || name === "company" || name === "intermediary" || name === "policyType" || name === "agentPlan") {
+//       const commission = findAgentCommission({ 
+//         agent: values.agentName,
+//         vehicle: values.vehicleType,
+//         company: values.company,
+//         intermediary: values.intermediary,
+//         policyType: values.policyType,
+//         agentPlan: values.agentPlan,});
+//       setValues((prev) => ({
+//         ...prev,
+//         [name]: value,
+//         // commission:commission, // Update the commission field
+//       }));
+//       console.log("one of the input value changed...");
+//     } else {
+//       setValues((prev) => ({
+//         ...prev,
+//         [name]: value,
+//       }));
+//     }
+//   }
+// },
+// [setValues, values]
+// );
+
+
+const handleChange = useCallback((event) => {
+  const { name, value } = event.target;
+
+  // Handle the "Net" calculation when either thirdParty or ownDamage changes
+  if (name === "thirdParty" || name === "ownDamage") {
+    setValues((prev) => {
+      const updatedValues = {
         ...prev,
         [name]: value,
-        commission, // Update the commission field
-      }));
-      console.log("one of the input value changed...");
-    } else {
-      setValues((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+      };
+
+      const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
+      return {
+        ...updatedValues,
+        net: isNaN(netValue) ? null : netValue,
+      };
+    });
   }
-},
-[setValues, values, findAgentCommission]
-);
+
+  // Handle other fields
+  setValues((prev) => ({
+    ...prev,
+    [name]: value,
+  }));
+
+  // Dynamically update the commission value
+  if (
+    name === "agentName" ||
+    name === "vehicleType" ||
+    name === "company" ||
+    name === "intermediary" ||
+    name === "policyType" ||
+    name === "agentPlan"
+  ) {
+    setValues((prev) => {
+      const commission = findAgentCommission({
+        agent: prev.agentName,
+        vehicle: prev.vehicleType,
+        company: prev.company,
+        intermediary: prev.intermediary,
+        policyType: prev.policyType,
+        agentPlan: prev.agentPlan,
+      });
+      return {
+        ...prev,
+        commission: commission,
+      };
+    });
+    console.log("one of the input values changed...");
+  }
+}, [setValues, findAgentCommission]);
+
 
 
   const handleDateChange = useCallback((date) => {
@@ -160,7 +213,7 @@ if (name === "thirdParty" || name === "ownDamage") {
         policyNumber,
         paymentMode,
         capReached,
-        amomuntRecieved,
+        amountRecieved,
         amountToBePaid,
       } = policyToEdit;
       setValues({
@@ -182,11 +235,21 @@ if (name === "thirdParty" || name === "ownDamage") {
         policyNumber,
         paymentMode,
         capReached,
-        amomuntRecieved,
+        amountRecieved,
         amountToBePaid,
       });
     }
   }, [policyToEdit]);
+
+  const fetchPolicy = async () => {
+    try {
+      const response = await fetch(apiUrl)
+      const data = await response.json()
+      setData(data)
+    } catch (error) {
+      console.error('Error fetching policy:', error);
+    }
+  }
 
   const handleSubmit = useCallback(async () => {
     if (policyToEdit) {
@@ -221,7 +284,8 @@ if (name === "thirdParty" || name === "ownDamage") {
       if (response.status === 201) {
         const newValues = await response.json();
         // Update the client-side data state with the new policy
-        setData([newValues, ...data]);
+        // setData([newValues, ...data]);
+        fetchPolicy()
         setValues(initialValues); // Reset form fields
       }
       // else {
@@ -303,7 +367,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   SelectProps={{ native: true }}
                 >
                   {policyTypeData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
@@ -373,7 +437,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   SelectProps={{ native: true }}
                 >
                   {companyData.map((option) => (
-                    <option key={option.value} value={option.name}>
+                    <option key={option.value} value={option._id}>
                       {option.name}
                     </option>
                   ))}
@@ -390,7 +454,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   SelectProps={{ native: true }}
                 >
                   {intermediaryData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
@@ -407,7 +471,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   SelectProps={{ native: true }}
                 >
                   {vehicleData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
@@ -424,7 +488,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   SelectProps={{ native: true }}
                 >
                   {agentData.map((option) => (
-                    <option key={option._id} value={option.firstName}>
+                    <option key={option._id} value={option._id}>
                       {option.firstName}
                     </option>
                   ))}
@@ -441,7 +505,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   SelectProps={{ native: true }}
                 >
                   {agentplanData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
@@ -469,7 +533,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   SelectProps={{ native: true }}
                 >
                   {ourplanData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
@@ -496,7 +560,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   SelectProps={{ native: true }}
                 >
                   {paymentModeData.map((option) => (
-                    <option key={option._id} value={option.name}>
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
@@ -509,17 +573,17 @@ if (name === "thirdParty" || name === "ownDamage") {
                   label="CAP reached"
                   name="capReached"
                   onChange={handleChange}
-                  value={values.capReached}
+                  value={values.premium-values.commission}
                 ></TextField>
               </Grid>
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   type="number"
-                  label="Amomunt recieved"
-                  name="amomuntRecieved"
+                  label="Amount recieved"
+                  name="amountRecieved"
                   onChange={handleChange}
-                  value={values.amomuntRecieved}
+                  value={values.amountRecieved}
                 ></TextField>
               </Grid>
               <Grid xs={12} md={6}>
@@ -529,7 +593,7 @@ if (name === "thirdParty" || name === "ownDamage") {
                   label="Amount to be paid"
                   name="amountToBePaid"
                   onChange={handleChange}
-                  value={values.amountToBePaid}
+                  value={values.premium-values.commission-values.amountRecieved}
                   disabled
                 ></TextField>
               </Grid>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext } from "react";
 export const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
+  const [policyData, setPolicyData] = useState([]);
   const [intermediaryData, setIntermediaryData] = useState([]);
   const [agentData, setAgentData] = useState([]);
   const [companyData, setCompanyData] = useState([]);
@@ -15,6 +16,11 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     try {
+      // const policyResponse = await fetch("api/policies");
+      // const policyData = await policyResponse.json();
+      // setPolicyData(policyData);
+
+
       const intermediaryResponse = await fetch("api/intermediaries");
       const intermediaryData = await intermediaryResponse.json();
       setIntermediaryData(intermediaryData);

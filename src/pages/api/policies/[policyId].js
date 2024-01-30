@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         policyNumber,
         paymentMode,
         capReached,
-        amomuntRecieved,
+        amountRecieved,
         amountToBePaid, } = values;
 
       // Find the policy by ID and update its name
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
         policyNumber,
         paymentMode,
         capReached,
-        amomuntRecieved,
+        amountRecieved,
         amountToBePaid,
         }, // Update the fields
         { new: true } // Return the updated document

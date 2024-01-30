@@ -135,12 +135,14 @@ export const AgentCommissionsTable = (props) => {
               {items.map((agentCommission) => {
                 const isSelected = selected.includes(agentCommission.id);
                 const createdAt =new Date(agentCommission.createdAt);
-                const agent = agentData.find(agent=> agent._id === agentCommission.agent);
-                const vehicle = vehicleData.find(vehicle=> vehicle._id === agentCommission.vehicle);
-                const company = companyData.find(company=> company._id === agentCommission.company);
-                const intermediary = intermediaryData.find(intermediary=> intermediary._id === agentCommission.intermediary);
-                const policytype = policyTypeData.find(policytype=> policytype._id === agentCommission.policytype);
-                const agentplan = agentplanData.find(agentplan=> agentplan._id === agentCommission.agentplan);      
+                console.log(agentCommission);
+                // const agent = agentData.find(agent=> agent._id === agentCommission.agent);
+                // const vehicle = vehicleData.find(vehicle=> vehicle._id === agentCommission.vehicle);
+                // const company = companyData.find(company=> company._id === agentCommission.company);
+                // const intermediary = intermediaryData.find(intermediary=> intermediary._id === agentCommission.intermediary);
+                // const policyType = policyTypeData.find(policyType=> policyType._id === agentCommission.policyType);
+                // const agentPlan = agentplanData.find(agentPlan=> agentPlan._id === agentCommission.agentPlan);      
+                
                 return (
                   <TableRow
                     hover
@@ -161,26 +163,26 @@ export const AgentCommissionsTable = (props) => {
                     </TableCell>
                     <TableCell> 
                       <Typography variant="subtitle2">
-                        {agent && agent.firstName}
+                        {agentCommission.agent.firstName}
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {vehicle && vehicle.name}
+                      {agentCommission.vehicle.name}
                     </TableCell>
                     <TableCell>
-                      {company && company.name}
+                      {agentCommission.company.name}
                     </TableCell>                    
                     <TableCell>
-                      {intermediary&& intermediary.name}
+                      {agentCommission.intermediary.name}
                     </TableCell>                    
                     <TableCell>
                       {agentCommission.type}
                     </TableCell>    
                     <TableCell>
-                      {policytype&& policytype.name}
+                      {agentCommission.policyType.name}
                     </TableCell>    
                     <TableCell>
-                      {agentplan&& agentplan.name}
+                      {agentCommission.agentPlan.name}
                     </TableCell>    
                     <TableCell>
                       {agentCommission.commission}

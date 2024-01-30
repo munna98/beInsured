@@ -5,7 +5,15 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       // Retrieve all policies from the database
-      const policies = await policyModel.find({});
+      const policies = await policyModel.find({})
+      .populate("agentName")
+      .populate("vehicleType")
+      .populate("company")
+      .populate("intermediary")
+      .populate("policyType")
+      .populate("agentPlan")
+      .populate("ourPlan")
+      .populate("paymentMode")
       res.status(200).json(policies);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch policies', error: error.message });
@@ -30,7 +38,7 @@ export default async function handler(req, res) {
         policyNumber,
         paymentMode,
         capReached,
-        amomuntRecieved,
+        amountRecieved,
         amountToBePaid, } = req.body.values;
       // Create a new policy using the Mongoose model
       console.log(req.body.values);
@@ -53,7 +61,7 @@ export default async function handler(req, res) {
         policyNumber: policyNumber,
         paymentMode: paymentMode,
         capReached: capReached,
-        amomuntRecieved: amomuntRecieved,
+        amountRecieved: amountRecieved,
         amountToBePaid: amountToBePaid,
       });
       console.log(newPolicy);

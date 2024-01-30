@@ -80,7 +80,7 @@ export const PoliciesTable = (props) => {
   return (
     <Card style={{ overflowX: 'auto' }}>
       <Scrollbar>
-        <Box sx={{ minWidth: 3700 }}>
+        <Box sx={{ minWidth: 3400 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -163,9 +163,8 @@ export const PoliciesTable = (props) => {
               {items.map((policy) => {
                 const isSelected = selected.includes(policy.id);
                 const date = new Date(policy.date)
-                if(policy._id== "659ff4e1a81d8b2a317e7aab"){
-                  console.log(policy);
-                }
+                console.log(policy);
+
                 return (
                   <TableRow
                     hover
@@ -193,7 +192,7 @@ export const PoliciesTable = (props) => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {policy.policyType}
+                      {policy.policyType.name}
                     </TableCell>
                     <TableCell>
                       {policy.vehicleNumber}
@@ -211,37 +210,37 @@ export const PoliciesTable = (props) => {
                       {policy.net || 'N/A'}
                     </TableCell>
                     <TableCell>
-                      {policy.company || 'N/A'}
+                      {policy.company.name || 'N/A'}
                     </TableCell>
                     <TableCell>
-                      {policy.intermediary}
+                      {policy.intermediary.name}
                     </TableCell>
                     <TableCell>
-                      {policy.vehicleType}
+                      {policy.vehicleType.name}
                     </TableCell>
                     <TableCell>
                       {policy.commission}
                     </TableCell>
                     <TableCell>
-                      {policy.agentName || 'N/A'}
+                      {policy.agentName.firstName || 'N/A'}
                     </TableCell>
                     <TableCell>
-                      {policy.ourPlan}
+                      {policy.ourPlan.name}
                     </TableCell>
                     <TableCell>
-                      {policy.agentPlan || 'N/A'}
+                      {policy.agentPlan.name || 'N/A'}
                     </TableCell>
                     <TableCell>
                       {policy.policyNumber}
                     </TableCell>
                     <TableCell>
-                      {policy.paymentMode}
+                      {policy.paymentMode.name}
                     </TableCell>
                     <TableCell>
                       {policy.capReached}
                     </TableCell>
                     <TableCell>
-                      {policy.amountRecieved || 'N/A'}
+                      {policy.amountRecieved }
                     </TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={2}>

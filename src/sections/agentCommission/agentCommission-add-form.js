@@ -46,9 +46,9 @@ export const AgentCommissionAddForm = ({
     vehicle: [],
     company: [],
     intermediary: [],
-    type: commissionTypes[0].name,
-    policytype: policyTypeData[0].name,
-    agentplan: agentplanData[0].name,
+    type: commissionTypes[0]._id,
+    policyType: policyTypeData[0]._id,
+    agentPlan: agentplanData[0]._id,
     commission: "",
     tds: "",
   });
@@ -58,6 +58,12 @@ export const AgentCommissionAddForm = ({
   useEffect(() => {
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
   }, []);
+
+  const fetchAgentCommission = async () => {
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    setData(data)
+  }
 
   const handleChange = useCallback(
     (event) => {
@@ -149,15 +155,16 @@ export const AgentCommissionAddForm = ({
       if (response.status === 201) {
         const newValues = await response.json();
         // Update the client-side data state with the new agentCommission
-        setData([...newValues, ...data]);
+        // setData([...newValues, ...data]);
+        fetchAgentCommission();
         setValues({
           agent: [],
           vehicle: [],
           company: [],
           intermediary: [],
-          type: "",
-          policytype: "",
-          agentplan: "",
+          type: commissionTypes[0]._id,
+          policyType: policyTypeData[0]._id,
+          agentPlan: agentplanData[0]._id,
           commission: "",
           tds: "",
         }); // Reset form fields
@@ -278,9 +285,9 @@ export const AgentCommissionAddForm = ({
                 <TextField
                   fullWidth
                   label="Policy type"
-                  name="policytype"
+                  name="policyType"
                   onChange={handleChange}
-                  value={values.policytype}
+                  value={values.policyType}
                   select
                   SelectProps={{ native: true }}
                 >
@@ -295,9 +302,9 @@ export const AgentCommissionAddForm = ({
                 <TextField
                   fullWidth
                   label="Agent plan"
-                  name="agentplan"
+                  name="agentPlan"
                   onChange={handleChange}
-                  value={values.agentplan}
+                  value={values.agentPlan}
                   select
                   SelectProps={{ native: true }}
                 >

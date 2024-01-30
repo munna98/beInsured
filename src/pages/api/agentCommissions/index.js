@@ -1,16 +1,34 @@
 import agentCommissionModel from "models/agentCommissions";
 
 export default async function handler(req, res) {
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     try {
-      const agentCommissions = await agentCommissionModel.find({});
+      // const agentCommissions = await agentCommissionModel.find({});
+      const agentCommissions = await agentCommissionModel
+        .find({})
+        .populate("agent")
+        .populate("vehicle")
+        .populate("company")
+        .populate("intermediary")
+        .populate("policyType")
+        .populate("agentPlan");
       res.status(200).json(agentCommissions);
     } catch (error) {
-      res.status(500).json({ message: 'Failed to fetch agentCommissions', error: error.message });
+      res.status(500).json({ message: "Failed to fetch agentCommissions", error: error.message });
     }
-  } else if (req.method === 'POST') {
+  } else if (req.method === "POST") {
     try {
-      const { agent, vehicle, company, intermediary, type, policytype, agentplan, commission, tds } = req.body.values;
+      const {
+        agent,
+        vehicle,
+        company,
+        intermediary,
+        type,
+        policyType,
+        agentPlan,
+        commission,
+        tds,
+      } = req.body.values;
 
       // Create an array of combinations
       const combinations = [];
@@ -25,8 +43,8 @@ export default async function handler(req, res) {
                 company: companyId,
                 intermediary: intermediaryId,
                 type,
-                policytype,
-                agentplan,
+                policyType,
+                agentPlan,
                 commission,
                 tds,
               });
@@ -34,6 +52,7 @@ export default async function handler(req, res) {
           }
         }
       }
+      
 
       // Create a new agentCommission for each combination
       const savedAgentCommissions = await Promise.all(
@@ -45,9 +64,9 @@ export default async function handler(req, res) {
 
       res.status(201).json(savedAgentCommissions);
     } catch (error) {
-      res.status(500).json({ message: 'Failed to create agentCommissions', error: error.message });
+      res.status(500).json({ message: "Failed to create agentCommissions", error: error.message });
     }
   } else {
-    res.status(405).json({ message: 'Method Not Allowed' });
+    res.status(405).json({ message: "Method Not Allowed" });
   }
 }

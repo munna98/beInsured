@@ -146,6 +146,7 @@ export const AgentCommissionAddForm = ({
         const newValues = await response.json();
         // Update the client-side data state with the new agentCommission
         setData([...newValues, ...data]);
+        console.log(data);
         setValues({
           agent: [],
           vehicle: [],
