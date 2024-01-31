@@ -146,6 +146,7 @@ const handleChange = useCallback((event) => {
   setValues((prev) => ({
     ...prev,
     [name]: value,
+    amountToBePaid: prev.premium - prev.commission - prev.amountRecieved
   }));
 
   // Dynamically update the commission value
@@ -155,7 +156,9 @@ const handleChange = useCallback((event) => {
     name === "company" ||
     name === "intermediary" ||
     name === "policyType" ||
-    name === "agentPlan"
+    name === "agentPlan" ||
+    name === "thirdParty" || 
+    name === "ownDamage"
   ) {
     setValues((prev) => {
       const commission = findAgentCommission({
@@ -165,10 +168,12 @@ const handleChange = useCallback((event) => {
         intermediary: prev.intermediary,
         policyType: prev.policyType,
         agentPlan: prev.agentPlan,
+        net: prev.net,
       });
       return {
         ...prev,
         commission: commission,
+        capReached: prev.premium - commission,
       };
     });
     console.log("one of the input values changed...");
@@ -594,7 +599,6 @@ const handleChange = useCallback((event) => {
                   name="amountToBePaid"
                   onChange={handleChange}
                   value={values.premium-values.commission-values.amountRecieved}
-                  disabled
                 ></TextField>
               </Grid>
             </Grid>

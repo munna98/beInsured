@@ -28,7 +28,7 @@ export default async function handler(req, res) {
         capReached,
         amountRecieved,
         amountToBePaid, } = values;
-
+        console.log(values)
       // Find the policy by ID and update its name
       const updatedAgent = await policyModel.findByIdAndUpdate(
         policyId,
@@ -56,6 +56,7 @@ export default async function handler(req, res) {
         amountToBePaid,
         }, // Update the fields
         { new: true } // Return the updated document
+
       );
 
       if (!updatedAgent) {

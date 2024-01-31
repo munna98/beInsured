@@ -131,7 +131,7 @@ const Page = () => {
                     color="inherit"
                     startIcon={(
                       <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
+                          <ArrowDownOnSquareIcon />
                       </SvgIcon>
                     )}
                   >
@@ -141,7 +141,7 @@ const Page = () => {
                     color="inherit"
                     startIcon={(
                       <SvgIcon fontSize="small">
-                        <ArrowDownOnSquareIcon />
+                        <ArrowUpOnSquareIcon />
                       </SvgIcon>
                     )}
                   >

@@ -16,9 +16,9 @@ export const DataProvider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      // const policyResponse = await fetch("api/policies");
-      // const policyData = await policyResponse.json();
-      // setPolicyData(policyData);
+      const policyResponse = await fetch("api/policies");
+      const policyData = await policyResponse.json();
+      setPolicyData(policyData);
 
 
       const intermediaryResponse = await fetch("api/intermediaries");
@@ -56,6 +56,8 @@ export const DataProvider = ({ children }) => {
       const agentCommissionResponse = await fetch("api/agentCommissions");
       const agentCommissionData = await agentCommissionResponse.json();
       setAgentCommissionData(agentCommissionData);
+
+      console.log(policyData);
 
       setIsFetching(false); // Set loading to false once data is fetched
     } catch (error) {
