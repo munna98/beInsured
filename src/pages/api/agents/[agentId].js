@@ -1,6 +1,8 @@
 // API handler file (e.g., agentHandler.js)
 
 import agentModel from "models/agents";
+import agentCommissionModel from "models/agentCommissions";
+import policyModel from "models/policies";
 
 export default async function handler(req, res) {
   const { agentId } = req.query;
@@ -35,7 +37,19 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'DELETE') {
     try {
-      // Find the agent by ID and delete it
+      // Check if the agent is referenced in agentCommissionModel
+      const isReferencedInCommissions = await agentCommissionModel.exists({ agent: agentId });
+      const isReferencedInPolicies = await policyModel.exists({ agentName: agentId });
+
+      const isReferenced = isReferencedInCommissions || isReferencedInPolicies
+
+      if (isReferenced) {
+        res.status(400).json({ message: 'Agent has a reference and cannot be deleted' });
+        console.log(message);
+        return;
+      }
+
+      // If not referenced, proceed with deletion
       const deletedAgent = await agentModel.findByIdAndDelete(agentId);
 
       if (!deletedAgent) {

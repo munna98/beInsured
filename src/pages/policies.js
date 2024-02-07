@@ -11,10 +11,12 @@ import { PoliciesTable } from 'src/sections/policy/policies-table';
 import { PoliciesSearch } from 'src/sections/policy/policies-search';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { PolicyAddForm } from 'src/sections/policy/policy-add-form';
+import { exportToExcel } from 'src/utils/export-to-excel';
 import useSearch from 'src/hooks/use-search';
 import { useContext } from "react";
 import { DataContext } from 'src/contexts/data-context';
 import TableLoader from 'src/components/table-loader';
+
  
 const now = new Date(); 
 const Page = () => {
@@ -65,6 +67,12 @@ const Page = () => {
       [policies]
     );
   };
+
+  const handleExport = useCallback(() => {
+    // Pass the data array to the function to generate the Excel file
+    exportToExcel(data, "policy_list.xlsx");
+  }, [data]);
+
 
   const [page, setPage] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
@@ -127,7 +135,7 @@ const Page = () => {
                   direction="row"
                   spacing={1}
                 >
-                  <Button
+                  <Button 
                     color="inherit"
                     startIcon={(
                       <SvgIcon fontSize="small">
@@ -137,7 +145,7 @@ const Page = () => {
                   >
                     Import
                   </Button>
-                  <Button
+                  <Button onClick={handleExport}
                     color="inherit"
                     startIcon={(
                       <SvgIcon fontSize="small">

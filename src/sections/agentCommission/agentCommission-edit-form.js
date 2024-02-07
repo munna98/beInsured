@@ -12,6 +12,8 @@ import {
   TextField,
   Select,
   Unstable_Grid2 as Grid,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import agentCommissionModel from "models/agentCommissions";
 
@@ -43,7 +45,19 @@ export const AgentCommissionEditForm = ({
 
 const [values, setValues] = useState({ ...agentCommissionToEdit });
 
+const [snackbarOpen, setSnackbarOpen] = useState(false);
+const [snackbarMessage, setSnackbarMessage] = useState('');
+const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // or 'error'
 
+const handleSnackbarClose = () => {
+  setSnackbarOpen(false);
+};
+
+const fetchAgentCommission = async () => {
+  const response = await fetch(apiUrl)
+  const data = await response.json()
+  setData(data)
+}
 
 console.log(values, "initial valuess");
   useEffect(() => {
@@ -85,20 +99,29 @@ console.log(values, "initial valuess");
       const updatedData = data.map((agentCommission) =>
         agentCommission._id === updatedValues._id ? updatedValues : agentCommission
       );
-      setData(updatedData);
-      setAgentCommissionToEdit();
-      setValues({
-      agent: agentCommissionToEdit.agent,
-      vehicle: agentCommissionToEdit.vehicle,
-      company: agentCommissionToEdit.company,
-      intermediary: agentCommissionToEdit.intermediary,
-      type: agentCommissionToEdit.type,
-      policyType: agentCommissionToEdit.policyType,
-      agentPlan: agentCommissionToEdit.agentPlan,
-      commission: agentCommissionToEdit.commission,
-      tds: agentCommissionToEdit.tds,
-      }); // Reset form fields
-      setDisplayForm(false);
+      // setData(updatedData);
+      fetchAgentCommission();
+      // setAgentCommissionToEdit();
+      // setValues({
+      // agent: agentCommissionToEdit.agent,
+      // vehicle: agentCommissionToEdit.vehicle,
+      // company: agentCommissionToEdit.company,
+      // intermediary: agentCommissionToEdit.intermediary,
+      // type: agentCommissionToEdit.type,
+      // policyType: agentCommissionToEdit.policyType,
+      // agentPlan: agentCommissionToEdit.agentPlan,
+      // commission: agentCommissionToEdit.commission,
+      // tds: agentCommissionToEdit.tds,
+      // }); // Reset form fields
+      // setDisplayForm(false);
+      setSnackbarSeverity('success');
+      setSnackbarMessage('Agent commission updated successfully.');
+      setSnackbarOpen(true);
+    }else {
+      // Handle error case
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error updating agent commission.  Please try again.');
+      setSnackbarOpen(true);
     }
 }, [values, setData, data, apiUrl, agentCommissionToEdit, setValues]);
 
@@ -335,6 +358,20 @@ return (
         </Button>
       </CardActions>
     </Card>
+    <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+    
   </form>
 );
 };

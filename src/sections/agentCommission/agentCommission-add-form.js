@@ -16,6 +16,8 @@ import {
   Chip,
   FormControl,
   Unstable_Grid2 as Grid,
+  Snackbar,
+  Alert
 } from "@mui/material";
 import agentCommissionModel from "models/agentCommissions";
 
@@ -53,7 +55,13 @@ export const AgentCommissionAddForm = ({
     tds: "",
   });
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // or 'error'
 
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   useEffect(() => {
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
@@ -168,6 +176,14 @@ export const AgentCommissionAddForm = ({
           commission: "",
           tds: "",
         }); // Reset form fields
+        setSnackbarSeverity('success');
+        setSnackbarMessage('Agent commission added successfully.');
+        setSnackbarOpen(true);
+    }else {
+      // Handle error case
+      setSnackbarSeverity('error');
+      setSnackbarMessage('Error updating agent commission.  Please try again.');
+      setSnackbarOpen(true);
     }
   }, [values, setData, data, apiUrl, setValues]);
 
@@ -347,6 +363,19 @@ export const AgentCommissionAddForm = ({
           </Button>
         </CardActions>
       </Card>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </form>
   );
 };

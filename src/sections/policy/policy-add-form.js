@@ -12,12 +12,13 @@ import {
   TextField,
   Unstable_Grid2 as Grid,
   Typography,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import Checkbox from "@mui/material/Checkbox";
 import { number } from "prop-types";
 import useAgentCommission from "src/hooks/use-agent-commission";
-
 
 export const PolicyAddForm = ({
   data,
@@ -27,7 +28,6 @@ export const PolicyAddForm = ({
   setPolicyToEdit,
   setDisplayForm,
 }) => {
-
   const {
     intermediaryData,
     agentData,
@@ -38,7 +38,6 @@ export const PolicyAddForm = ({
     policyTypeData,
     paymentModeData,
   } = useContext(DataContext);
-
 
   const [issueDate, setIssueDate] = useState(new Date());
 
@@ -64,123 +63,127 @@ export const PolicyAddForm = ({
     amountRecieved: "",
     amountToBePaid: "",
   };
-  
 
   const [values, setValues] = useState(initialValues);
   const { findAgentCommission } = useAgentCommission();
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // or 'error'
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   // console.log(values);
 
+  //   const handleChange = useCallback((event) => {
 
+  //     const { name, value } = event.target;
 
-//   const handleChange = useCallback((event) => {
+  //     // Handle the "Net" calculation when either thirdParty or ownDamage changes
+  // if (name === "thirdParty" || name === "ownDamage") {
+  //       setValues((prev) => {
+  //         const updatedValues = {
+  //           ...prev,
+  //           [name]: value,
+  //         };
 
-//     const { name, value } = event.target;
+  //         const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
+  //         return {
+  //           ...updatedValues,
+  //           net: isNaN(netValue) ? null : netValue,
+  //         };
+  //       });
+  //     }
 
-//     // Handle the "Net" calculation when either thirdParty or ownDamage changes
-// if (name === "thirdParty" || name === "ownDamage") {
-//       setValues((prev) => {
-//         const updatedValues = {
-//           ...prev,
-//           [name]: value,
-//         };
+  //   else {
+  //     // Handle other fields
 
-//         const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
-//         return {
-//           ...updatedValues,
-//           net: isNaN(netValue) ? null : netValue,
-//         };
-//       });
-//     }
+  //     // Dynamically update the commission value
+  //     if (name === "agentName" || name === "vehicleType" || name === "company" || name === "intermediary" || name === "policyType" || name === "agentPlan") {
+  //       const commission = findAgentCommission({
+  //         agent: values.agentName,
+  //         vehicle: values.vehicleType,
+  //         company: values.company,
+  //         intermediary: values.intermediary,
+  //         policyType: values.policyType,
+  //         agentPlan: values.agentPlan,});
+  //       setValues((prev) => ({
+  //         ...prev,
+  //         [name]: value,
+  //         // commission:commission, // Update the commission field
+  //       }));
+  //       console.log("one of the input value changed...");
+  //     } else {
+  //       setValues((prev) => ({
+  //         ...prev,
+  //         [name]: value,
+  //       }));
+  //     }
+  //   }
+  // },
+  // [setValues, values]
+  // );
 
-//   else {
-//     // Handle other fields
+  const handleChange = useCallback(
+    (event) => {
+      const { name, value } = event.target;
 
-//     // Dynamically update the commission value
-//     if (name === "agentName" || name === "vehicleType" || name === "company" || name === "intermediary" || name === "policyType" || name === "agentPlan") {
-//       const commission = findAgentCommission({ 
-//         agent: values.agentName,
-//         vehicle: values.vehicleType,
-//         company: values.company,
-//         intermediary: values.intermediary,
-//         policyType: values.policyType,
-//         agentPlan: values.agentPlan,});
-//       setValues((prev) => ({
-//         ...prev,
-//         [name]: value,
-//         // commission:commission, // Update the commission field
-//       }));
-//       console.log("one of the input value changed...");
-//     } else {
-//       setValues((prev) => ({
-//         ...prev,
-//         [name]: value,
-//       }));
-//     }
-//   }
-// },
-// [setValues, values]
-// );
+      // Handle the "Net" calculation when either thirdParty or ownDamage changes
+      if (name === "thirdParty" || name === "ownDamage") {
+        setValues((prev) => {
+          const updatedValues = {
+            ...prev,
+            [name]: value,
+          };
 
+          const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
+          return {
+            ...updatedValues,
+            net: isNaN(netValue) ? null : netValue,
+          };
+        });
+      }
 
-const handleChange = useCallback((event) => {
-  const { name, value } = event.target;
-
-  // Handle the "Net" calculation when either thirdParty or ownDamage changes
-  if (name === "thirdParty" || name === "ownDamage") {
-    setValues((prev) => {
-      const updatedValues = {
+      // Handle other fields
+      setValues((prev) => ({
         ...prev,
         [name]: value,
-      };
+        amountToBePaid: prev.premium - prev.commission - prev.amountRecieved,
+      }));
 
-      const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
-      return {
-        ...updatedValues,
-        net: isNaN(netValue) ? null : netValue,
-      };
-    });
-  }
-
-  // Handle other fields
-  setValues((prev) => ({
-    ...prev,
-    [name]: value,
-    amountToBePaid: prev.premium - prev.commission - prev.amountRecieved
-  }));
-
-  // Dynamically update the commission value
-  if (
-    name === "agentName" ||
-    name === "vehicleType" ||
-    name === "company" ||
-    name === "intermediary" ||
-    name === "policyType" ||
-    name === "agentPlan" ||
-    name === "thirdParty" || 
-    name === "ownDamage"
-  ) {
-    setValues((prev) => {
-      const commission = findAgentCommission({
-        agent: prev.agentName,
-        vehicle: prev.vehicleType,
-        company: prev.company,
-        intermediary: prev.intermediary,
-        policyType: prev.policyType,
-        agentPlan: prev.agentPlan,
-        net: prev.net,
-      });
-      return {
-        ...prev,
-        commission: commission,
-        capReached: prev.premium - commission,
-      };
-    });
-    console.log("one of the input values changed...");
-  }
-}, [setValues, findAgentCommission]);
-
-
+      // Dynamically update the commission value
+      if (
+        name === "agentName" ||
+        name === "vehicleType" ||
+        name === "company" ||
+        name === "intermediary" ||
+        name === "policyType" ||
+        name === "agentPlan" ||
+        name === "thirdParty" ||
+        name === "ownDamage"
+      ) {
+        setValues((prev) => {
+          const commission = findAgentCommission({
+            agent: prev.agentName,
+            vehicle: prev.vehicleType,
+            company: prev.company,
+            intermediary: prev.intermediary,
+            policyType: prev.policyType,
+            agentPlan: prev.agentPlan,
+            net: prev.net,
+          });
+          return {
+            ...prev,
+            commission: commission,
+            capReached: prev.premium - commission,
+          };
+        });
+        console.log("one of the input values changed...");
+      }
+    },
+    [setValues, findAgentCommission]
+  );
 
   const handleDateChange = useCallback((date) => {
     const selectedDate = date || new Date(); // If date is not provided, use today's date
@@ -193,7 +196,6 @@ const handleChange = useCallback((event) => {
   }, []);
 
   useEffect(() => {
-
     // **********
 
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
@@ -248,13 +250,13 @@ const handleChange = useCallback((event) => {
 
   const fetchPolicy = async () => {
     try {
-      const response = await fetch(apiUrl)
-      const data = await response.json()
-      setData(data)
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      setData(data);
     } catch (error) {
-      console.error('Error fetching policy:', error);
+      console.error("Error fetching policy:", error);
     }
-  }
+  };
 
   const handleSubmit = useCallback(async () => {
     if (policyToEdit) {
@@ -269,13 +271,17 @@ const handleChange = useCallback((event) => {
       if (response.status === 200) {
         const updatedValues = await response.json();
         // Update the client-side data state with the edited policy
-        const updatedData = data.map((policy) =>
-          policy._id === updatedValues._id ? updatedValues : policy
-        );
-        setData(updatedData);
+        // const updatedData = data.map((policy) =>
+        //   policy._id === updatedValues._id ? updatedValues : policy
+        // );
+        // setData(updatedData);
+        fetchPolicy()
         setPolicyToEdit();
         setValues(initialValues); // Reset form fields
-        setDisplayForm(false);
+        // setDisplayForm(false);
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Policy updated successfully.");
+        setSnackbarOpen(true);
       }
     } else {
       // Handle adding a new policy
@@ -287,17 +293,19 @@ const handleChange = useCallback((event) => {
         },
       });
       if (response.status === 201) {
-        const newValues = await response.json();
+        // const newValues = await response.json();
         // Update the client-side data state with the new policy
         // setData([newValues, ...data]);
-        fetchPolicy()
+        fetchPolicy();
         setValues(initialValues); // Reset form fields
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Policy added successfully.");
+        setSnackbarOpen(true);
+      } else {
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Error adding policy. Please try again.");
+        setSnackbarOpen(true);
       }
-      // else {
-      //   const errorData = await response.json();
-      //   setError(errorData.message); // Set error message state
-      //   setErrorDialogOpen(true)
-      // }
     }
   }, [values, initialValues, setData, data, apiUrl, policyToEdit, setValues]);
 
@@ -578,7 +586,7 @@ const handleChange = useCallback((event) => {
                   label="CAP reached"
                   name="capReached"
                   onChange={handleChange}
-                  value={values.premium-values.commission}
+                  value={values.premium - values.commission}
                 ></TextField>
               </Grid>
               <Grid xs={12} md={6}>
@@ -598,7 +606,7 @@ const handleChange = useCallback((event) => {
                   label="Amount to be paid"
                   name="amountToBePaid"
                   onChange={handleChange}
-                  value={values.premium-values.commission-values.amountRecieved}
+                  value={values.premium - values.commission - values.amountRecieved}
                 ></TextField>
               </Grid>
             </Grid>
@@ -611,6 +619,11 @@ const handleChange = useCallback((event) => {
           </Button>
         </CardActions>
       </Card>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </form>
   );
 };

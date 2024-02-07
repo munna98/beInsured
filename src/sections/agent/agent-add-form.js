@@ -8,7 +8,9 @@ import {
   CardHeader,
   Divider,
   TextField,
-  Unstable_Grid2 as Grid
+  Unstable_Grid2 as Grid,
+  Snackbar,
+  Alert
 } from '@mui/material';
 
 
@@ -23,6 +25,15 @@ export const AgentAddForm = ({ data, setData,
     location: '', 
   });
 
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // or 'error'
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+  
   // Initialize form fields with the existing agent's data
   useEffect(() => {
     document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
@@ -37,7 +48,12 @@ export const AgentAddForm = ({ data, setData,
       });
     }
   }, [agentToEdit]);
+  
 
+  useEffect(() => {
+    console.log(snackbarOpen);
+  }, [snackbarOpen,agentToEdit]);
+  
   const handleChange = useCallback(
     (event) => {
       setValues((prev) => ({
@@ -50,6 +66,7 @@ export const AgentAddForm = ({ data, setData,
 
   const handleSubmit = useCallback(async () => {
     if (agentToEdit) {
+
       // Handle editing by sending a PUT request
       const response = await fetch(`${apiUrl}/${agentToEdit._id}`, {
         method: 'PUT',
@@ -73,8 +90,11 @@ export const AgentAddForm = ({ data, setData,
           phone: '',
           location: '',
         }); // Reset form fields
-        setDisplayForm(false)
+        setSnackbarSeverity('success');
+        setSnackbarMessage('Agent updated successfully.');
+        setSnackbarOpen(true);
       }
+      // setDisplayForm(false);
     } else {
       // Handle adding a new agent
       const response = await fetch(apiUrl, {
@@ -95,12 +115,15 @@ export const AgentAddForm = ({ data, setData,
           phone: '',
           location: '',
         }); // Reset form fields
+        setSnackbarSeverity('success');
+        setSnackbarMessage('Agent added successfully.');
+        setSnackbarOpen(true);
+      } else {
+        // Handle error case
+        setSnackbarSeverity('error');
+        setSnackbarMessage('Error adding agent. Please try again.');
+        setSnackbarOpen(true);
       }
-      // else {
-      //   const errorData = await response.json();
-      //   setError(errorData.message); // Set error message state
-      //   setErrorDialogOpen(true)
-      // }
     }
   }, [values, setData, data, apiUrl, agentToEdit, setValues]);
 
@@ -187,8 +210,23 @@ export const AgentAddForm = ({ data, setData,
           <Button variant="contained" onClick={handleSubmit}>
             {agentToEdit ? 'Update Agent' : 'Save Agent'}
           </Button>
-        </CardActions>
+        </CardActions> 
       </Card>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </form> 
+    
   );
 };
