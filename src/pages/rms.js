@@ -4,36 +4,34 @@ import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
-import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
+import { Box, Button, Card, Container, Stack, SvgIcon, Typography, CardHeader, Avatar, IconButton } from '@mui/material';
 import { useSelection } from 'src/hooks/use-selection';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { PoliciesTable } from 'src/sections/policy/policies-table';
-import { PoliciesSearch } from 'src/sections/policy/policies-search';
+import { RmsTable } from 'src/sections/rm/rms-table';
+import { RmsSearch } from 'src/sections/rm/rms-search';
 import { applyPagination } from 'src/utils/apply-pagination';
-import { PolicyAddForm } from 'src/sections/policy/policy-add-form';
-import { exportToExcel } from 'src/utils/export-to-excel';
+import { RmAddForm } from 'src/sections/rm/rm-add-form';
 import useSearch from 'src/hooks/use-search';
-import { useContext } from "react";
-import { DataContext } from 'src/contexts/data-context';
 import TableLoader from 'src/components/table-loader';
+import { RmsCardList } from 'src/sections/rm/rm-card-list';
 
- 
-const now = new Date(); 
+
 const Page = () => {
 
   const [data, setData] = useState([]);
-  const apiUrl = '/api/policies';
+  const apiUrl = '/api/rms';
   const [loading, setLoading] = useState(true);
-  const { isFetching, refreshData } = useContext(DataContext);
+
   // ***** Setting api *****
   useEffect(() => {
- 
+
     const fetchData = async () => {
       try {
 
         const response = await fetch(apiUrl)
         const data = await response.json()
         setData(data)
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -42,15 +40,13 @@ const Page = () => {
     };
 
     fetchData();
-    refreshData();
   }, []);
 
-  
+
   // ***** End setting api *****
 
   const { searchTerm, searchResults, handleSearchChange } = useSearch(data);
-
-  const usePolicies = (page, rowsPerPage) => {
+  const useRms = (page, rowsPerPage) => {
     return useMemo(
       () => {
         return applyPagination(searchResults, page, rowsPerPage);
@@ -59,28 +55,22 @@ const Page = () => {
     );
   };
 
-  const usePolicyIds = (policies) => {
+  const useRmIds = (rms) => {
     return useMemo(
       () => {
-        return policies.map((policy) => policy.id);
+        return rms.map((rm) => rm.id);
       },
-      [policies]
+      [rms]
     );
   };
 
-  const handleExport = useCallback(() => {
-    // Pass the data array to the function to generate the Excel file
-    exportToExcel(data, "policy_list.xlsx");
-  }, [data]);
-
-
   const [page, setPage] = useState(0);
   const [displayForm, setDisplayForm] = useState(false);
+  const [rmToEdit, setRmToEdit] = useState();
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [policyToEdit, setPolicyToEdit] = useState();
-  const policies = usePolicies(page, rowsPerPage);
-  const policiesIds = usePolicyIds(policies);
-  const policiesSelection = useSelection(policiesIds);
+  const rms = useRms(page, rowsPerPage);
+  const rmsIds = useRmIds(rms);
+  const rmsSelection = useSelection(rmsIds);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -99,17 +89,16 @@ const Page = () => {
   const handleAdd = useCallback(
     () => {
       setDisplayForm((prev) => !prev)
-      setPolicyToEdit();
+      setRmToEdit();
     },
     []
   );
-
 
   return (
     <>
       <Head>
         <title>
-          Policies | beInsured
+          Rms | beInsured
         </title>
       </Head>
       <Box
@@ -128,28 +117,28 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Policies
+                  Rms
                 </Typography>
                 <Stack
                   alignItems="center"
                   direction="row"
                   spacing={1}
                 >
-                  <Button 
+                  <Button
                     color="inherit"
                     startIcon={(
                       <SvgIcon fontSize="small">
-                          <ArrowDownOnSquareIcon />
+                        <ArrowUpOnSquareIcon />
                       </SvgIcon>
                     )}
                   >
                     Import
                   </Button>
-                  <Button onClick={handleExport}
+                  <Button
                     color="inherit"
                     startIcon={(
                       <SvgIcon fontSize="small">
-                        <ArrowUpOnSquareIcon />
+                        <ArrowDownOnSquareIcon />
                       </SvgIcon>
                     )}
                   >
@@ -171,40 +160,39 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            {displayForm  && 
-            (isFetching? (<p1>Please wait...</p1>):
-              (<PolicyAddForm
+            {displayForm &&
+              <RmAddForm
                 data={data}
                 setData={setData}
                 apiUrl={apiUrl}
-                policyToEdit={policyToEdit}
-                setPolicyToEdit={setPolicyToEdit}
+                rmToEdit={rmToEdit}
+                setRmToEdit={setRmToEdit}
                 setDisplayForm={setDisplayForm}
-              />))}
-            <PoliciesSearch
+              />}
+            <RmsSearch
               searchTerm={searchTerm}
               handleSearchChange={handleSearchChange}
             />
             {loading ?
-              (<TableLoader/>)
-              :(<PoliciesTable
+              (<TableLoader />)
+              : (<RmsCardList
                 count={searchResults.length}
-                items={policies}
-                onDeselectAll={policiesSelection.handleDeselectAll}
-                onDeselectOne={policiesSelection.handleDeselectOne}
+                items={rms}
+                onDeselectAll={rmsSelection.handleDeselectAll}
+                onDeselectOne={rmsSelection.handleDeselectOne}
                 onPageChange={handlePageChange}
                 onRowsPerPageChange={handleRowsPerPageChange}
-                onSelectAll={policiesSelection.handleSelectAll}
-                onSelectOne={policiesSelection.handleSelectOne}
+                onSelectAll={rmsSelection.handleSelectAll}
+                onSelectOne={rmsSelection.handleSelectOne}
                 page={page}
                 rowsPerPage={rowsPerPage}
-                selected={policiesSelection.selected}
+                selected={rmsSelection.selected}
                 searchResults={searchResults}
                 data={data}
                 setData={setData}
                 apiUrl={apiUrl}
-                policyToEdit={policyToEdit}
-                setPolicyToEdit={setPolicyToEdit}
+                rmToEdit={rmToEdit}
+                setRmToEdit={setRmToEdit}
                 setDisplayForm={setDisplayForm}
               />)}
           </Stack>
@@ -220,4 +208,4 @@ Page.getLayout = (page) => (
   </DashboardLayout>
 );
 
-export default Page;
+export default Page; 

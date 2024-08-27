@@ -21,7 +21,7 @@ import {
 export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
   const {
     intermediaryData,
-    agentData,
+    agentData, 
     companyData,
     vehicleData,
     ourplanData, 
@@ -36,12 +36,12 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
   ];
 
   const [values, setValues] = useState({
-    intermediary: intermediaryData[0].name,
+    intermediary:intermediaryData[0]._id,
     company: [],
     vehicle: [],
     type: commissionTypes[0].name,
-    policytype: policyTypeData[0].name,
-    ourplan: ourplanData[0].name,
+    policyType: policyTypeData[0]._id,
+    ourPlan: ourplanData[0]._id,
     commission: "",
     tds: "",
   });
@@ -49,6 +49,12 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
   useEffect(() => {
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
   }, []);
+
+  const fetchIntermediaryCommission = async () => {
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    setData(data)
+  }
 
   const handleChange = useCallback(
     (event) => {
@@ -105,7 +111,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
         ))}
         {additionalOptionsCount > 0 && <Chip label={`+${additionalOptionsCount}`} />}
       </div>
-    );
+    ); 
   };
 
   const getOptionLabel = (value, options) => {
@@ -123,6 +129,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
   };
 
   const handleSubmit = useCallback(async () => {
+    console.log("clicked on submit");
     const response = await fetch(apiUrl, {
       method: "POST",
       body: JSON.stringify({ values }),
@@ -132,15 +139,16 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
     });
     if (response.status === 201) {
       const newValues = await response.json();
-      // Update the client-side data state with the new agentCommission
-      setData([...newValues, ...data]);
+      // Update the client-side data state with the new interemediaryCommission
+      // setData([...newValues, ...data]);
+      fetchIntermediaryCommission();
       setValues({
-        intermediary: "",
+        intermediary:intermediaryData[0]._id,
         company: [],
         vehicle: [],
-        type: "",
-        policytype: "",
-        ourplan: "",
+        type: commissionTypes[0].name,
+        policyType: policyTypeData[0]._id,
+        ourPlan: ourplanData[0]._id,
         commission: "",
         tds: "",
       }); // Reset form fields
@@ -149,7 +157,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
 
   return (
     <form autoComplete="off" noValidate Card id="editForm">
-      <Card>
+      <Card> 
         <CardHeader title="Add Intermediary Commission" />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
@@ -172,7 +180,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
                 </TextField>
               </Grid>
               <Grid xs={12} md={6}>
-                <FormControl fullWidth>
+                <FormControl fullWidth> 
                   <InputLabel>Company</InputLabel>
                   <Select
                     fullWidth
@@ -216,7 +224,7 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Type"
+                  label="Type" 
                   name="type"
                   onChange={handleChange}
                   select
@@ -234,11 +242,11 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
                 <TextField
                   fullWidth
                   label="Policy type"
-                  name="policytype"
+                  name="policyType"
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-                  value={values.policytype}
+                  value={values.policyType}
                 >
                   {policyTypeData.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -251,11 +259,11 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
                 <TextField
                   fullWidth
                   label="Our plan"
-                  name="ourplan"
+                  name="ourPlan"
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-                  value={values.ourplan}
+                  value={values.ourPlan}
                 >
                   {ourplanData.map((option) => (
                     <option key={option._id} value={option._id}>

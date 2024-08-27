@@ -12,6 +12,7 @@ export const DataProvider = ({ children }) => {
   const [policyTypeData, setPolicyTypeData] = useState([]);
   const [paymentModeData, setPaymentModeData] = useState([]);
   const [agentCommissionData, setAgentCommissionData] = useState([]);
+  const [intermediaryCommissionData, setIntermediaryCommissionData] = useState([]);
   const [isFetching, setIsFetching] = useState(true); // Track loading state
 
   const fetchData = async () => {
@@ -57,6 +58,10 @@ export const DataProvider = ({ children }) => {
       const agentCommissionData = await agentCommissionResponse.json();
       setAgentCommissionData(agentCommissionData);
 
+      const intermediaryCommissionResponse = await fetch("/api/intermediaryCommissions"); 
+      const intermediaryCommissionData = await intermediaryCommissionResponse.json();
+      setIntermediaryCommissionData(intermediaryCommissionData);
+
       console.log(policyData);
 
       setIsFetching(false); // Set loading to false once data is fetched
@@ -74,9 +79,15 @@ export const DataProvider = ({ children }) => {
     fetchData();
   };
 
+  useEffect(() => {
+    // Save policy data to local storage whenever it changes
+    localStorage.setItem('policyData', JSON.stringify(policyData));
+  }, [policyData]);
+
   return (
     <DataContext.Provider
       value={{
+        policyData,
         intermediaryData,
         agentData,
         companyData,
@@ -86,6 +97,7 @@ export const DataProvider = ({ children }) => {
         policyTypeData,
         paymentModeData,
         agentCommissionData,
+        intermediaryCommissionData,
         isFetching,
         refreshData,
       }}
@@ -94,3 +106,6 @@ export const DataProvider = ({ children }) => {
     </DataContext.Provider>
   );
 };
+
+
+

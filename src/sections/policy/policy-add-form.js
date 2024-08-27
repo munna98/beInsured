@@ -15,7 +15,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers"; 
 import Checkbox from "@mui/material/Checkbox";
 import { number } from "prop-types";
 import useAgentCommission from "src/hooks/use-agent-commission";
@@ -61,7 +61,7 @@ export const PolicyAddForm = ({
     paymentMode: paymentModeData[0]._id,
     capReached: "",
     amountRecieved: "",
-    amountToBePaid: "",
+    amountToBePaid: "", 
   };
 
   const [values, setValues] = useState(initialValues);
@@ -146,11 +146,22 @@ export const PolicyAddForm = ({
       }
 
       // Handle other fields
+
+      // setValues((prev) => ({
+      //   ...prev,
+      //   [name]: value,
+      //   amountToBePaid: prev.premium - prev.commission - prev.amountRecieved,
+      // }));
+
       setValues((prev) => ({
         ...prev,
         [name]: value,
-        amountToBePaid: prev.premium - prev.commission - prev.amountRecieved,
+        amountToBePaid: 
+          name === "paymentMode" && value === paymentModeData[1]._id  //Assuming amount paid value is Agent Paid
+          ? prev.premium - prev.commission 
+          : prev.premium - prev.commission - prev.amountRecieved,
       }));
+
 
       // Dynamically update the commission value
       if (
@@ -226,19 +237,19 @@ export const PolicyAddForm = ({
       setValues({
         date,
         customerName,
-        policyType,
+        policyType:policyType._id,
         vehicleNumber,
         premium,
         thirdParty,
         ownDamage,
         net,
-        company,
-        intermediary,
-        vehicleType,
-        agentName,
-        agentPlan,
+        company:company._id,
+        intermediary:intermediary._id,
+        vehicleType:vehicleType._id,
+        agentName: agentName._id,
+        agentPlan: agentPlan._id,
         commission,
-        ourPlan,
+        ourPlan: ourPlan._id, 
         policyNumber,
         paymentMode,
         capReached,
@@ -368,7 +379,7 @@ export const PolicyAddForm = ({
                   <FormControlLabel control={<Checkbox />} label="OD" />
                 </FormGroup>
               </Grid>  */}
-
+              
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -442,7 +453,7 @@ export const PolicyAddForm = ({
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Company"
+                  label="Company" 
                   name="company"
                   onChange={handleChange}
                   value={values.company}
@@ -579,26 +590,30 @@ export const PolicyAddForm = ({
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="CAP reached"
-                  name="capReached"
-                  onChange={handleChange}
-                  value={values.premium - values.commission}
-                ></TextField>
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Amount recieved"
-                  name="amountRecieved"
-                  onChange={handleChange}
-                  value={values.amountRecieved}
-                ></TextField>
-              </Grid>
+              {values.paymentMode !== paymentModeData[1]._id && (
+                <>
+                  <Grid xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Cap reached"
+                      name="capReached"
+                      onChange={handleChange}
+                      type="number"
+                      value={values.capReached}
+                    />
+                  </Grid>
+                  <Grid xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Amount received"
+                      name="amountRecieved"
+                      onChange={handleChange}
+                      type="number"
+                      value={values.amountRecieved}
+                    />
+                  </Grid>
+                </>
+              )}
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth

@@ -4,18 +4,25 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       // Retrieve all intermediaryCommissions from the database
-      const intermediaryCommissions = await intermediaryCommissionModel.find({});
+      const intermediaryCommissions = await intermediaryCommissionModel.find({})
+      .populate("vehicle")
+      .populate("company")
+      .populate("intermediary")
+      .populate("policyType")
+      .populate("ourPlan")
+
+      console.log(intermediaryCommissions, 'logging inter commissions');
       res.status(200).json(intermediaryCommissions);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch intermediaryCommissions', error: error.message });
     }
   } else if (req.method === 'POST') {
     try {
-      const { intermediary, company, vehicle, type, policytype, ourplan, commission,tds  } = req.body.values;
-
+      const { intermediary, company, vehicle, type, policyType, ourPlan, commission,tds  } = req.body.values;
+      console.log(intermediary,'intermediary');
       // Create an array of combinations
       const combinations = [];
-
+ 
         for (const vehicleId of vehicle) {
           for (const companyId of company) {
               combinations.push({
@@ -23,8 +30,8 @@ export default async function handler(req, res) {
                 company: companyId,
                 vehicle: vehicleId,
                 type,
-                policytype,
-                ourplan,
+                policyType, 
+                ourPlan, 
                 commission,
                 tds,
               });
@@ -41,7 +48,7 @@ export default async function handler(req, res) {
 
       res.status(201).json(savedIntermediaryCommissions);
     } catch (error) {
-      res.status(500).json({ message: 'Failed to create intermediaryCommissions', error: error.message });
+      res.status(500).json({ message: 'Failed to create intermediaryCommissions', error: error.message  });
     }
   } else {
     res.status(405).json({ message: 'Method Not Allowed' });

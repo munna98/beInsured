@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         email:email,
         phone:phone,
         location:location,
-      });
+      }); 
       console.log(newAgent);
       // Save the new agent to the database
       const savedAgent = await newAgent.save();

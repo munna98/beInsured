@@ -20,7 +20,7 @@ import TableLoader from 'src/components/table-loader';
 const Page = () => {
 
   const [data, setData] = useState([]);
-  const apiUrl = '/api/intermediaryCommissions';
+  const apiUrl = '/api/intermediaryCommissions'; 
   const [loading, setLoading] = useState(true);
   const { isFetching, refreshData } = useContext(DataContext);
 

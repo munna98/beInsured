@@ -31,13 +31,13 @@ const initializeAgentCommissionModel = async () => {
           ref: 'intermediary', 
           required: true,
         },
-        type: String,
+        type: String, 
         policyType: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'policytype', 
           required: true,
         },
-        agentPlan: {
+        agentPlan: { 
           type: mongoose.Schema.Types.ObjectId,
           ref: 'agentplan', 
           required: true,

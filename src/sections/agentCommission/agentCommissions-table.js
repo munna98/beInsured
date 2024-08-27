@@ -59,7 +59,7 @@ export const AgentCommissionsTable = (props) => {
 
   const handleClickDeleteOpen = (Id) => {
     setDeleteDialogOpen(true);
-    setdeleteId(Id);
+    setdeleteId(Id); 
   };
 
   const handleClose = () => {
@@ -126,7 +126,7 @@ export const AgentCommissionsTable = (props) => {
                 <TableCell>
                   Tds
                 </TableCell>
-                <TableCell>
+                <TableCell> 
                   Actions
                 </TableCell>
               </TableRow>

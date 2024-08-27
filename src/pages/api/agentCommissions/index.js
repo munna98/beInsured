@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         .populate("company")
         .populate("intermediary")
         .populate("policyType")
-        .populate("agentPlan");
+        .populate("agentPlan"); 
       res.status(200).json(agentCommissions);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch agentCommissions", error: error.message });
@@ -19,11 +19,11 @@ export default async function handler(req, res) {
   } else if (req.method === "POST") {
     try {
       const {
-        agent,
+        agent, 
         vehicle,
         company,
-        intermediary,
-        type,
+        intermediary, 
+        type, 
         policyType,
         agentPlan,
         commission,
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
                 policyType,
                 agentPlan,
                 commission,
-                tds,
+                tds, 
               });
             }
           }

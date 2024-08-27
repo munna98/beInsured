@@ -10,8 +10,9 @@ import {
   CardHeader,
   Divider,
   TextField,
-  Unstable_Grid2 as Grid
-
+  Alert,
+  Snackbar,
+  Unstable_Grid2 as Grid,
 } from "@mui/material";
 
 export const IntermediaryCommissionEditForm = ({
@@ -39,32 +40,45 @@ export const IntermediaryCommissionEditForm = ({
   ];
 
   // const [values, setValues] = useState({
-  //   agent: "",
-  //   vehicle: "",
-  //   company: "",
-  //   intermediary: "",
-  //   type: "",
-  //   policytype: "",
-  //   agentplan: "",
-  //   commission: "",
-  //   tds: "",
+  //   intermediary: intermediaryCommissionToEdit.intermediary,
+  //   company: intermediaryCommissionToEdit.company,
+  //   vehicle: intermediaryCommissionToEdit.vehicle,
+  //   type: intermediaryCommissionToEdit.type,
+  //   policytype: intermediaryCommissionToEdit.policytype,
+  //   ourplan: intermediaryCommissionToEdit.ourplan,
+  //   commission: intermediaryCommissionToEdit.commission,
+  //   tds: intermediaryCommissionToEdit.tds,
   // });
-  const [values, setValues] = useState({
-    intermediary: intermediaryCommissionToEdit.intermediary,
-    company: intermediaryCommissionToEdit.company,
-    vehicle: intermediaryCommissionToEdit.vehicle,
-    type: intermediaryCommissionToEdit.type,
-    policytype: intermediaryCommissionToEdit.policytype,
-    ourplan: intermediaryCommissionToEdit.ourplan,
-    commission: intermediaryCommissionToEdit.commission,
-    tds: intermediaryCommissionToEdit.tds,
-  });
 
+  const [values, setValues] = useState({ ...intermediaryCommissionToEdit });
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success"); // or 'error'
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+  const fetchIntermediaryCommission = async () => {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    setData(data);
+  };
 
   // Initialize form fields with the existing intermediaryCommission's data
   useEffect(() => {
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
 
+    setValues({
+      intermediary: intermediaryCommissionToEdit.intermediary,
+      company: intermediaryCommissionToEdit.company,
+      vehicle: intermediaryCommissionToEdit.vehicle,
+      type: intermediaryCommissionToEdit.type,
+      policyType: intermediaryCommissionToEdit.policyType,
+      ourPlan: intermediaryCommissionToEdit.ourPlan,
+      commission: intermediaryCommissionToEdit.commission,
+      tds: intermediaryCommissionToEdit.tds,
+    });
   }, [intermediaryCommissionToEdit]);
 
   const handleChange = useCallback((event) => {
@@ -74,45 +88,37 @@ export const IntermediaryCommissionEditForm = ({
     }));
   }, []);
 
-
   const handleSubmit = useCallback(async () => {
-
-      // Handle editing by sending a PUT request
-      const response = await fetch(`${apiUrl}/${intermediaryCommissionToEdit._id}`, {
-        method: "PUT",
-        body: JSON.stringify({ values }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.status === 200) {
-        const updatedValues = await response.json();
-        // Update the client-side data state with the edited agentCommission
-        const updatedData = data.map((agentCommission) =>
-          agentCommission._id === updatedValues._id ? updatedValues : agentCommission
-        );
-        setData(updatedData);
-        setIntermediaryCommissionToEdit();
-        setValues({
-          intermediary: "",
-          company: "",
-          vehicle: "",
-          type: "",
-          policytype: "",
-          ourplan: "",
-          commission: "",
-          tds: "",
-        }); // Reset form fields
-        setDisplayForm(false);
-      }
+    // Handle editing by sending a PUT request
+    const response = await fetch(`${apiUrl}/${intermediaryCommissionToEdit._id}`, {
+      method: "PUT",
+      body: JSON.stringify({ values }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200) {
+      const updatedValues = await response.json();
+      // Update the client-side data state with the edited agentCommission
+      const updatedData = data.map((agentCommission) =>
+        agentCommission._id === updatedValues._id ? updatedValues : agentCommission
+      );
+      fetchIntermediaryCommission();
+      setSnackbarSeverity("success");
+      setSnackbarMessage("Intermediary commission updated successfully.");
+      setSnackbarOpen(true);
+    } else {
+      // Handle error case
+      setSnackbarSeverity("error");
+      setSnackbarMessage("Error updating intermediary commission.  Please try again.");
+      setSnackbarOpen(true);
+    }
   }, [values, setData, data, apiUrl, intermediaryCommissionToEdit, setValues]);
 
   return (
     <form autoComplete="off" noValidate Card id="editForm">
       <Card>
-        <CardHeader
-          title="Edit Intermediary Commission"
-        />
+        <CardHeader title="Edit Intermediary Commission" />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
             <Grid container spacing={3}>
@@ -139,10 +145,7 @@ export const IntermediaryCommissionEditForm = ({
                   ))}
                 </TextField>
               </Grid> */}
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Intermediary"
@@ -150,23 +153,16 @@ export const IntermediaryCommissionEditForm = ({
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-
                 >
                   {intermediaryData.map((option) => (
-                    <option
-                      key={option._id}
-                      value={option._id}
-                    >
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
 
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Company"
@@ -174,23 +170,16 @@ export const IntermediaryCommissionEditForm = ({
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-
                 >
                   {companyData.map((option) => (
-                    <option
-                      key={option._id}
-                      value={option._id}
-                    >
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
 
-              <Grid
-                xs={12}
-                md={6}
-              >
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Vehicle"
@@ -198,20 +187,15 @@ export const IntermediaryCommissionEditForm = ({
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-
                 >
                   {vehicleData.map((option) => (
-                    <option
-                      key={option._id}
-                      value={option._id}
-                    >
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
                 </TextField>
               </Grid>
 
-              
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -232,7 +216,7 @@ export const IntermediaryCommissionEditForm = ({
                 <TextField
                   fullWidth
                   label="Policy type"
-                  name="policytype"
+                  name="policyType"
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
@@ -248,7 +232,7 @@ export const IntermediaryCommissionEditForm = ({
                 <TextField
                   fullWidth
                   label="Our plan"
-                  name="ourplan"
+                  name="ourPlan"
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
@@ -292,6 +276,19 @@ export const IntermediaryCommissionEditForm = ({
           </Button>
         </CardActions>
       </Card>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </form>
   );
 };

@@ -16,14 +16,14 @@ export default async function handler(req, res) {
 
         { 
           agent: agent,
-          vehicle: vehicle,
+          vehicle: vehicle, 
           company: company,
           intermediary: intermediary,
           type: type,
           policyType: policyType,
           agentPlan: agentPlan,
           commission: commission,
-          tds: tds, }, // Update the name field
+          tds: tds, }, // Update the name field 
         { new: true } // Return the updated document
       );
 

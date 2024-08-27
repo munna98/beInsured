@@ -16,6 +16,8 @@ import SwatchIcon from '@heroicons/react/24/solid/SwatchIcon';
 import BankNotesIcon from '@heroicons/react/24/solid/BankNotesIcon';
 import RectangleStackIcon from '@heroicons/react/24/solid/RectangleStackIcon';
 import RectangleGroupIcon from '@heroicons/react/24/solid/RectangleGroupIcon';
+import ChartPieIcon from '@heroicons/react/24/solid/ChartPieIcon';
+import AtSymbolIcon from '@heroicons/react/24/solid/AtSymbolIcon';
 
 
 import { SvgIcon } from '@mui/material';
@@ -66,6 +68,15 @@ export const items = [
       </SvgIcon>
     )
   },
+  // {
+  //   title: 'RMs',
+  //   path: '/rms',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <AtSymbolIcon />
+  //     </SvgIcon>
+  //   )
+  // },
   {
     title: 'Vehicles',
     path: '/vehicles',
@@ -151,6 +162,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <CogIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Reports',
+    path: '/reports',
+    icon: (
+      <SvgIcon fontSize="small">
+        <ChartPieIcon />
       </SvgIcon>
     )
   },

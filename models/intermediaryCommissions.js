@@ -11,12 +11,33 @@ const initializeAgentCommissionModel = async () => {
     // If the model hasn't been registered, define it
     const intermediaryCommissionSchema = new mongoose.Schema(
       {
-        intermediary: String,
-        company: String,
-        vehicle: String,
-        type: String,
-        policytype: String,
-        ourplan: String,
+        intermediary: {
+          type: mongoose.Schema.Types.ObjectId, 
+          ref: 'intermediary', 
+          required: true,
+        },
+        company:  {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'company', 
+          required: true,
+        }, 
+        vehicle: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'vehicle', 
+          required: true,
+        },
+        type: String, 
+        policyType: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'policytype', 
+          required: true,
+        },
+        // ourplan: String,
+        ourPlan: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'ourplan', 
+          required: true,
+        },
         commission: Number,
         tds: Number,
       },

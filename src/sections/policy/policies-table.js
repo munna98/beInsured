@@ -77,7 +77,7 @@ export const PoliciesTable = (props) => {
     setPolicyToEdit(policy);
   }
 
-  return (
+  return ( 
     <Card style={{ overflowX: 'auto' }}>
       <Scrollbar>
         <Box sx={{ minWidth: 3400 }}>

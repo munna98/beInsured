@@ -8,7 +8,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Divider,
+  Divider, 
   TextField,
   Select,
   MenuItem,
@@ -36,7 +36,7 @@ export const AgentCommissionAddForm = ({
     agentplanData,
     policyTypeData,
     paymentModeData,
-  } = useContext(DataContext);
+  } = useContext(DataContext); 
 
   const commissionTypes = [
     { _id: 1, name: "Flat" }, 
@@ -48,7 +48,7 @@ export const AgentCommissionAddForm = ({
     vehicle: [],
     company: [],
     intermediary: [],
-    type: commissionTypes[0]._id,
+    type: commissionTypes[0].name,
     policyType: policyTypeData[0]._id,
     agentPlan: agentplanData[0]._id,
     commission: "",
@@ -62,7 +62,7 @@ export const AgentCommissionAddForm = ({
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
-
+ 
   useEffect(() => {
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -170,7 +170,7 @@ export const AgentCommissionAddForm = ({
           vehicle: [],
           company: [],
           intermediary: [],
-          type: commissionTypes[0]._id,
+          type: commissionTypes[0].name,
           policyType: policyTypeData[0]._id,
           agentPlan: agentplanData[0]._id,
           commission: "",
@@ -237,7 +237,7 @@ export const AgentCommissionAddForm = ({
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> 
               <Grid xs={12} md={6}>
                 <FormControl fullWidth>
                   <InputLabel>Company</InputLabel>

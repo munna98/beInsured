@@ -14,8 +14,8 @@ import {
 } from '@mui/material';
 
  
-export const AgentAddForm = ({ data, setData,
-  apiUrl, agentToEdit, setAgentToEdit, setDisplayForm }) => {
+export const RmAddForm = ({ data, setData,
+  apiUrl, rmToEdit, setRmToEdit, setDisplayForm }) => {
 
   const [values, setValues] = useState({
     firstName: '',
@@ -34,25 +34,25 @@ export const AgentAddForm = ({ data, setData,
     setSnackbarOpen(false);
   };
   
-  // Initialize form fields with the existing agent's data
+  // Initialize form fields with the existing rm's data
   useEffect(() => {
     document.getElementById('editForm').scrollIntoView({ behavior: 'smooth' });
 
-    if (agentToEdit) {
+    if (rmToEdit) {
       setValues({
-        firstName: agentToEdit.firstName,
-        lastName: agentToEdit.lastName,
-        email: agentToEdit.email,
-        phone: agentToEdit.phone,
-        location: agentToEdit.location,
+        firstName: rmToEdit.firstName,
+        lastName: rmToEdit.lastName,
+        email: rmToEdit.email,
+        phone: rmToEdit.phone,
+        location: rmToEdit.location,
       });
     }
-  }, [agentToEdit]);
+  }, [rmToEdit]);
   
 
   useEffect(() => {
     console.log(snackbarOpen);
-  }, [snackbarOpen,agentToEdit]);
+  }, [snackbarOpen,rmToEdit]);
   
   const handleChange = useCallback(
     (event) => {
@@ -65,10 +65,10 @@ export const AgentAddForm = ({ data, setData,
   );
 
   const handleSubmit = useCallback(async () => {
-    if (agentToEdit) {
+    if (rmToEdit) {
 
       // Handle editing by sending a PUT request
-      const response = await fetch(`${apiUrl}/${agentToEdit._id}`, {
+      const response = await fetch(`${apiUrl}/${rmToEdit._id}`, {
         method: 'PUT',
         body: JSON.stringify({ values }),
         headers: {
@@ -77,12 +77,12 @@ export const AgentAddForm = ({ data, setData,
       });
       if (response.status === 200) {
         const updatedValues = await response.json();
-        // Update the client-side data state with the edited agent
-        const updatedData = data.map((agent) =>
-          agent._id === updatedValues._id ? updatedValues : agent
+        // Update the client-side data state with the edited rm
+        const updatedData = data.map((rm) =>
+          rm._id === updatedValues._id ? updatedValues : rm
         );
         setData(updatedData);
-        setAgentToEdit();
+        setRmToEdit();
         setValues({
           firstName: '',
           lastName: '',
@@ -91,12 +91,12 @@ export const AgentAddForm = ({ data, setData,
           location: '',
         }); // Reset form fields
         setSnackbarSeverity('success');
-        setSnackbarMessage('Agent updated successfully.');
+        setSnackbarMessage('Rm updated successfully.');
         setSnackbarOpen(true);
       }
       // setDisplayForm(false);
     } else {
-      // Handle adding a new agent
+      // Handle adding a new rm
       const response = await fetch(apiUrl, {
         method: 'POST',
         body: JSON.stringify({ values }),
@@ -106,7 +106,7 @@ export const AgentAddForm = ({ data, setData,
       });
       if (response.status === 201) {
         const newValues = await response.json();
-        // Update the client-side data state with the new agent
+        // Update the client-side data state with the new rm
         setData([newValues, ...data]);
         setValues({
           firstName: '',
@@ -116,22 +116,22 @@ export const AgentAddForm = ({ data, setData,
           location: '',
         }); // Reset form fields
         setSnackbarSeverity('success');
-        setSnackbarMessage('Agent added successfully.');
+        setSnackbarMessage('Rm added successfully.');
         setSnackbarOpen(true);
       } else {
         // Handle error case
         setSnackbarSeverity('error');
-        setSnackbarMessage('Error adding agent. Please try again.');
+        setSnackbarMessage('Error adding rm. Please try again.');
         setSnackbarOpen(true);
       }
     }
-  }, [values, setData, data, apiUrl, agentToEdit, setValues]);
+  }, [values, setData, data, apiUrl, rmToEdit, setValues]);
 
 
   return (
     <form autoComplete="off" noValidate Card id="editForm" >
       <Card>
-        <CardHeader title={agentToEdit ? 'Edit Agent' : 'Add Agent'} />
+        <CardHeader title={rmToEdit ? 'Edit Rm' : 'Add Rm'} />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
             <Grid
@@ -208,7 +208,7 @@ export const AgentAddForm = ({ data, setData,
         <Divider />
         <CardActions sx={{ justifyContent: 'flex-end' }}>
           <Button variant="contained" onClick={handleSubmit}>
-            {agentToEdit ? 'Update Agent' : 'Save Agent'}
+            {rmToEdit ? 'Update Rm' : 'Save Rm'}
           </Button>
         </CardActions> 
       </Card>
