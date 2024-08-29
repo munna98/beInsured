@@ -175,7 +175,7 @@ const Page = () => {
             />
             {loading ?
               (<TableLoader />)
-              : (<RmsCardList
+              : (<RmsTable
                 count={searchResults.length}
                 items={rms}
                 onDeselectAll={rmsSelection.handleDeselectAll}

@@ -68,15 +68,15 @@ export const items = [
       </SvgIcon>
     )
   },
-  // {
-  //   title: 'RMs',
-  //   path: '/rms',
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <AtSymbolIcon />
-  //     </SvgIcon>
-  //   )
-  // },
+  {
+    title: 'RMs',
+    path: '/rms',
+    icon: (
+      <SvgIcon fontSize="small">
+        <AtSymbolIcon />
+      </SvgIcon>
+    )
+  },
   {
     title: 'Vehicles',
     path: '/vehicles',

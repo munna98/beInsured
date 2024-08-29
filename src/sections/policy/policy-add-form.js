@@ -157,8 +157,8 @@ export const PolicyAddForm = ({
         ...prev,
         [name]: value,
         amountToBePaid: 
-          name === "paymentMode" && value === paymentModeData[1]._id  //Assuming amount paid value is Agent Paid
-          ? prev.premium - prev.commission 
+          (name === "paymentMode" && value === paymentModeData[1]._id)  //Assuming amount paid value is Agent Paid
+          ? prev.commission 
           : prev.premium - prev.commission - prev.amountRecieved,
       }));
 
@@ -621,7 +621,8 @@ export const PolicyAddForm = ({
                   label="Amount to be paid"
                   name="amountToBePaid"
                   onChange={handleChange}
-                  value={values.premium - values.commission - values.amountRecieved}
+                  value={(values.paymentMode == paymentModeData[1]._id)? values.commission:
+                     values.premium - values.commission - values.amountRecieved}
                 ></TextField>
               </Grid>
             </Grid>

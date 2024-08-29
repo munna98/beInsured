@@ -1,7 +1,7 @@
 // API handler file (e.g., rmHandler.js)
 
 import rmModel from "models/rms";
-import rmCommissionModel from "models/rmCommissions";
+// import rmCommissionModel from "models/rmCommissions";
 import policyModel from "models/policies";
 
 export default async function handler(req, res) {
