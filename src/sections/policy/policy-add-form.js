@@ -37,7 +37,9 @@ export const PolicyAddForm = ({
     agentplanData,
     policyTypeData,
     paymentModeData,
+    paymentByData
   } = useContext(DataContext);
+
 
   const [issueDate, setIssueDate] = useState(new Date());
 
@@ -58,11 +60,13 @@ export const PolicyAddForm = ({
     commission: "",
     ourPlan: ourplanData[0]._id,
     policyNumber: "",
-    paymentMode: paymentModeData[0]._id,
+    paymentMode: "",
+    paymentBy:paymentByData[0]._id,
     capReached: "",
     amountRecieved: "",
     amountToBePaid: "", 
   };
+  
 
   const [values, setValues] = useState(initialValues);
   const { findAgentCommission } = useAgentCommission();
@@ -74,14 +78,12 @@ export const PolicyAddForm = ({
     setSnackbarOpen(false);
   };
 
-  // console.log(values);
-
-  //   const handleChange = useCallback((event) => {
-
+  // const handleChange = useCallback(
+  //   (event) => {
   //     const { name, value } = event.target;
 
   //     // Handle the "Net" calculation when either thirdParty or ownDamage changes
-  // if (name === "thirdParty" || name === "ownDamage") {
+  //     if (name === "thirdParty" || name === "ownDamage") {
   //       setValues((prev) => {
   //         const updatedValues = {
   //           ...prev,
@@ -93,75 +95,74 @@ export const PolicyAddForm = ({
   //           ...updatedValues,
   //           net: isNaN(netValue) ? null : netValue,
   //         };
-  //       });
+  //       // });
   //     }
 
-  //   else {
-  //     // Handle other fields
+      
+  //     setValues((prev) => ({
+  //       ...prev,
+  //       [name]: value,
+  //       amountToBePaid: 
+  //         (name === "paymentBy" && value === paymentBy[1]._id)  //Assuming amount paid value is Agent Paid
+  //         ? -(prev.commission) 
+  //         : prev.premium - prev.commission - prev.amountRecieved,
+  //     }));
+
 
   //     // Dynamically update the commission value
-  //     if (name === "agentName" || name === "vehicleType" || name === "company" || name === "intermediary" || name === "policyType" || name === "agentPlan") {
-  //       const commission = findAgentCommission({
-  //         agent: values.agentName,
-  //         vehicle: values.vehicleType,
-  //         company: values.company,
-  //         intermediary: values.intermediary,
-  //         policyType: values.policyType,
-  //         agentPlan: values.agentPlan,});
-  //       setValues((prev) => ({
-  //         ...prev,
-  //         [name]: value,
-  //         // commission:commission, // Update the commission field
-  //       }));
-  //       console.log("one of the input value changed...");
-  //     } else {
-  //       setValues((prev) => ({
-  //         ...prev,
-  //         [name]: value,
-  //       }));
+  //     if (
+  //       name === "agentName" ||
+  //       name === "vehicleType" ||
+  //       name === "company" ||
+  //       name === "intermediary" ||
+  //       name === "policyType" ||
+  //       name === "agentPlan" ||
+  //       name === "thirdParty" ||
+  //       name === "paymentBy" ||
+  //       name === "ownDamage" ||
+  //       name === "paymentBy"
+  //     ) {
+  //       setValues((prev) => {
+  //         const commission = findAgentCommission({
+  //           agent: prev.agentName,
+  //           vehicle: prev.vehicleType,
+  //           company: prev.company,
+  //           intermediary: prev.intermediary,
+  //           policyType: prev.policyType,
+  //           agentPlan: prev.agentPlan,
+  //           net: prev.net,
+  //         });
+  //         return {
+  //           ...prev,
+  //           commission: commission,
+  //           capReached: prev.paymentBy === paymentByData[0]._id? prev.premium - commission: 0,
+  //         };
+  //       });
+  //       console.log("one of the input values changed...");
   //     }
-  //   }
-  // },
-  // [setValues, values]
+  //   },
+  //   [setValues, findAgentCommission]
   // );
 
-  const handleChange = useCallback(
-    (event) => {
-      const { name, value } = event.target;
+
+const handleChange = useCallback(
+  (event) => {
+    const { name, value } = event.target;
+
+    setValues((prev) => {
+      let updatedValues = {
+        ...prev,
+        [name]: value,
+      };
 
       // Handle the "Net" calculation when either thirdParty or ownDamage changes
       if (name === "thirdParty" || name === "ownDamage") {
-        setValues((prev) => {
-          const updatedValues = {
-            ...prev,
-            [name]: value,
-          };
-
-          const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
-          return {
-            ...updatedValues,
-            net: isNaN(netValue) ? null : netValue,
-          };
-        });
+        const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
+        updatedValues = {
+          ...updatedValues,
+          net: isNaN(netValue) ? null : netValue,
+        };
       }
-
-      // Handle other fields
-
-      // setValues((prev) => ({
-      //   ...prev,
-      //   [name]: value,
-      //   amountToBePaid: prev.premium - prev.commission - prev.amountRecieved,
-      // }));
-
-      setValues((prev) => ({
-        ...prev,
-        [name]: value,
-        amountToBePaid: 
-          (name === "paymentMode" && value === paymentModeData[1]._id)  //Assuming amount paid value is Agent Paid
-          ? prev.commission 
-          : prev.premium - prev.commission - prev.amountRecieved,
-      }));
-
 
       // Dynamically update the commission value
       if (
@@ -172,29 +173,53 @@ export const PolicyAddForm = ({
         name === "policyType" ||
         name === "agentPlan" ||
         name === "thirdParty" ||
+        name === "paymentBy" ||
+        name === "premium" ||
         name === "ownDamage"
       ) {
-        setValues((prev) => {
-          const commission = findAgentCommission({
-            agent: prev.agentName,
-            vehicle: prev.vehicleType,
-            company: prev.company,
-            intermediary: prev.intermediary,
-            policyType: prev.policyType,
-            agentPlan: prev.agentPlan,
-            net: prev.net,
-          });
-          return {
-            ...prev,
-            commission: commission,
-            capReached: prev.premium - commission,
-          };
+        const commission = findAgentCommission({
+          agent: updatedValues.agentName,
+          vehicle: updatedValues.vehicleType,
+          company: updatedValues.company,
+          intermediary: updatedValues.intermediary,
+          policyType: updatedValues.policyType,
+          agentPlan: updatedValues.agentPlan,
+          net: updatedValues.net,
         });
-        console.log("one of the input values changed...");
+
+        updatedValues = {
+          ...updatedValues,
+          commission: commission,
+          capReached: updatedValues.paymentBy === paymentByData[0]._id ? updatedValues.premium - commission : 0,
+        };
       }
-    },
-    [setValues, findAgentCommission]
-  );
+
+      // Update amountToBePaid and handle amountRecieved when paymentBy is relevant
+      if (name === "paymentBy" || name === "premium" || name === "commission" || name === "amountRecieved") {
+        updatedValues = {
+          ...updatedValues,
+          // Set amountRecieved to 0 if paymentBy is "Agent Paid"
+          amountRecieved: value === paymentByData[1]._id ? 0 : updatedValues.amountRecieved,
+          // Calculate amountToBePaid
+          amountToBePaid:
+            value === paymentByData[1]._id // Assuming amount paid value is "Agent Paid"
+              ? -updatedValues.commission
+              : updatedValues.premium - updatedValues.commission - updatedValues.amountRecieved,
+        };
+      }
+
+      return updatedValues;
+    });
+
+    console.log("one of the input values changed...");
+  },
+  [setValues, findAgentCommission]
+);
+
+  
+
+  console.log('values',values);
+  
 
   const handleDateChange = useCallback((date) => {
     const selectedDate = date || new Date(); // If date is not provided, use today's date
@@ -230,6 +255,7 @@ export const PolicyAddForm = ({
         ourPlan,
         policyNumber,
         paymentMode,
+        paymentBy,
         capReached,
         amountRecieved,
         amountToBePaid,
@@ -252,6 +278,7 @@ export const PolicyAddForm = ({
         ourPlan: ourPlan._id, 
         policyNumber,
         paymentMode,
+        paymentBy: paymentBy._id,
         capReached,
         amountRecieved,
         amountToBePaid,
@@ -297,7 +324,7 @@ export const PolicyAddForm = ({
     } else {
       // Handle adding a new policy
       const response = await fetch(apiUrl, {
-        method: "POST",
+        method: "POST", 
         body: JSON.stringify({ values }),
         headers: {
           "Content-Type": "application/json",
@@ -319,7 +346,6 @@ export const PolicyAddForm = ({
       }
     }
   }, [values, initialValues, setData, data, apiUrl, policyToEdit, setValues]);
-
   return (
     <form autoComplete="off" noValidate Card id="editForm">
       <Card>
@@ -573,7 +599,7 @@ export const PolicyAddForm = ({
                   value={values.policyNumber}
                 />
               </Grid>
-              <Grid xs={12} md={6}>
+              {/* <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Payment mode"
@@ -589,8 +615,27 @@ export const PolicyAddForm = ({
                     </option>
                   ))}
                 </TextField>
+              </Grid> */}
+              <Grid xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="Payment By"
+                  name="paymentBy"
+                  onChange={handleChange}
+                  value={values.paymentBy}
+                  select
+                  SelectProps={{ native: true }}
+                >
+                  {paymentByData.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </TextField>
               </Grid>
-              {values.paymentMode !== paymentModeData[1]._id && (
+
+
+              {values.paymentBy === paymentByData[0]._id &&(
                 <>
                   <Grid xs={12} md={6}>
                     <TextField
@@ -599,7 +644,7 @@ export const PolicyAddForm = ({
                       name="capReached"
                       onChange={handleChange}
                       type="number"
-                      value={values.capReached}
+                      value={(values.paymentBy == paymentByData[0]._id)? values.capReached: 0}
                     />
                   </Grid>
                   <Grid xs={12} md={6}>
@@ -609,7 +654,7 @@ export const PolicyAddForm = ({
                       name="amountRecieved"
                       onChange={handleChange}
                       type="number"
-                      value={values.amountRecieved}
+                      value={(values.paymentBy == paymentByData[0]._id)?  values.amountRecieved: 0}
                     />
                   </Grid>
                 </>
@@ -621,7 +666,7 @@ export const PolicyAddForm = ({
                   label="Amount to be paid"
                   name="amountToBePaid"
                   onChange={handleChange}
-                  value={(values.paymentMode == paymentModeData[1]._id)? values.commission:
+                  value={(values.paymentBy == paymentByData[1]._id)? -(values.commission):
                      values.premium - values.commission - values.amountRecieved}
                 ></TextField>
               </Grid>

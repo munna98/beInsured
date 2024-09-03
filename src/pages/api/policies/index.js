@@ -14,6 +14,7 @@ export default async function handler(req, res) {
       .populate("agentPlan")
       .populate("ourPlan")
       .populate("paymentMode")
+      .populate('paymentBy')
       res.status(200).json(policies);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch policies', error: error.message });
@@ -37,22 +38,23 @@ export default async function handler(req, res) {
         ourPlan,
         policyNumber,
         paymentMode,
+        paymentBy,
         capReached,
         amountRecieved,
         amountToBePaid, } = req.body.values;
       // Create a new policy using the Mongoose model
-      console.log(req.body.values);
+      console.log("log1",req.body.values);
       const newPolicy = new policyModel({
         date: date,
         customerName: customerName,
         policyType: policyType,
         vehicleNumber: vehicleNumber,
-        premium: premium,
+        premium: premium, 
         thirdParty: thirdParty,
         ownDamage: ownDamage,
         net: net,
         company: company,
-        intermediary: intermediary,
+        intermediary: intermediary, 
         vehicleType: vehicleType,
         agentName: agentName,
         agentPlan: agentPlan,
@@ -60,11 +62,12 @@ export default async function handler(req, res) {
         ourPlan: ourPlan,
         policyNumber: policyNumber,
         paymentMode: paymentMode,
+        paymentBy: paymentBy,
         capReached: capReached,
         amountRecieved: amountRecieved,
         amountToBePaid: amountToBePaid,
       });
-      console.log(newPolicy);
+      console.log("log2",newPolicy);
       // Save the new policy to the database
       const savedPolicy = await newPolicy.save();
       res.status(201).json(savedPolicy);

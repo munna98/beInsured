@@ -25,6 +25,7 @@ export default async function handler(req, res) {
         ourPlan,
         policyNumber,
         paymentMode,
+        paymentBy,
         capReached,
         amountRecieved,
         amountToBePaid, } = values;
@@ -51,6 +52,7 @@ export default async function handler(req, res) {
         ourPlan,
         policyNumber,
         paymentMode,
+        paymentBy,
         capReached,
         amountRecieved,
         amountToBePaid,

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Grid, Paper, Typography } from '@mui/material';
+import { Card, Grid, Paper, Typography, Button } from '@mui/material';
+import { exportAgentLedgerToExcel } from 'src/utils/export-to-excel-agent-ledger';
 
 const AgentLedgerSummary = ({ policies }) => {
   const [summary, setSummary] = useState({
@@ -17,7 +18,7 @@ const AgentLedgerSummary = ({ policies }) => {
     const totalCommission = policies.reduce((sum, policy) => sum + policy.commission, 0);
     const totalPayable = totalGrossPremium - totalCommission;
     const totalPaid = policies.reduce((sum, policy) => sum + policy.amountRecieved, 0);
-    const balance = totalPayable - totalPaid;
+    const balance = policies.reduce((sum, policy) => sum + policy.amountToBePaid, 0);
 
     setSummary({
       totalGrossPremium,
@@ -30,13 +31,19 @@ const AgentLedgerSummary = ({ policies }) => {
   }, [policies]);
 
   const summaryData = [
-    { label: "Total Gross Premium:", value: `Rs ${summary.totalGrossPremium}` },
-    { label: "Total Net Premium:", value: `Rs ${summary.totalNetPremium}` },
-    { label: "Total Commission:", value: `Rs ${summary.totalCommission}` },
-    { label: "Total Payable:", value: `Rs ${summary.totalPayable}` },
-    { label: "Total Paid:", value: `Rs ${summary.totalPaid}` },
-    { label: "Balance:", value: `Rs ${summary.balance}` },
+    { label: "Total Gross Premium:", value: `₹ ${summary.totalGrossPremium}` },
+    { label: "Total Net Premium:", value: `₹ ${summary.totalNetPremium}` },
+    { label: "Total Commission:", value: `₹ ${summary.totalCommission}` },
+    { label: "Total Payable:", value: `₹ ${summary.totalPayable}` },
+    { label: "Total Paid:", value: `₹ ${summary.totalPaid}` },
+    { label: "Balance:", value: `₹ ${summary.balance}` },
   ];
+
+  const handleExport = () => {
+    exportAgentLedgerToExcel(summary, policies, "Agent_Ledger_Report.xlsx");
+  };
+
+  const isExportDisabled = policies.length === 0 || summary.totalGrossPremium === 0;
 
   return (
     <Card sx={{ mt: 3, p: 3, boxShadow: 3 }}>
@@ -52,6 +59,15 @@ const AgentLedgerSummary = ({ policies }) => {
           </Grid>
         ))}
       </Grid>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 3 }}
+        onClick={handleExport}
+        disabled={isExportDisabled}
+      >
+        Export to Excel
+      </Button>
     </Card>
   );
 };

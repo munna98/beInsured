@@ -45,7 +45,6 @@ export const AgentLedgerTable = (props) => {
                 <TableCell>Agent</TableCell>
                 <TableCell>Premium</TableCell>
                 <TableCell>Net Premium</TableCell>
-                <TableCell>Paid By</TableCell>
                 <TableCell>Recieved Amount</TableCell>
                 <TableCell>Plan</TableCell>
                 <TableCell>Commission</TableCell>
@@ -67,13 +66,13 @@ export const AgentLedgerTable = (props) => {
                     <TableCell>{policy.agentName.firstName}</TableCell>
                     <TableCell>{policy.premium}</TableCell>
                     <TableCell>{policy.net}</TableCell>
-                    <TableCell>{policy.paymentMode.name}</TableCell>
                     <TableCell>{policy.amountRecieved}</TableCell>
                     <TableCell>{policy.agentPlan.name}</TableCell>
                     <TableCell>{policy.commission}</TableCell>
                     <TableCell>{policy.premium-policy.commission}</TableCell>
-                    <TableCell>{policy.paymentMode.name}</TableCell>
-                    <TableCell>{policy.premium-policy.commission-policy.amountRecieved}</TableCell>
+                    <TableCell>{policy.paymentBy.name}</TableCell>
+                    {/* <TableCell>{policy.premium-policy.commission-policy.amountRecieved}</TableCell> */}
+                    <TableCell>{policy.amountToBePaid}</TableCell>
                   </TableRow>
                 );
               })}

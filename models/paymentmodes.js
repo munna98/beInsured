@@ -20,3 +20,4 @@ try {
 }
 
 export default paymentmodeModel;
+ 

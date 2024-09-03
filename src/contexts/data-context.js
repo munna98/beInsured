@@ -11,6 +11,7 @@ export const DataProvider = ({ children }) => {
   const [agentplanData, setAgentplanData] = useState([]);
   const [policyTypeData, setPolicyTypeData] = useState([]);
   const [paymentModeData, setPaymentModeData] = useState([]);
+  const [paymentByData, setPaymentByData] = useState([]);
   const [agentCommissionData, setAgentCommissionData] = useState([]);
   const [intermediaryCommissionData, setIntermediaryCommissionData] = useState([]);
   const [isFetching, setIsFetching] = useState(true); // Track loading state
@@ -54,6 +55,10 @@ export const DataProvider = ({ children }) => {
       const paymentModeData = await paymentModeResponse.json();
       setPaymentModeData(paymentModeData);
 
+      const paymentByResponse = await fetch("api/paymentbies");
+      const paymentByData = await paymentByResponse.json();
+      setPaymentByData(paymentByData);
+
       const agentCommissionResponse = await fetch("api/agentCommissions");
       const agentCommissionData = await agentCommissionResponse.json();
       setAgentCommissionData(agentCommissionData);
@@ -62,7 +67,7 @@ export const DataProvider = ({ children }) => {
       const intermediaryCommissionData = await intermediaryCommissionResponse.json();
       setIntermediaryCommissionData(intermediaryCommissionData);
 
-      console.log(policyData);
+      console.log(paymentByData);
 
       setIsFetching(false); // Set loading to false once data is fetched
     } catch (error) {
@@ -96,6 +101,7 @@ export const DataProvider = ({ children }) => {
         agentplanData,
         policyTypeData,
         paymentModeData,
+        paymentByData,
         agentCommissionData,
         intermediaryCommissionData,
         isFetching,

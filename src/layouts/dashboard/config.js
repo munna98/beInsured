@@ -134,16 +134,16 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Payment modes',
-    extrasSubItem: true,
-    path: '/paymentmodes',
-    icon: (
-      <SvgIcon fontSize="small">
-        <BankNotesIcon />
-      </SvgIcon>
-    )
-  },
+  // {
+  //   title: 'Payment modes',
+  //   extrasSubItem: true,
+  //   path: '/paymentmodes',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <BankNotesIcon />
+  //     </SvgIcon>
+  //   )
+  // },
 
   
   // {

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { object } from 'prop-types';
 
 let policyModel;
 
@@ -62,9 +63,15 @@ const initializePolicyModel = async () => {
           required: true,
         },
         policyNumber: String,
-        paymentMode:  {
+        paymentMode:  String,
+        // paymentMode:  {
+        //   type: mongoose.Schema.Types.ObjectId,
+        //   ref: 'paymentmode', 
+        //   required: true,
+        // },
+        paymentBy: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'paymentmode', 
+          ref: 'paymentby', 
           required: true,
         },
         capReached: Number,

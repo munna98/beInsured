@@ -145,8 +145,11 @@ export const PoliciesTable = (props) => {
                 <TableCell>
                   Policy No
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   Payment Mode
+                </TableCell> */}
+                <TableCell>
+                  Payment By
                 </TableCell>
                 <TableCell>
                   Cap Reached
@@ -163,7 +166,7 @@ export const PoliciesTable = (props) => {
               {items.map((policy) => {
                 const isSelected = selected.includes(policy.id);
                 const date = new Date(policy.date)
-                console.log(policy);
+                console.log('polisee',policy);
 
                 return (
                   <TableRow
@@ -234,7 +237,7 @@ export const PoliciesTable = (props) => {
                       {policy.policyNumber}
                     </TableCell>
                     <TableCell>
-                      {policy.paymentMode.name}
+                      {policy.paymentBy.name}
                     </TableCell>
                     <TableCell>
                       {policy.capReached}
@@ -242,6 +245,9 @@ export const PoliciesTable = (props) => {
                     <TableCell>
                       {policy.amountRecieved }
                     </TableCell>
+                      {/* <TableCell>
+                        {policy.amountToBePaid }
+                      </TableCell> */}
                     <TableCell>
                       <Stack direction="row" spacing={2}>
                         <IconButton>
