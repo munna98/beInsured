@@ -27,7 +27,7 @@ export const exportAgentLedgerToExcel = (summary, policies, filename) => {
     Plan: policy.agentPlan.name,
     Commission: policy.commission,
     Payable: policy.premium - policy.commission,
-    "Paid By": policy.paymentMode.name,
+    "Paid By": policy.paymentBy.name,
     Balance: policy.amountToBePaid,
   }));
 
