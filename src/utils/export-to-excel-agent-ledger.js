@@ -23,6 +23,8 @@ export const exportAgentLedgerToExcel = (summary, policies, filename) => {
     Agent: policy.agentName.firstName,
     Premium: policy.premium,
     "Net Premium": policy.net,
+    "TP Amount": policy.thirdParty,
+    "OD Amount": policy.ownDamage,
     "Received Amount": policy.amountRecieved,
     Plan: policy.agentPlan.name,
     Commission: policy.commission,
