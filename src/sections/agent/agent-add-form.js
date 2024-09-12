@@ -72,7 +72,7 @@ export const AgentAddForm = ({ data, setData,
         method: 'PUT',
         body: JSON.stringify({ values }),
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json', 
         },
       });
       if (response.status === 200) {

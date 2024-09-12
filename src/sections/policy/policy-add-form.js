@@ -29,7 +29,7 @@ export const PolicyAddForm = ({
   setDisplayForm,
 }) => {
   const {
-    intermediaryData,
+    intermediaryData, 
     agentData,
     companyData,
     vehicleData,

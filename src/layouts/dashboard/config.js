@@ -18,9 +18,11 @@ import RectangleStackIcon from '@heroicons/react/24/solid/RectangleStackIcon';
 import RectangleGroupIcon from '@heroicons/react/24/solid/RectangleGroupIcon';
 import ChartPieIcon from '@heroicons/react/24/solid/ChartPieIcon';
 import AtSymbolIcon from '@heroicons/react/24/solid/AtSymbolIcon';
-
+import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 
 import { SvgIcon } from '@mui/material';
+import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
+
 
 export const items = [
   {
@@ -156,6 +158,32 @@ export const items = [
   //     </SvgIcon>
   //   )
   // }
+
+
+  {
+    title: 'Payment',
+    extrasSubItem: true,
+    path: '/payment',
+    icon: (
+      <SvgIcon fontSize="small">
+        <ArrowUpOnSquareIcon />
+      </SvgIcon>
+    )
+  },
+
+
+  {
+    title: 'Receipt',
+    extrasSubItem: true,
+    path: '/receipts',
+    icon: (
+      <SvgIcon fontSize="small">
+        <ArrowDownOnSquareIcon />
+      </SvgIcon>
+    )
+  },
+
+  
   {
     title: 'Settings',
     path: '/settings',

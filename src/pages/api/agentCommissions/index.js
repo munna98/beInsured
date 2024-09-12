@@ -19,20 +19,33 @@ export default async function handler(req, res) {
   } else if (req.method === "POST") {
     try {
       const {
-        agent, 
+        agent,
         vehicle,
         company,
-        intermediary, 
-        type, 
+        intermediary,
+        type,
         policyType,
         agentPlan,
         commission,
         tds,
       } = req.body.values;
 
-      // Create an array of combinations
-      const combinations = [];
+      // Check if the combination already exists
+      const existingCommission = await agentCommissionModel.findOne({
+        agent: { $in: agent },
+        vehicle: { $in: vehicle },
+        company: { $in: company },
+        intermediary: { $in: intermediary },
+        policyType:{ $in: policyType },
+        agentPlan:{ $in: agentPlan}
+      });
 
+      if (existingCommission) {
+        return res.status(409).json({ message: "This agent commission combination already exists." });
+      }
+
+      // Proceed with creating new commissions if the combination doesn't exist
+      const combinations = [];
       for (const agentId of agent) {
         for (const vehicleId of vehicle) {
           for (const companyId of company) {
@@ -46,15 +59,13 @@ export default async function handler(req, res) {
                 policyType,
                 agentPlan,
                 commission,
-                tds, 
+                tds,
               });
             }
           }
         }
       }
-      
 
-      // Create a new agentCommission for each combination
       const savedAgentCommissions = await Promise.all(
         combinations.map(async (combination) => {
           const newAgentCommission = new agentCommissionModel(combination);

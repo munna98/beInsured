@@ -153,6 +153,7 @@ export const AgentCommissionAddForm = ({
   };
 
   const handleSubmit = useCallback(async () => {
+    try {
       const response = await fetch(apiUrl, {
         method: "POST",
         body: JSON.stringify({ values }),
@@ -160,10 +161,9 @@ export const AgentCommissionAddForm = ({
           "Content-Type": "application/json",
         },
       });
+  
       if (response.status === 201) {
-        const newValues = await response.json();
-        // Update the client-side data state with the new agentCommission
-        // setData([...newValues, ...data]);
+        // Reset the form and show success message
         fetchAgentCommission();
         setValues({
           agent: [],
@@ -175,17 +175,28 @@ export const AgentCommissionAddForm = ({
           agentPlan: agentplanData[0]._id,
           commission: "",
           tds: "",
-        }); // Reset form fields
-        setSnackbarSeverity('success');
-        setSnackbarMessage('Agent commission added successfully.');
+        });
+        setSnackbarSeverity("success");
+        setSnackbarMessage("Agent commission added successfully.");
         setSnackbarOpen(true);
-    }else {
-      // Handle error case
-      setSnackbarSeverity('error');
-      setSnackbarMessage('Error updating agent commission.  Please try again.');
+      } else if (response.status === 409) {
+        // Notify the user about the existing combination
+        const result = await response.json();
+        setSnackbarSeverity("error");
+        setSnackbarMessage(result.message);
+        setSnackbarOpen(true);
+      } else {
+        setSnackbarSeverity("error");
+        setSnackbarMessage("Error adding agent commission. Please try again.");
+        setSnackbarOpen(true);
+      }
+    } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarMessage("Error adding agent commission. Please try again.");
       setSnackbarOpen(true);
     }
-  }, [values, setData, data, apiUrl, setValues]);
+  }, [values, apiUrl, fetchAgentCommission, setValues]);
+  
 
   return (
     <form autoComplete="off" noValidate Card id="editForm">

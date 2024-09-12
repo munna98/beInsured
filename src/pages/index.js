@@ -164,11 +164,11 @@ const Page = () => (
               value="₹-15k"
             />
           </Grid>
-          <Grid
+          {/* <Grid
             xs={12}
             lg={8}
           >
-            {/* <OverviewSales
+            <OverviewSales
               chartSeries={[
                 {
                   name: 'This year',
@@ -303,8 +303,8 @@ const Page = () => (
                 }
               ]}
               sx={{ height: '100%' }}
-            /> */}
-          </Grid>
+            />
+          </Grid> */}
         </Grid>
       </Container>
     </Box>

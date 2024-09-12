@@ -7,7 +7,7 @@ export const PolicytypesSearch = ({ searchTerm, handleSearchChange }) => {
       <OutlinedInput
         value={searchTerm} 
         fullWidth
-        placeholder="Search Intermediary"
+        placeholder="Search Policytype"
         onChange={handleSearchChange}
         startAdornment={(
           <InputAdornment position="start">
