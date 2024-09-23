@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch receipts', error: error.message });
     }
-  } else if (req.method === 'POST') {
+  } else if (req.method === 'POST') { 
     try {
       const { agent, date, amount } = req.body;
 

@@ -15,6 +15,17 @@ import { DatePicker } from "@mui/x-date-pickers";
 
 export const ReceiptAddForm = ({ data, setData, apiUrl, receiptToEdit, setReceiptToEdit }) => {
   const [agentData, setAgentData] = useState([]);
+
+  const fetchReceipts = async () => {
+    try {
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching Receipts:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setInitialLoading(true);
@@ -37,6 +48,13 @@ export const ReceiptAddForm = ({ data, setData, apiUrl, receiptToEdit, setReceip
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    fetchReceipts()
+  }, [])
+  
+  
+
   const [values, setValues] = useState({ agent: '', date: new Date(), amount: "" });
   const [initialLoading, setInitialLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -73,10 +91,7 @@ export const ReceiptAddForm = ({ data, setData, apiUrl, receiptToEdit, setReceip
         },
       });
       if (response.status === 200) {
-        const updatedReceipt = await response.json();
-        const updatedData = data.map((receipt) =>
-          receipt._id === updatedReceipt._id ? updatedReceipt : receipt
-        );
+        fetchReceipts()
         setData(updatedData);
         setReceiptToEdit(null);
         setValues({ agent: agentData[0]._id, date: new Date(), amount: '' }); // Reset form
@@ -96,8 +111,7 @@ export const ReceiptAddForm = ({ data, setData, apiUrl, receiptToEdit, setReceip
         },
       });
       if (response.status === 201) {
-        const newReceipt = await response.json();
-        setData([newReceipt, ...data]);
+        fetchReceipts()
         setValues({ agent: agentData[0]._id, date: new Date(), amount: '' }); // Reset form
         setSnackbarSeverity('success');
         setSnackbarMessage('Receipt added successfully.');

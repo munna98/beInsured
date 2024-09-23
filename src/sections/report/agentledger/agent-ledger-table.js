@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { format } from "date-fns";
 import {
   Box,
-  Card,
+  Card, 
   Checkbox,
   Stack,
   IconButton,

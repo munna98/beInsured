@@ -127,15 +127,15 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Policy types',
-    path: '/policytypes',
-    icon: (
-      <SvgIcon fontSize="small">
-        <SwatchIcon />
-      </SvgIcon>
-    )
-  },
+  // {
+  //   title: 'Policy types',
+  //   path: '/policytypes',
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <SwatchIcon />
+  //     </SvgIcon>
+  //   )
+  // },
   // {
   //   title: 'Payment modes',
   //   extrasSubItem: true,

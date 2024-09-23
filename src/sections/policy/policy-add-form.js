@@ -78,73 +78,6 @@ export const PolicyAddForm = ({
     setSnackbarOpen(false);
   };
 
-  // const handleChange = useCallback(
-  //   (event) => {
-  //     const { name, value } = event.target;
-
-  //     // Handle the "Net" calculation when either thirdParty or ownDamage changes
-  //     if (name === "thirdParty" || name === "ownDamage") {
-  //       setValues((prev) => {
-  //         const updatedValues = {
-  //           ...prev,
-  //           [name]: value,
-  //         };
-
-  //         const netValue = updatedValues.thirdParty - -updatedValues.ownDamage;
-  //         return {
-  //           ...updatedValues,
-  //           net: isNaN(netValue) ? null : netValue,
-  //         };
-  //       // });
-  //     }
-
-      
-  //     setValues((prev) => ({
-  //       ...prev,
-  //       [name]: value,
-  //       amountToBePaid: 
-  //         (name === "paymentBy" && value === paymentBy[1]._id)  //Assuming amount paid value is Agent Paid
-  //         ? -(prev.commission) 
-  //         : prev.premium - prev.commission - prev.amountRecieved,
-  //     }));
-
-
-  //     // Dynamically update the commission value
-  //     if (
-  //       name === "agentName" ||
-  //       name === "vehicleType" ||
-  //       name === "company" ||
-  //       name === "intermediary" ||
-  //       name === "policyType" ||
-  //       name === "agentPlan" ||
-  //       name === "thirdParty" ||
-  //       name === "paymentBy" ||
-  //       name === "ownDamage" ||
-  //       name === "paymentBy"
-  //     ) {
-  //       setValues((prev) => {
-  //         const commission = findAgentCommission({
-  //           agent: prev.agentName,
-  //           vehicle: prev.vehicleType,
-  //           company: prev.company,
-  //           intermediary: prev.intermediary,
-  //           policyType: prev.policyType,
-  //           agentPlan: prev.agentPlan,
-  //           net: prev.net,
-  //         });
-  //         return {
-  //           ...prev,
-  //           commission: commission,
-  //           capReached: prev.paymentBy === paymentByData[0]._id? prev.premium - commission: 0,
-  //         };
-  //       });
-  //       console.log("one of the input values changed...");
-  //     }
-  //   },
-  //   [setValues, findAgentCommission]
-  // );
-
-
 const handleChange = useCallback(
   (event) => {
     const { name, value } = event.target;
@@ -283,7 +216,7 @@ const handleChange = useCallback(
         amountToBePaid,
       });
     }
-  }, [policyToEdit]);
+  }, [policyToEdit]); 
 
   const fetchPolicy = async () => {
     try {

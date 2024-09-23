@@ -14,28 +14,32 @@ export const RecentReceipts = ({ receipts }) => {
             <ListItemText primary="No receipts added yet." />
           </ListItem>
         ) : (
-          receipts.slice(0, 5).map((receipt, index) => {
-            const hasDivider = index < receipts.length - 1;
-            const ago = formatDistanceToNow(new Date(receipt.date), { addSuffix: true });
-            const formattedDate = format(new Date(receipt.date), 'dd-MM-yyyy'); // Format the date
+          receipts
+            .slice() // Make a shallow copy of receipts array to avoid mutating the original array
+            .reverse() // Reverse the array to show the most recent first
+            .slice(0, 5) // Limit to 5 items
+            .map((receipt, index) => {
+              const hasDivider = index < receipts.length - 1;
+              const ago = formatDistanceToNow(new Date(receipt.date), { addSuffix: true });
+              const formattedDate = format(new Date(receipt.date), 'dd-MM-yyyy'); // Format the date
 
-            return (
-              <ListItem divider={hasDivider} key={receipt._id} sx={{ display: 'flex', alignItems: 'center' }}>
-                <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
-                  <Typography variant="subtitle1">{receipt.agent.firstName}</Typography>
-                  <Typography variant="body2" color="textSecondary">{formattedDate}</Typography>
-                </Stack>
-                <Typography variant="subtitle1" sx={{ textAlign: 'right', flexShrink: 0, ml: 2 }}>
-                  {receipt.amount}
-                </Typography>
-                <IconButton edge="end">
-                  <SvgIcon>
-                    <EllipsisVerticalIcon />
-                  </SvgIcon>
-                </IconButton>
-              </ListItem>
-            );
-          })
+              return (
+                <ListItem divider={hasDivider} key={receipt._id} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Stack direction="column" spacing={1} sx={{ flex: 1 }}>
+                    <Typography variant="subtitle1">{receipt.agent.firstName}</Typography>
+                    <Typography variant="body2" color="textSecondary">{formattedDate}</Typography>
+                  </Stack>
+                  <Typography variant="subtitle1" sx={{ textAlign: 'right', flexShrink: 0, ml: 2 }}>
+                    {receipt.amount}
+                  </Typography>
+                  <IconButton edge="end">
+                    <SvgIcon>
+                      <EllipsisVerticalIcon />
+                    </SvgIcon>
+                  </IconButton>
+                </ListItem>
+              );
+            })
         )}
       </List>
       <CardActions sx={{ justifyContent: 'flex-end', paddingY: 1 }}>
@@ -55,3 +59,4 @@ export const RecentReceipts = ({ receipts }) => {
     </Card>
   );
 };
+
