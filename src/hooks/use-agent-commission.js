@@ -30,12 +30,33 @@ const useAgentCommission = () => {
     console.log("Conditions:", { agent, vehicle, company, intermediary, policyType, agentPlan });
     console.log("Commission Found:", commissionFound);
 
-    if (commissionFound && commissionFound.type === "Flat") {
-      return commissionFound.commission;
+    if (commissionFound){
+      
+      switch(commissionFound?.policyType.name){
+        case "OD": 
+          if (commissionFound.odCommissionType === "Flat")
+            return commissionFound.odCommission;
+          if (commissionFound.odCommissionType === "Percentage")
+            return Math.round( commissionFound.odCommission  * net / 100);
+        case "TP": 
+          if (commissionFound.tpCommissionType === "Flat")
+            return commissionFound.tpCommission;
+          if (commissionFound.tpCommissionType === "Percentage")
+            return Math.round( commissionFound.tpCommission  * net / 100);
+        case "PK": 
+        if (commissionFound.odCommissionType === "Flat")
+          if (commissionFound.tpCommissionType === "Flat")
+            return commissionFound.odCommission + commissionFound.tpCommission;
+          if (commissionFound.tpCommissionType === "Percentage")
+            return commissionFound.odCommission + Math.round( commissionFound.tpCommission  * net / 100);
+        if (commissionFound.odCommissionType === "Percentage")
+          if (commissionFound.tpCommissionType === "Flat")
+            return Math.round( commissionFound.odCommission  * net / 100) + commissionFound.tpCommission;
+          if (commissionFound.tpCommissionType === "Percentage")
+            return Math.round( commissionFound.odCommission  * net / 100) + Math.round( commissionFound.tpCommission  * net / 100);
+      }
     }
-    if (commissionFound && commissionFound.type === "Percentage") {
-      return Math.round(commissionFound.commission * net / 100);
-    } else return 0;
+  else return 0;
   };
 
   return { findAgentCommission };

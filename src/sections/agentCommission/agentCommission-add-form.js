@@ -1,5 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
-import { useContext } from "react";
+import React, { useCallback, useState, useEffect, useContext } from "react";
 import { DataContext } from "src/contexts/data-context";
 import {
   Box,
@@ -19,8 +18,6 @@ import {
   Snackbar,
   Alert
 } from "@mui/material";
-import agentCommissionModel from "models/agentCommissions";
-
 
 export const AgentCommissionAddForm = ({
   data,
@@ -32,13 +29,12 @@ export const AgentCommissionAddForm = ({
     agentData,
     companyData,
     vehicleData,
-    ourplanData,
     agentplanData,
     policyTypeData,
-    paymentModeData,
   } = useContext(DataContext); 
 
   const commissionTypes = [
+    { _id: 3, name: "" }, 
     { _id: 1, name: "Flat" }, 
     { _id: 2, name: "Percentage" }, 
   ];
@@ -48,21 +44,23 @@ export const AgentCommissionAddForm = ({
     vehicle: [],
     company: [],
     intermediary: [],
-    type: commissionTypes[0].name,
     policyType: policyTypeData[0]._id,
     agentPlan: agentplanData[0]._id,
-    commission: "",
     tds: "",
+    odCommissionType: commissionTypes[0].name,
+    odCommission: "",
+    tpCommissionType: commissionTypes[0].name,
+    tpCommission: "",
   });
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success'); // or 'error'
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
- 
+
   useEffect(() => {
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -77,32 +75,27 @@ export const AgentCommissionAddForm = ({
     (event) => {
       const { name, value } = event.target;
 
-      // Handle "Select All" option
-      if (value.includes("selectAll")) {
-        const allOptionIds = getAllOptionIds(name);
-
-        // If "Select All" is already selected, deselect all options
-        if (values[name].length === allOptionIds.length) {
+      if (["agent", "vehicle", "company", "intermediary"].includes(name)) {
+        if (value.includes("selectAll")) {
+          const allOptionIds = getAllOptionIds(name);
           setValues((prevValues) => ({
             ...prevValues,
-            [name]: [],
+            [name]: prevValues[name].length === allOptionIds.length ? [] : allOptionIds,
           }));
         } else {
-          // Otherwise, select all options
           setValues((prevValues) => ({
             ...prevValues,
-            [name]: allOptionIds,
+            [name]: value,
           }));
         }
       } else {
-        // Handle other options
         setValues((prevValues) => ({
           ...prevValues,
           [name]: value,
         }));
       }
     },
-    [setValues, values]
+    [setValues]
   );
 
   const getAllOptionIds = (fieldName) => {
@@ -163,24 +156,24 @@ export const AgentCommissionAddForm = ({
       });
   
       if (response.status === 201) {
-        // Reset the form and show success message
         fetchAgentCommission();
         setValues({
           agent: [],
           vehicle: [],
           company: [],
           intermediary: [],
-          type: commissionTypes[0].name,
           policyType: policyTypeData[0]._id,
           agentPlan: agentplanData[0]._id,
-          commission: "",
           tds: "",
+          odCommissionType: commissionTypes[0].name,
+          odCommission: "",
+          tpCommissionType: commissionTypes[0].name,
+          tpCommission: "",
         });
         setSnackbarSeverity("success");
         setSnackbarMessage("Agent commission added successfully.");
         setSnackbarOpen(true);
       } else if (response.status === 409) {
-        // Notify the user about the existing combination
         const result = await response.json();
         setSnackbarSeverity("error");
         setSnackbarMessage(result.message);
@@ -195,15 +188,155 @@ export const AgentCommissionAddForm = ({
       setSnackbarMessage("Error adding agent commission. Please try again.");
       setSnackbarOpen(true);
     }
-  }, [values, apiUrl, fetchAgentCommission, setValues]);
-  
+  }, [values, apiUrl, fetchAgentCommission, setValues, policyTypeData, commissionTypes]);
+
+  const selectedPolicy = (() => {
+    const selectedPolicyType = policyTypeData.find(pt => pt._id === values.policyType);
+    if (!selectedPolicyType) return "other";
+    
+    const policyName = selectedPolicyType.name.toLowerCase();
+    if (policyName === "pk") return "pk";
+    if (policyName === "od") return "od";
+    if (policyName === "tp") return "tp";
+    return "other";
+  })();
+
+  const renderCommissionFields = () => {
+    switch (selectedPolicy) {
+      case "pk":
+        return (
+          <>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="OD Commission type"
+                name="odCommissionType"
+                onChange={handleChange}
+                value={values.odCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="OD Commission"
+                name="odCommission"
+                onChange={handleChange}
+                required
+                value={values.odCommission}
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="TP Commission type"
+                name="tpCommissionType"
+                onChange={handleChange}
+                value={values.tpCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="TP Commission"
+                name="tpCommission"
+                onChange={handleChange}
+                required
+                value={values.tpCommission}
+              />
+            </Grid>
+          </>
+        );
+      case "od":
+        return(
+          <>
+          <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="OD Commission type"
+                name="odCommissionType"
+                onChange={handleChange}
+                value={values.odCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="OD Commission"
+                name="odCommission"
+                onChange={handleChange}
+                required
+                value={values.odCommission}
+              />
+            </Grid>
+          </>
+        )
+      case "tp":
+        return(
+          <>
+          <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="TP Commission type"
+                name="tpCommissionType"
+                onChange={handleChange}
+                value={values.tpCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="TP Commission"
+                name="tpCommission"
+                onChange={handleChange}
+                required
+                value={values.tpCommission}
+              />
+            </Grid>
+          </>
+        )
+    }
+  };
 
   return (
     <form autoComplete="off" noValidate Card id="editForm">
       <Card>
-        <CardHeader
-          title="Add Agent Commission"
-        />
+        <CardHeader title="Add Agent Commission" />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
             <Grid container spacing={3}>
@@ -290,24 +423,7 @@ export const AgentCommissionAddForm = ({
                     ))}
                   </Select>
                 </FormControl>
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Type"
-                  name="type"
-                  onChange={handleChange}
-                  value={values.type}
-                  select
-                  SelectProps={{ native: true }}
-                >
-                  {commissionTypes.map((option) => (
-                    <option key={option._id} value={option.name}>
-                      {option.name}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
+              </Grid>         
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -342,17 +458,7 @@ export const AgentCommissionAddForm = ({
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Commission"
-                  name="commission"
-                  onChange={handleChange}
-                  required
-                  value={values.commission}
-                />
-              </Grid>
+              {renderCommissionFields()}
 
               <Grid xs={12} md={6}>
                 <TextField
@@ -366,6 +472,7 @@ export const AgentCommissionAddForm = ({
               </Grid>
             </Grid>
           </Box>
+          
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>

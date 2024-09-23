@@ -31,7 +31,6 @@ const initializeAgentCommissionModel = async () => {
           ref: 'intermediary', 
           required: true,
         },
-        type: String, 
         policyType: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'policytype', 
@@ -42,8 +41,11 @@ const initializeAgentCommissionModel = async () => {
           ref: 'agentplan', 
           required: true,
         },
-        commission: Number,
         tds: Number,
+        odCommissionType: String,
+        odCommission: Number,
+        tpCommissionType: String, 
+        tpCommission: Number,
       },
       { 
         timestamps: true,

@@ -1,11 +1,11 @@
-import PencilIcon from '@heroicons/react/24/solid/PencilIcon';
-import TrashIcon from '@heroicons/react/24/solid/TrashIcon';
-import { SvgIcon, Tooltip, } from '@mui/material';
-import PropTypes from 'prop-types';
+import PencilIcon from "@heroicons/react/24/solid/PencilIcon";
+import TrashIcon from "@heroicons/react/24/solid/TrashIcon";
+import { SvgIcon, Tooltip } from "@mui/material";
+import PropTypes from "prop-types";
 
 import { useContext } from "react";
-import { DataContext } from 'src/contexts/data-context';
-import { format } from 'date-fns';
+import { DataContext } from "src/contexts/data-context";
+import { format } from "date-fns";
 import {
   Avatar,
   Box,
@@ -20,11 +20,11 @@ import {
   TablePagination,
   TableRow,
   Typography,
-} from '@mui/material';
-import { Scrollbar } from 'src/components/scrollbar';
-import { getInitials } from 'src/utils/get-initials';
-import { useState } from 'react';
-import DeleteDialog from 'src/components/delete-dialog';
+} from "@mui/material";
+import { Scrollbar } from "src/components/scrollbar";
+import { getInitials } from "src/utils/get-initials";
+import { useState } from "react";
+import DeleteDialog from "src/components/delete-dialog";
 
 export const AgentCommissionsTable = (props) => {
   const {
@@ -32,7 +32,7 @@ export const AgentCommissionsTable = (props) => {
     items = [],
     onDeselectAll,
     onDeselectOne,
-    onPageChange = () => { },
+    onPageChange = () => {},
     onRowsPerPageChange,
     onSelectAll,
     onSelectOne,
@@ -40,26 +40,32 @@ export const AgentCommissionsTable = (props) => {
     rowsPerPage = 0,
     selected = [],
     setData,
-    apiUrl = '',
+    apiUrl = "",
     agentCommissionToEdit = {},
     setAgentCommissionToEdit,
     setDisplayForm,
   } = props;
 
-  const { intermediaryData, agentData, companyData,vehicleData
-    , ourplanData, agentplanData, policyTypeData, paymentModeData } = useContext(DataContext);
+  const {
+    intermediaryData,
+    agentData,
+    companyData,
+    vehicleData,
+    ourplanData,
+    agentplanData,
+    policyTypeData,
+    paymentModeData,
+  } = useContext(DataContext);
 
-  
-  const selectedSome = (selected.length > 0) && (selected.length < items.length);
-  const selectedAll = (items.length > 0) && (selected.length === items.length);
-
+  const selectedSome = selected.length > 0 && selected.length < items.length;
+  const selectedAll = items.length > 0 && selected.length === items.length;
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setdeleteId] = useState();
 
   const handleClickDeleteOpen = (Id) => {
     setDeleteDialogOpen(true);
-    setdeleteId(Id); 
+    setdeleteId(Id);
   };
 
   const handleClose = () => {
@@ -67,17 +73,19 @@ export const AgentCommissionsTable = (props) => {
   };
 
   const fetchAgentCommission = async () => {
-    const response = await fetch(apiUrl)
-    const data = await response.json()
-    setData(data)
-  }
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    setData(data);
+  };
 
   const handleEdit = (agentCommissionId) => {
-    setDisplayForm(prev => true)
-    const agentCommission = items.find(agentCommission => agentCommission._id === agentCommissionId);
+    setDisplayForm((prev) => true);
+    const agentCommission = items.find(
+      (agentCommission) => agentCommission._id === agentCommissionId
+    );
     setAgentCommissionToEdit(agentCommission);
-    console.log(agentCommission,"agent commission to edit");
-  }
+    console.log(agentCommission, "agent commission to edit");
+  };
 
   return (
     <Card>
@@ -99,56 +107,32 @@ export const AgentCommissionsTable = (props) => {
                     }}
                   />
                 </TableCell>
-                <TableCell>
-                  Agent
-                </TableCell>
-                <TableCell>
-                  Vehicle
-                </TableCell>
-                <TableCell>
-                  Company
-                </TableCell>
-                <TableCell>
-                  Intermediary
-                </TableCell>
-                <TableCell>
-                  Type
-                </TableCell>
-                <TableCell>
-                  Policy type
-                </TableCell>
-                <TableCell>
-                  Agent plan
-                </TableCell>
-                <TableCell>
-                  Commission
-                </TableCell>
-                <TableCell>
-                  Tds
-                </TableCell>
-                <TableCell> 
-                  Actions
-                </TableCell>
+                <TableCell>Agent</TableCell>
+                <TableCell>Vehicle</TableCell>
+                <TableCell>Company</TableCell>
+                <TableCell>Intermediary</TableCell>
+                <TableCell>Policy type</TableCell>
+                <TableCell>Agent plan</TableCell>
+                <TableCell>TP Commission</TableCell>
+                <TableCell>OD Commission</TableCell>
+                <TableCell>Tds</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.map((agentCommission) => {
                 const isSelected = selected.includes(agentCommission.id);
-                const createdAt =new Date(agentCommission.createdAt);
+                const createdAt = new Date(agentCommission.createdAt);
                 console.log(agentCommission);
                 // const agent = agentData.find(agent=> agent._id === agentCommission.agent);
                 // const vehicle = vehicleData.find(vehicle=> vehicle._id === agentCommission.vehicle);
                 // const company = companyData.find(company=> company._id === agentCommission.company);
                 // const intermediary = intermediaryData.find(intermediary=> intermediary._id === agentCommission.intermediary);
                 // const policyType = policyTypeData.find(policyType=> policyType._id === agentCommission.policyType);
-                // const agentPlan = agentplanData.find(agentPlan=> agentPlan._id === agentCommission.agentPlan);      
-                
+                // const agentPlan = agentplanData.find(agentPlan=> agentPlan._id === agentCommission.agentPlan);
+
                 return (
-                  <TableRow
-                    hover
-                    key={agentCommission.id}
-                    selected={isSelected}
-                  >
+                  <TableRow hover key={agentCommission.id} selected={isSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isSelected}
@@ -161,35 +145,24 @@ export const AgentCommissionsTable = (props) => {
                         }}
                       />
                     </TableCell>
-                    <TableCell> 
-                      <Typography variant="subtitle2">
-                        {agentCommission.agent.firstName}
-                      </Typography>
+                    <TableCell>
+                      <Typography variant="subtitle2">{agentCommission.agent.firstName}</Typography>
+                    </TableCell>
+                    <TableCell>{agentCommission.vehicle.name}</TableCell>
+                    <TableCell>{agentCommission.company.name}</TableCell>
+                    <TableCell>{agentCommission.intermediary.name}</TableCell>
+                    <TableCell>{agentCommission.policyType.name}</TableCell>
+                    <TableCell>{agentCommission.agentPlan.name}</TableCell>
+                    <TableCell>
+                    {agentCommission.tpCommission ? agentCommission.tpCommission : "-"}&nbsp;
+                    {agentCommission.tpCommissionType ? agentCommission.tpCommissionType : "-"}                    
                     </TableCell>
                     <TableCell>
-                      {agentCommission.vehicle.name}
+                    {agentCommission.odCommission ? agentCommission.odCommission : "-"}&nbsp;
+                    {agentCommission.odCommissionType ? agentCommission.odCommissionType : "-"}
                     </TableCell>
-                    <TableCell>
-                      {agentCommission.company.name}
-                    </TableCell>                    
-                    <TableCell>
-                      {agentCommission.intermediary.name}
-                    </TableCell>                    
-                    <TableCell>
-                      {agentCommission.type}
-                    </TableCell>    
-                    <TableCell>
-                      {agentCommission.policyType.name}
-                    </TableCell>    
-                    <TableCell>
-                      {agentCommission.agentPlan.name}
-                    </TableCell>    
-                    <TableCell>
-                      {agentCommission.commission}
-                    </TableCell>                
-                    <TableCell>
-                      {agentCommission.tds}
-                    </TableCell>                    
+                    <TableCell>{agentCommission.tds ? agentCommission.tds : "-"}</TableCell>
+
                     {/* <TableCell>
                       {format(createdAt, 'dd-MM-yyyy')}
                     </TableCell> */}
@@ -197,19 +170,21 @@ export const AgentCommissionsTable = (props) => {
                       <Stack direction="row" spacing={2}>
                         <IconButton>
                           <Tooltip title="Edit">
-                            <SvgIcon fontSize="small"
+                            <SvgIcon
+                              fontSize="small"
                               cursor="pointer"
                               color="neutral"
                               aria-label="edit"
                               onClick={() => handleEdit(agentCommission._id)} // You should define the handleDelete function
-                            > 
+                            >
                               <PencilIcon />
                             </SvgIcon>
                           </Tooltip>
                         </IconButton>
                         <IconButton>
                           <Tooltip title="Delete">
-                            <SvgIcon fontSize="small"
+                            <SvgIcon
+                              fontSize="small"
                               cursor="pointer"
                               color="neutral"
                               aria-label="delete"
@@ -246,12 +221,12 @@ export const AgentCommissionsTable = (props) => {
         fetchData={fetchAgentCommission}
       />
     </Card>
-  ); 
+  );
 };
 
 AgentCommissionsTable.propTypes = {
   count: PropTypes.number,
-  items: PropTypes.array, 
+  items: PropTypes.array,
   onDeselectAll: PropTypes.func,
   onDeselectOne: PropTypes.func,
   onPageChange: PropTypes.func,

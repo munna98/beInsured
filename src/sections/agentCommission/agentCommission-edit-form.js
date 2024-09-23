@@ -23,21 +23,15 @@ export const AgentCommissionEditForm = ({
   setAgentCommissionToEdit,
   setDisplayForm,
 }) => {
-  const {
-    intermediaryData,
-    agentData,
-    companyData,
-    vehicleData,
-    policyTypeData,
-    agentplanData,
-  } = useContext(DataContext);
+  const { intermediaryData, agentData, companyData, vehicleData, policyTypeData, agentplanData } =
+    useContext(DataContext);
 
   const commissionTypes = [
     { _id: 1, name: "Flat" },
     { _id: 2, name: "Percentage" },
   ];
 
-  const [values, setValues] = useState({ ...agentCommissionToEdit });
+  const [values, setValues] = useState(null); // Initialize with null to avoid premature rendering
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -53,18 +47,22 @@ export const AgentCommissionEditForm = ({
   };
 
   useEffect(() => {
-    document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
-    setValues({
-      agent: agentCommissionToEdit.agent,
-      vehicle: agentCommissionToEdit.vehicle,
-      company: agentCommissionToEdit.company,
-      intermediary: agentCommissionToEdit.intermediary,
-      type: agentCommissionToEdit.type,
-      policyType: agentCommissionToEdit.policyType,
-      agentPlan: agentCommissionToEdit.agentPlan,
-      commission: agentCommissionToEdit.commission,
-      tds: agentCommissionToEdit.tds,
-    });
+    if (agentCommissionToEdit && agentCommissionToEdit._id) {
+      setValues({
+        agent: agentCommissionToEdit.agent._id || "",
+        vehicle: agentCommissionToEdit.vehicle._id || "",
+        company: agentCommissionToEdit.company._id || "",
+        intermediary: agentCommissionToEdit.intermediary._id || "",
+        policyType: agentCommissionToEdit.policyType._id || "",
+        agentPlan: agentCommissionToEdit.agentPlan._id || "",
+        tds: agentCommissionToEdit.tds || "",
+        odCommissionType: agentCommissionToEdit.odCommissionType || "",
+        odCommission: agentCommissionToEdit.odCommission || "",
+        tpCommissionType: agentCommissionToEdit.tpCommissionType || "",
+        tpCommission: agentCommissionToEdit.tpCommission || "",
+      });
+      document.getElementById("editForm")?.scrollIntoView({ behavior: "smooth" });
+    }
   }, [agentCommissionToEdit]);
 
   const handleChange = useCallback((event) => {
@@ -95,6 +93,150 @@ export const AgentCommissionEditForm = ({
       setSnackbarOpen(true);
     }
   }, [values, setData, apiUrl, agentCommissionToEdit]);
+
+  const selectedPolicy = (() => {
+    const policyName = agentCommissionToEdit.policyType.name.toLowerCase();
+    if (policyName === "pk") return "pk";
+    if (policyName === "od") return "od";
+    if (policyName === "tp") return "tp"; 
+    return "other";
+  })();
+
+  const renderCommissionFields = () => {
+    switch (selectedPolicy) {
+      case "pk":
+        return (
+          <>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="OD Commission type"
+                name="odCommissionType"
+                onChange={handleChange}
+                value={values.odCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="OD Commission"
+                name="odCommission"
+                onChange={handleChange}
+                required
+                value={values.odCommission}
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="TP Commission type"
+                name="tpCommissionType"
+                onChange={handleChange}
+                value={values.tpCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="TP Commission"
+                name="tpCommission"
+                onChange={handleChange}
+                required
+                value={values.tpCommission}
+              />
+            </Grid>
+          </>
+        );
+      case "od":
+        return (
+          <>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="OD Commission type"
+                name="odCommissionType"
+                onChange={handleChange}
+                value={values.odCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="OD Commission"
+                name="odCommission"
+                onChange={handleChange}
+                required
+                value={values.odCommission}
+              />
+            </Grid>
+          </>
+        );
+      case "tp":
+        return (
+          <>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="TP Commission type"
+                name="tpCommissionType"
+                onChange={handleChange}
+                value={values.tpCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="TP Commission"
+                name="tpCommission"
+                onChange={handleChange}
+                required
+                value={values.tpCommission}
+              />
+            </Grid>
+          </>
+        );
+    }
+  };
+
+  if (!values) {
+    return <p>Loading...</p>; // Prevent rendering until values are set
+  }
 
   return (
     <form autoComplete="off" noValidate Card id="editForm">
@@ -217,36 +359,7 @@ export const AgentCommissionEditForm = ({
                 </TextField>
               </Grid>
 
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Commission type"
-                  name="type"
-                  onChange={handleChange}
-                  select
-                  SelectProps={{ native: true }}
-                  value={values.type}
-                  required
-                >
-                  {commissionTypes.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Commission"
-                  name="commission"
-                  onChange={handleChange}
-                  required
-                  value={values.commission}
-                />
-              </Grid>
+              {renderCommissionFields()}
 
               <Grid xs={12} md={6}>
                 <TextField
@@ -269,16 +382,8 @@ export const AgentCommissionEditForm = ({
         </CardActions>
       </Card>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

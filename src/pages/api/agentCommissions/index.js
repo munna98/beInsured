@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         .populate("company")
         .populate("intermediary")
         .populate("policyType")
-        .populate("agentPlan"); 
+        .populate("agentPlan");
       res.status(200).json(agentCommissions);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch agentCommissions", error: error.message });
@@ -23,11 +23,13 @@ export default async function handler(req, res) {
         vehicle,
         company,
         intermediary,
-        type,
         policyType,
         agentPlan,
-        commission,
         tds,
+        odCommissionType,
+        odCommission,
+        tpCommissionType,
+        tpCommission,
       } = req.body.values;
 
       // Check if the combination already exists
@@ -36,12 +38,14 @@ export default async function handler(req, res) {
         vehicle: { $in: vehicle },
         company: { $in: company },
         intermediary: { $in: intermediary },
-        policyType:{ $in: policyType },
-        agentPlan:{ $in: agentPlan}
+        policyType: { $in: policyType },
+        agentPlan: { $in: agentPlan },
       });
 
       if (existingCommission) {
-        return res.status(409).json({ message: "This agent commission combination already exists." });
+        return res
+          .status(409)
+          .json({ message: "This agent commission combination already exists." });
       }
 
       // Proceed with creating new commissions if the combination doesn't exist
@@ -55,11 +59,13 @@ export default async function handler(req, res) {
                 vehicle: vehicleId,
                 company: companyId,
                 intermediary: intermediaryId,
-                type,
                 policyType,
                 agentPlan,
-                commission,
                 tds,
+                odCommissionType,
+                odCommission,
+                tpCommissionType,
+                tpCommission,
               });
             }
           }
