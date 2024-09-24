@@ -9,7 +9,7 @@ export default async function handler(req, res) {
       .populate("company")
       .populate("intermediary")
       .populate("policyType")
-      .populate("ourPlan")
+      .populate("ourPlan")  
 
       console.log(intermediaryCommissions, 'logging inter commissions');
       res.status(200).json(intermediaryCommissions);
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     }
   } else if (req.method === 'POST') {
     try {
-      const { intermediary, company, vehicle, type, policyType, ourPlan, commission,tds  } = req.body.values;
+      const { intermediary, company, vehicle, policyType, ourPlan, odCommission, odCommissionType, tpCommission, tpCommissionType ,tds  } = req.body.values;
       console.log(intermediary,'intermediary');
       // Create an array of combinations
       const combinations = [];
@@ -29,11 +29,13 @@ export default async function handler(req, res) {
                 intermediary,
                 company: companyId,
                 vehicle: vehicleId,
-                type,
                 policyType, 
                 ourPlan, 
-                commission,
                 tds,
+                odCommissionType,
+                odCommission,
+                tpCommissionType,
+                tpCommission,
               });
             }
       }

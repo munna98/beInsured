@@ -118,6 +118,8 @@ const handleChange = useCallback(
           policyType: updatedValues.policyType,
           agentPlan: updatedValues.agentPlan,
           net: updatedValues.net,
+          ownDamage: updatedValues.ownDamage,
+          thirdParty: updatedValues.thirdParty,
         });
 
         updatedValues = {

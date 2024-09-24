@@ -18,7 +18,7 @@ import {
   TableCell,
   TableHead,
   TablePagination,
-  TableRow,
+  TableRow, 
   Typography,
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -108,17 +108,13 @@ export const IntermediaryCommissionsTable = (props) => {
                   Vehicle
                 </TableCell>
                 <TableCell>
-                  Type
-                </TableCell>
-                <TableCell>
                   Policy type
                 </TableCell>
                 <TableCell>
                   Our plan
                 </TableCell>
-                <TableCell>
-                  Commission
-                </TableCell>
+                <TableCell>TP Commission</TableCell>
+                <TableCell>OD Commission</TableCell>
                 <TableCell>
                   Tds
                 </TableCell>
@@ -169,17 +165,19 @@ export const IntermediaryCommissionsTable = (props) => {
                       {intermediaryCommission.vehicle.name}
                     </TableCell>                                      
                     <TableCell>
-                      {intermediaryCommission.type}
-                    </TableCell>    
-                    <TableCell>
                       {intermediaryCommission.policyType.name}
                     </TableCell>    
                     <TableCell>
                       {intermediaryCommission.ourPlan.name}
                     </TableCell>    
                     <TableCell>
-                      {intermediaryCommission.commission}
-                    </TableCell>                
+                    {intermediaryCommission.tpCommission ? intermediaryCommission.tpCommission : "-"}&nbsp;
+                    {intermediaryCommission.tpCommissionType ? intermediaryCommission.tpCommissionType : "-"}                    
+                    </TableCell>
+                    <TableCell>
+                    {intermediaryCommission.odCommission ? intermediaryCommission.odCommission : "-"}&nbsp;
+                    {intermediaryCommission.odCommissionType ? intermediaryCommission.odCommissionType : "-"}
+                    </TableCell>            
                     <TableCell>
                       {intermediaryCommission.tds}
                     </TableCell>                    

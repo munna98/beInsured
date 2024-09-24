@@ -10,7 +10,7 @@ import {
   Divider, 
   TextField,
   Select,
-  MenuItem,
+  MenuItem, 
   InputLabel,
   Chip,
   FormControl,
@@ -34,7 +34,6 @@ export const AgentCommissionAddForm = ({
   } = useContext(DataContext); 
 
   const commissionTypes = [
-    { _id: 3, name: "" }, 
     { _id: 1, name: "Flat" }, 
     { _id: 2, name: "Percentage" }, 
   ];

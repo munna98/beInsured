@@ -22,7 +22,7 @@ export default async function handler(req, res) {
           vehicle: vehicle, 
           company: company,
           intermediary: intermediary,
-          policyType: policyType,
+          policyType: policyType, 
           agentPlan: agentPlan,
           tds: tds, 
           odCommissionType: odCommissionType,

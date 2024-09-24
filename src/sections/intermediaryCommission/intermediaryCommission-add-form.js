@@ -21,7 +21,7 @@ import {
 export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
   const {
     intermediaryData,
-    agentData, 
+    agentData,  
     companyData,
     vehicleData,
     ourplanData, 
@@ -39,11 +39,13 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
     intermediary:intermediaryData[0]._id,
     company: [],
     vehicle: [],
-    type: commissionTypes[0].name,
     policyType: policyTypeData[0]._id,
     ourPlan: ourplanData[0]._id,
-    commission: "",
     tds: "",
+    odCommissionType: commissionTypes[0].name,
+    odCommission: "",
+    tpCommissionType: commissionTypes[0].name,
+    tpCommission: "", 
   });
 
   useEffect(() => {
@@ -146,14 +148,159 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
         intermediary:intermediaryData[0]._id,
         company: [],
         vehicle: [],
-        type: commissionTypes[0].name,
         policyType: policyTypeData[0]._id,
         ourPlan: ourplanData[0]._id,
-        commission: "",
         tds: "",
+        odCommissionType: commissionTypes[0].name,
+        odCommission: "",
+        tpCommissionType: commissionTypes[0].name,
+        tpCommission: "",
       }); // Reset form fields
     }
   }, [values, setData, data, apiUrl, setValues]);
+
+  const selectedPolicy = (() => {
+    const selectedPolicyType = policyTypeData.find(pt => pt._id === values.policyType);
+    if (!selectedPolicyType) return "other";
+    
+    const policyName = selectedPolicyType.name.toLowerCase();
+    if (policyName === "pk") return "pk";
+    if (policyName === "od") return "od";
+    if (policyName === "tp") return "tp";
+    return "other";
+  })();
+
+  const renderCommissionFields = () => {
+    switch (selectedPolicy) {
+      case "pk":
+        return (
+          <>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="OD Commission type"
+                name="odCommissionType"
+                onChange={handleChange}
+                value={values.odCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="OD Commission"
+                name="odCommission"
+                onChange={handleChange}
+                required
+                value={values.odCommission}
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="TP Commission type"
+                name="tpCommissionType"
+                onChange={handleChange}
+                value={values.tpCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="TP Commission"
+                name="tpCommission"
+                onChange={handleChange}
+                required
+                value={values.tpCommission}
+              />
+            </Grid>
+          </>
+        );
+      case "od":
+        return(
+          <>
+          <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="OD Commission type"
+                name="odCommissionType"
+                onChange={handleChange}
+                value={values.odCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="OD Commission"
+                name="odCommission"
+                onChange={handleChange}
+                required
+                value={values.odCommission}
+              />
+            </Grid>
+          </>
+        )
+      case "tp":
+        return(
+          <>
+          <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="TP Commission type"
+                name="tpCommissionType"
+                onChange={handleChange}
+                value={values.tpCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="TP Commission"
+                name="tpCommission"
+                onChange={handleChange}
+                required
+                value={values.tpCommission}
+              />
+            </Grid>
+          </>
+        )
+    }
+  };
 
   return (
     <form autoComplete="off" noValidate Card id="editForm">
@@ -224,15 +371,15 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  label="Type" 
-                  name="type"
+                  label="Our plan"
+                  name="ourPlan"
                   onChange={handleChange}
                   select
                   SelectProps={{ native: true }}
-                  value={values.type}
+                  value={values.ourPlan}
                 >
-                  {commissionTypes.map((option) => (
-                    <option key={option._id} value={option.name}>
+                  {ourplanData.map((option) => (
+                    <option key={option._id} value={option._id}>
                       {option.name}
                     </option>
                   ))}
@@ -255,35 +402,8 @@ export const IntermediaryCommissionAddForm = ({ data, setData, apiUrl }) => {
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Our plan"
-                  name="ourPlan"
-                  onChange={handleChange}
-                  select
-                  SelectProps={{ native: true }}
-                  value={values.ourPlan}
-                >
-                  {ourplanData.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Commission"
-                  name="commission"
-                  onChange={handleChange}
-                  required
-                  value={values.commission}
-                />
-              </Grid>
 
+              {renderCommissionFields()}
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth

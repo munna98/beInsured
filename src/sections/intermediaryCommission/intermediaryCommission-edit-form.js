@@ -70,14 +70,16 @@ export const IntermediaryCommissionEditForm = ({
     document.getElementById("editForm").scrollIntoView({ behavior: "smooth" });
 
     setValues({
-      intermediary: intermediaryCommissionToEdit.intermediary,
-      company: intermediaryCommissionToEdit.company,
-      vehicle: intermediaryCommissionToEdit.vehicle,
-      type: intermediaryCommissionToEdit.type,
-      policyType: intermediaryCommissionToEdit.policyType,
-      ourPlan: intermediaryCommissionToEdit.ourPlan,
-      commission: intermediaryCommissionToEdit.commission,
-      tds: intermediaryCommissionToEdit.tds,
+      intermediary: intermediaryCommissionToEdit.intermediary._id || "",
+      company: intermediaryCommissionToEdit.company._id || "",
+      vehicle: intermediaryCommissionToEdit.vehicle._id || "",
+      policyType: intermediaryCommissionToEdit.policyType._id || "",
+      ourPlan: intermediaryCommissionToEdit.ourPlan._id || "",
+      tds: intermediaryCommissionToEdit.tds || "",
+      odCommissionType: intermediaryCommissionToEdit.odCommissionType || "",
+      odCommission: intermediaryCommissionToEdit.odCommission || "",
+      tpCommissionType: intermediaryCommissionToEdit.tpCommissionType || "",
+      tpCommission: intermediaryCommissionToEdit.tpCommission || "",
     });
   }, [intermediaryCommissionToEdit]);
 
@@ -115,6 +117,146 @@ export const IntermediaryCommissionEditForm = ({
     }
   }, [values, setData, data, apiUrl, intermediaryCommissionToEdit, setValues]);
 
+  const selectedPolicy = (() => {
+    const policyName = agentCommissionToEdit.policyType.name.toLowerCase();
+    if (policyName === "pk") return "pk";
+    if (policyName === "od") return "od";
+    if (policyName === "tp") return "tp"; 
+    return "other";
+  })();
+
+  const renderCommissionFields = () => {
+    switch (selectedPolicy) {
+      case "pk":
+        return (
+          <>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="OD Commission type"
+                name="odCommissionType"
+                onChange={handleChange}
+                value={values.odCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="OD Commission"
+                name="odCommission"
+                onChange={handleChange}
+                required
+                value={values.odCommission}
+              />
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="TP Commission type"
+                name="tpCommissionType"
+                onChange={handleChange}
+                value={values.tpCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="TP Commission"
+                name="tpCommission"
+                onChange={handleChange}
+                required
+                value={values.tpCommission}
+              />
+            </Grid>
+          </>
+        );
+      case "od":
+        return (
+          <>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="OD Commission type"
+                name="odCommissionType"
+                onChange={handleChange}
+                value={values.odCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="OD Commission"
+                name="odCommission"
+                onChange={handleChange}
+                required
+                value={values.odCommission}
+              />
+            </Grid>
+          </>
+        );
+      case "tp":
+        return (
+          <>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="TP Commission type"
+                name="tpCommissionType"
+                onChange={handleChange}
+                value={values.tpCommissionType}
+                select
+                SelectProps={{ native: true }}
+              >
+                {commissionTypes.map((option) => (
+                  <option key={option._id} value={option.name}>
+                    {option.name}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <TextField
+                fullWidth
+                type="number"
+                label="TP Commission"
+                name="tpCommission"
+                onChange={handleChange}
+                required
+                value={values.tpCommission}
+              />
+            </Grid>
+          </>
+        );
+    }
+  };
+
   return (
     <form autoComplete="off" noValidate Card id="editForm">
       <Card>
@@ -122,29 +264,6 @@ export const IntermediaryCommissionEditForm = ({
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
             <Grid container spacing={3}>
-              {/* <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Intermediary name"
-                  name="agent"
-                  onChange={handleChange}
-                  select
-                  SelectProps={{ native: true }}
-
-                >
-                  {agentData.map((option) => (
-                    <option
-                      key={option._id}
-                      value={option._id}
-                    >
-                      {option.firstName}
-                    </option>
-                  ))}
-                </TextField>
-              </Grid> */}
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -244,17 +363,8 @@ export const IntermediaryCommissionEditForm = ({
                   ))}
                 </TextField>
               </Grid>
-              <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  type="number"
-                  label="Commission"
-                  name="commission"
-                  onChange={handleChange}
-                  required
-                  value={values.commission}
-                />
-              </Grid>
+
+              {renderCommissionFields()}
 
               <Grid xs={12} md={6}>
                 <TextField
@@ -276,16 +386,8 @@ export const IntermediaryCommissionEditForm = ({
           </Button>
         </CardActions>
       </Card>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: '100%' }}
-        >
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

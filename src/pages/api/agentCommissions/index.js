@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     try {
       const {
         agent,
-        vehicle,
+        vehicle, 
         company,
         intermediary,
         policyType,

@@ -15,7 +15,7 @@ const initializeAgentCommissionModel = async () => {
           type: mongoose.Schema.Types.ObjectId, 
           ref: 'intermediary', 
           required: true,
-        },
+        }, 
         company:  {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'company', 
@@ -26,7 +26,6 @@ const initializeAgentCommissionModel = async () => {
           ref: 'vehicle', 
           required: true,
         },
-        type: String, 
         policyType: {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'policytype', 
@@ -38,8 +37,11 @@ const initializeAgentCommissionModel = async () => {
           ref: 'ourplan', 
           required: true,
         },
-        commission: Number,
         tds: Number,
+        odCommissionType: String,
+        odCommission: Number,
+        tpCommissionType: String, 
+        tpCommission: Number,
       },
       { 
         timestamps: true,

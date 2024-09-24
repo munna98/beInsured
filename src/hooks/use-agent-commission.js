@@ -14,6 +14,8 @@ const useAgentCommission = () => {
     policyType,
     agentPlan,
     net,
+    ownDamage,
+    thirdParty,
   }) => {
     console.log("agentCommissionData:", agentCommissionData);
 
@@ -48,12 +50,12 @@ const useAgentCommission = () => {
           if (commissionFound.tpCommissionType === "Flat")
             return commissionFound.odCommission + commissionFound.tpCommission;
           if (commissionFound.tpCommissionType === "Percentage")
-            return commissionFound.odCommission + Math.round( commissionFound.tpCommission  * net / 100);
+            return commissionFound.odCommission + Math.round( commissionFound.tpCommission  * thirdParty / 100);
         if (commissionFound.odCommissionType === "Percentage")
           if (commissionFound.tpCommissionType === "Flat")
-            return Math.round( commissionFound.odCommission  * net / 100) + commissionFound.tpCommission;
+            return Math.round( commissionFound.odCommission  * ownDamage / 100) + commissionFound.tpCommission;
           if (commissionFound.tpCommissionType === "Percentage")
-            return Math.round( commissionFound.odCommission  * net / 100) + Math.round( commissionFound.tpCommission  * net / 100);
+            return Math.round( commissionFound.odCommission  * ownDamage / 100) + Math.round( commissionFound.tpCommission  * thirdParty / 100);
       }
     }
   else return 0;
