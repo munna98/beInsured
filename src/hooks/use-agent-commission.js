@@ -29,36 +29,59 @@ const useAgentCommission = () => {
         data.agentPlan._id === agentPlan
     );
 
+
+
     console.log("Conditions:", { agent, vehicle, company, intermediary, policyType, agentPlan });
     console.log("Commission Found:", commissionFound);
+    const policyFound = commissionFound?.policyType.name;
+    console.log( policyFound,' policyFound');
+    
 
-    if (commissionFound){
-      
-      switch(commissionFound?.policyType.name){
-        case "OD": 
+    if (commissionFound) {
+      switch (policyFound) {
+        case "OD":
           if (commissionFound.odCommissionType === "Flat")
             return commissionFound.odCommission;
           if (commissionFound.odCommissionType === "Percentage")
-            return Math.round( commissionFound.odCommission  * net / 100);
-        case "TP": 
+            return Math.round(commissionFound.odCommission * net / 100);
+          break;
+
+        case "TP":
           if (commissionFound.tpCommissionType === "Flat")
             return commissionFound.tpCommission;
           if (commissionFound.tpCommissionType === "Percentage")
-            return Math.round( commissionFound.tpCommission  * net / 100);
-        case "PK": 
-        if (commissionFound.odCommissionType === "Flat")
-          if (commissionFound.tpCommissionType === "Flat")
-            return commissionFound.odCommission + commissionFound.tpCommission;
-          if (commissionFound.tpCommissionType === "Percentage")
-            return commissionFound.odCommission + Math.round( commissionFound.tpCommission  * thirdParty / 100);
-        if (commissionFound.odCommissionType === "Percentage")
-          if (commissionFound.tpCommissionType === "Flat")
-            return Math.round( commissionFound.odCommission  * ownDamage / 100) + commissionFound.tpCommission;
-          if (commissionFound.tpCommissionType === "Percentage")
-            return Math.round( commissionFound.odCommission  * ownDamage / 100) + Math.round( commissionFound.tpCommission  * thirdParty / 100);
+            return Math.round(commissionFound.tpCommission * net / 100);
+          break;
+
+        case "PK":
+          let odCommission = 0;
+          let tpCommission = 0;
+
+          // Handle Own Damage (OD) commission
+          if (commissionFound.odCommissionType === "Flat") {
+            odCommission = commissionFound.odCommission;
+          } else if (commissionFound.odCommissionType === "Percentage") {
+            odCommission = Math.round(
+              commissionFound.odCommission * ownDamage / 100
+            );
+          }
+
+          // Handle Third Party (TP) commission
+          if (commissionFound.tpCommissionType === "Flat") {
+            tpCommission = commissionFound.tpCommission;
+          } else if (commissionFound.tpCommissionType === "Percentage") {
+            tpCommission = Math.round(
+              commissionFound.tpCommission * thirdParty / 100
+            );
+          }
+
+          // Return the sum of OD and TP commission
+          return odCommission + tpCommission;
+
+        default:
+          return 0;
       }
-    }
-  else return 0;
+    }else return 0;
   };
 
   return { findAgentCommission };
