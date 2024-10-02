@@ -23,6 +23,9 @@ out
 /.env.test.local
 /.env.production.local
 
+/.eslintrc.cjs
+/.eslintrc.json
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
