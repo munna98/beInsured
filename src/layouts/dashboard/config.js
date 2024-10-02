@@ -13,7 +13,6 @@ import ScaleIcon from '@heroicons/react/24/solid/ScaleIcon';
 import TruckIcon from '@heroicons/react/24/solid/TruckIcon';
 import BarsArrowDownIcon from '@heroicons/react/24/solid/BarsArrowDownIcon';
 import SwatchIcon from '@heroicons/react/24/solid/SwatchIcon';
-import BankNotesIcon from '@heroicons/react/24/solid/BankNotesIcon';
 import RectangleStackIcon from '@heroicons/react/24/solid/RectangleStackIcon';
 import RectangleGroupIcon from '@heroicons/react/24/solid/RectangleGroupIcon';
 import ChartPieIcon from '@heroicons/react/24/solid/ChartPieIcon';
